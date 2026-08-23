@@ -2904,3 +2904,251 @@ button {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ==== Roles & Permissions page ==== */
+
+.roles-page-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.roles-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.roles-header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  background: var(--ember);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.roles-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.roles-count-badge {
+  background: var(--ember-tint);
+  color: var(--ember-tint-text);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+/* Gold outline chip — for CUSTOM role type badges (steel/ember/patina/neutral
+   outline variants already existed from the Users page; gold was missing). */
+.chip-outline-gold {
+  color: var(--gold);
+}
+
+/* ---- Role name cell ---- */
+.role-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.role-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.role-name-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.permissions-count-link {
+  color: var(--steel);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.actions-cell-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Roles table needs its own 6-column layout, same override pattern as the
+   Users table: .table-head / .table-row already carry no fixed
+   grid-template-columns (per current CSS), so this just sets it directly. */
+.roles-table-grid {
+  min-width: 980px;
+}
+.roles-table-row {
+  grid-template-columns: 2.2fr 0.7fr 1fr 0.9fr 1fr 130px;
+}
+
+/* ==== Create New Role modal ==== */
+
+/* Unlike the other two modals, this one wraps Role Details + Permissions in
+   a single outer card rather than two separate .form-section boxes. */
+.role-modal-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  padding: 24px;
+}
+.role-modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 28px;
+  align-items: start;
+}
+.role-section-label {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+/* ---- Permission groups (nested cards inside the outer role-modal-card) ---- */
+.permission-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.permission-group:last-child {
+  margin-bottom: 0;
+}
+.permission-group-header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+.permission-group-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text);
+}
+.permission-checkbox-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px 20px;
+}
+.permission-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+}
+
+/* A color-flexible checkbox — each permission group has its own accent
+   (ember/steel/patina/violet/gold) rather than always ember like the
+   other two modals' checkboxes. */
+.role-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--surface-2);
+  color: transparent;
+}
+.role-checkbox.checked-ember {
+  background: var(--ember);
+  border-color: var(--ember);
+  color: #ffffff;
+}
+.role-checkbox.checked-steel {
+  background: var(--steel);
+  border-color: var(--steel);
+  color: #ffffff;
+}
+.role-checkbox.checked-patina {
+  background: var(--patina);
+  border-color: var(--patina);
+  color: #ffffff;
+}
+.role-checkbox.checked-violet {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: #ffffff;
+}
+.role-checkbox.checked-gold {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #ffffff;
+}
+
+/* ---- Assigned users ---- */
+.assigned-users-section {
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+  margin-top: 20px;
+}
+.assigned-users-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.assigned-users-count-badge {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+.assigned-users-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+.add-users-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 100px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: none;
+  cursor: pointer;
+}
+.add-users-chip-btn:hover {
+  border-color: var(--ember);
+  color: var(--ember);
+}
