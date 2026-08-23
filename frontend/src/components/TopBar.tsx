@@ -1,6 +1,7 @@
 'use client';
 
 import { Bell, ChevronDown } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 
 type TopBarProps = {
   orgName?: string;
@@ -51,6 +52,9 @@ export default function TopBar({
           </div>
           <ChevronDown size={14} color="var(--text-tertiary)" />
         </button>
+
+        <ThemeToggle />
+        
       </div>
     </header>
   );

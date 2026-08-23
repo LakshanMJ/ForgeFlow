@@ -1,5 +1,5 @@
 'use client';
-
+import Link from "next/link";
 import {
   ChevronDown,
   ChevronLeft,
@@ -25,6 +25,7 @@ export type AccentKey =
 // type AccentKey = 'steel' | 'ember' | 'gold' | 'patina' | 'neutral';
 
 export type Project = {
+  id: string;
   code: string;
   name: string;
   description: string;
@@ -108,7 +109,8 @@ export default function ProjectTable({
 
           {/* Table rows */}
           {projects.map((project) => (
-            <div className="table-row" key={project.code}>
+            
+            <div className="table-row" key={project.id}>
               {/* Project */}
               <div className="project-cell">
                 <span
@@ -129,8 +131,12 @@ export default function ProjectTable({
 
                 <div>
                   <div className="project-info-name">
-                    {project.name}
-
+                    <Link
+                      href={`/projects/${project.id}`}
+                      className="project-name-link"
+                    >
+                      {project.name}
+                    </Link>
                     {project.pinned && (
                       <Pin size={12} color="var(--gold)" />
                     )}
