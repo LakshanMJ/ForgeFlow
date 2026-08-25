@@ -120,12 +120,13 @@ export class AuthService {
           });
 
 
-        const ownerRole =
-          await tx.role.findUnique({
-            where: {
-              name: 'OWNER',
-            },
-          });
+        const ownerRole = await tx.role.create({
+          data: {
+            organizationId: organization.id,
+            name: 'OWNER',
+            description: 'Organization owner',
+          },
+        });
 
 
         if (!ownerRole) {

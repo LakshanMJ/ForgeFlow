@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async createUser(
     dto: CreateUserDto,
@@ -29,7 +29,10 @@ export class UsersService {
 
     const role = await this.prisma.role.findUnique({
       where: {
-        name: dto.role,
+        organizationId_name: {
+          organizationId,
+          name: dto.role,
+        },
       },
     });
 

@@ -18,6 +18,7 @@ model Organization {
   timezone String?
 
   users     User[]
+  roles Role[]
   projects  Project[]
   tasks     Task[]
   labels    Label[]
@@ -65,16 +66,21 @@ model User {
 }
 
 model Role {
-  id          String  @id @default(uuid())
-  name        String  @unique
+  id             String @id @default(uuid())
+  organizationId String
+
+  name        String
   description String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   userRoles       UserRole[]
   rolePermissions RolePermission[]
 
+  @@unique([organizationId, name])
+  @@index([organizationId])
   @@map("roles")
 }
 
