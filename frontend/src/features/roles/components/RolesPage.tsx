@@ -14,16 +14,21 @@ import { TabPanel } from '@mui/lab';
 import RolesList from './RolesList';
 import RoleAssignments from './RoleAssignments';
 import PermissionMatrix from './PermissionMatrix';
-import CreateRoleModal from './CreateRoleModal';
+import { useRoles } from '../hooks/useRoles';
 
 export default function RolesPage() {
   const [tab, setTab] = useState('list');
-  
+  const {
+    data: roles,
+    isLoading,
+    isError,
+    error,
+  } = useRoles();
 
   return (
     <>
       <div className="roles-page-header-row">
-        <div className="roles-header-left"> 
+        <div className="roles-header-left">
           <div className="roles-title-row">
             <h1 className="page-title" style={{ marginBottom: 0 }}>
               Roles &amp; Permissions
@@ -41,7 +46,13 @@ export default function RolesPage() {
           </button>
         </div> */}
       </div>
-
+      <div>
+        {roles?.map((role) => (
+          <div key={role.id}>
+            {role.name}
+          </div>
+        ))}
+      </div>
       <div className="users-stat-row" style={{ marginBottom: 20 }}>
         <div className="users-stat-card">
           <span

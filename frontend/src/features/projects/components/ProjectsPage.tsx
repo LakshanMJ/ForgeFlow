@@ -1,6 +1,7 @@
 'use client';
 import CreateProjectModal from '@/features/projects/components/CreateProjectModal';
 import DataTable from '@/shared/components/DataTable';
+import Modal from '@/shared/components/Modal';
 import ProjectTable from '@/shared/components/ProjectTable';
 import SearchInput from '@/shared/components/SearchInput';
 import {
@@ -14,9 +15,12 @@ import {
 	MoreVertical,
 	ChevronLeft,
 	ChevronRight,
+	Shield,
+	Save,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import AddProjetForm from './AddProjetForm';
 
 type StatusKey = 'in-progress' | 'completed' | 'pending' | 'planning' | 'on-hold';
 
@@ -416,7 +420,20 @@ export default function ProjectsPage() {
 				</button>
 			</div>
 
-			<CreateProjectModal open={isCreateOpen} onClose={() => setIsCreateOpen(false)} />
+			{/* <CreateProjectModal open={isCreateOpen} onClose={() => setIsCreateOpen(false)} /> */}
+
+			<Modal
+				isOpen={isCreateOpen}
+				onClose={() => setIsCreateOpen(false)}
+				title="Create New Project"
+				icon={<Shield size={18} />}
+				size="xl"
+				submitLabel="Save Project"
+				submitIcon={<Save size={14} />}
+				onSubmit={() => { }}
+			>
+				<AddProjetForm />
+			</Modal>
 
 			<div className="filter-bar">
 				{/* <div className="search-input">

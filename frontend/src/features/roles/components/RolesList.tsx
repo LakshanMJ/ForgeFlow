@@ -22,9 +22,12 @@ import {
     GripVertical,
     ChevronLeft,
     ChevronRight,
+    Save
 } from 'lucide-react';
 import { useState } from 'react';
-import CreateRoleModal from './CreateRoleModal';
+import Modal from '@/shared/components/Modal';
+import RoleForm from './AddRoleForm';
+import AddRoleForm from './AddRoleForm';
 
 type RoleType = 'SYSTEM' | 'CUSTOM';
 type RoleStatus = 'Active' | 'Inactive';
@@ -146,8 +149,20 @@ const RolesList = () => {
 
     return (
         <>
-            <CreateRoleModal open={isCreateRoleOpen} onClose={() => setIsCreateRoleOpen(false)} />
 
+            <Modal
+                isOpen={isCreateRoleOpen}
+                onClose={() => setIsCreateRoleOpen(false)}
+                title="Create New Role"
+                icon={<Shield size={18} />}
+                size="xl"
+                submitLabel="Save Role"
+                submitIcon={<Save size={14} />}
+                onSubmit={()=>{}}
+            >
+                <AddRoleForm />
+            </Modal>
+            {/* <CreateRoleModal open={isCreateRoleOpen} onClose={() => setIsCreateRoleOpen(false)} /> */}
             <div className="filter-bar">
                 <div className="search-input">
                     <Search size={14} />

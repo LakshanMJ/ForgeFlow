@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import {
   Box,
   Button,
@@ -11,9 +14,35 @@ import {
   Typography,
 } from "@mui/material";
 
+import { useLogin } from "../hooks/useLogin";
+
 export default function LoginForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = useLogin();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    login.mutate(
+      {
+        email,
+        password,
+      },
+      {
+        onSuccess: () => {
+          router.push("/dashboard");
+        },
+      },
+    );
+  };
+
   return (
     <Box
+      component="form"
+      onSubmit={handleSubmit}
       sx={{
         minHeight: "100vh",
         display: "flex",
@@ -33,6 +62,7 @@ export default function LoginForm() {
       >
         <CardContent sx={{ p: 5 }}>
           <Stack spacing={3}>
+
             <Box sx={{ textAlign: "center" }}>
               <Typography
                 variant="h4"
@@ -58,6 +88,10 @@ export default function LoginForm() {
               type="email"
               fullWidth
               autoComplete="email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
             />
 
             <TextField
@@ -65,20 +99,38 @@ export default function LoginForm() {
               type="password"
               fullWidth
               autoComplete="current-password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
             />
 
             <Button
+              type="submit"
               variant="contained"
               size="large"
               fullWidth
+              disabled={login.isPending}
               sx={{
                 py: 1.4,
                 textTransform: "none",
                 fontWeight: 600,
               }}
             >
-              Sign In
+              {login.isPending
+                ? "Signing In..."
+                : "Sign In"}
             </Button>
+
+            {login.isError && (
+              <Typography
+                color="error"
+                variant="body2"
+                textAlign="center"
+              >
+                Invalid email or password
+              </Typography>
+            )}
 
             <Typography
               variant="body2"
@@ -96,6 +148,7 @@ export default function LoginForm() {
                 Register
               </Link>
             </Typography>
+
           </Stack>
         </CardContent>
       </Card>

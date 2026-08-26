@@ -12,10 +12,14 @@ import {
   ChevronRight,
   MoreVertical,
   ChevronLeft,
+  Shield,
+  Save,
 } from 'lucide-react';
 import { useState } from 'react';
 import AddUserModal from './AddUserModal';
 import SearchInput from '@/shared/components/SearchInput';
+import Modal from '@/shared/components/Modal';
+import AddUserForm from './AddUserForm';
 
 type Status = 'Online' | 'Away' | 'Offline';
 
@@ -154,7 +158,19 @@ export default function UsersPage() {
         </p>
       </div>
 
-      <AddUserModal open={isAddUserOpen} onClose={() => setIsAddUserOpen(false)} />
+      {/* <AddUserModal open={isAddUserOpen} onClose={() => setIsAddUserOpen(false)} /> */}
+      <Modal
+        isOpen={isAddUserOpen}
+        onClose={() => setIsAddUserOpen(false)}
+        title="Create New Role"
+        icon={<Shield size={18} />}
+        size="xl"
+        submitLabel="Save Role"
+        submitIcon={<Save size={14} />}
+        onSubmit={() => { }}
+      >
+        <AddUserForm />
+      </Modal>
 
       <div className="users-stat-row" style={{ marginBottom: 20 }}>
         <div className="users-stat-card">
