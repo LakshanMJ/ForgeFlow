@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProjectsModule } from './projects/projects.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.modules';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { RolesModule } from './roles/roles.module';
     ProjectsModule,
     UsersModule,
     RolesModule,
+    PermissionsModule
   ],
   controllers: [
     AppController,

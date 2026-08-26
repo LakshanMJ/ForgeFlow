@@ -87,7 +87,9 @@ model Role {
 model Permission {
   id          String  @id @default(uuid())
   name        String  @unique
+  displayName String
   description String?
+   category   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
