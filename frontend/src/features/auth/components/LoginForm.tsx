@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import {
   Box,
@@ -14,35 +14,57 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useLogin } from "../hooks/useLogin";
+import { login } from "../api/auth.api";
 
 export default function LoginForm() {
   const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const login = useLogin();
+  const [loading, setLoading] =
+    useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [error, setError] =
+    useState("");
 
-    login.mutate(
-      {
+  const handleLogin = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const response = await login({
         email,
         password,
-      },
-      {
-        onSuccess: () => {
-          router.push("/dashboard");
-        },
-      },
-    );
+      });
+
+      // Store tokens
+      localStorage.setItem(
+        "accessToken",
+        response.accessToken,
+      );
+
+      localStorage.setItem(
+        "refreshToken",
+        response.refreshToken,
+      );
+
+      // Go to dashboard
+      router.push("/dashboard");
+
+    } catch (error) {
+      console.error(error);
+
+      setError(
+        "Invalid email or password",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Box
-      component="form"
-      onSubmit={handleSubmit}
       sx={{
         minHeight: "100vh",
         display: "flex",
@@ -105,32 +127,31 @@ export default function LoginForm() {
               }
             />
 
+            {error && (
+              <Typography
+                color="error"
+                variant="body2"
+              >
+                {error}
+              </Typography>
+            )}
+
             <Button
-              type="submit"
               variant="contained"
               size="large"
               fullWidth
-              disabled={login.isPending}
+              disabled={loading}
+              onClick={handleLogin}
               sx={{
                 py: 1.4,
                 textTransform: "none",
                 fontWeight: 600,
               }}
             >
-              {login.isPending
-                ? "Signing In..."
+              {loading
+                ? "Signing in..."
                 : "Sign In"}
             </Button>
-
-            {login.isError && (
-              <Typography
-                color="error"
-                variant="body2"
-                textAlign="center"
-              >
-                Invalid email or password
-              </Typography>
-            )}
 
             <Typography
               variant="body2"
@@ -138,6 +159,7 @@ export default function LoginForm() {
               sx={{ textAlign: "center" }}
             >
               Don't have an account?{" "}
+
               <Link
                 href="/register"
                 style={{

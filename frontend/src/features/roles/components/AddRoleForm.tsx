@@ -1,283 +1,709 @@
 'use client';
 
 import { usePermissions } from '@/features/permissions/hooks/usePermissions';
+
 import {
     Check,
     ChevronDown,
-    Plus,
     Users,
     X,
     FolderOpen,
     ClipboardList,
     Paperclip,
-    BarChart3
+    BarChart3,
+    Shield,
 } from 'lucide-react';
-import { useState } from 'react';
+
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+
+import { useEffect, useState } from 'react';
+
+import type {
+    CreateRoleData,
+    UpdateRoleData,
+    Role,
+    RoleUser,
+} from '../types/role.types';
+import { useUsers } from '@/features/users/hooks/useUsers';
+
+type RoleFormMode = 'create' | 'view' | 'edit';
 
 interface RoleFormProps {
-    groups: any[];
-    assignedUsers: any[];
-    togglePermission: (groupKey: string, itemKey: string) => void;
-    removeUser: (initials: string) => void;
+    mode: RoleFormMode;
+
+    /**
+     * Existing role.
+     *
+     * Required for view/edit.
+     * Not required for create.
+     */
+    role?: Role;
+
+    /**
+     * Optional initial users.
+     *
+     * Mainly useful if the parent already
+     * has selected users.
+     */
+    assignedUsers?: RoleUser[];
+
+    /**
+     * Kept for compatibility.
+     *
+     * No longer required because the
+     * Autocomplete handles user selection.
+     */
     onAddUsers?: () => void;
+
+    /**
+     * Called when the form is submitted.
+     */
+    onSubmit?: (
+        data: CreateRoleData | UpdateRoleData,
+    ) => void;
 }
 
-type Accent = 'ember' | 'steel' | 'patina' | 'violet' | 'gold';
+type Accent =
+    | 'ember'
+    | 'steel'
+    | 'patina'
+    | 'violet'
+    | 'gold';
 
-type PermissionItem = {
-    key: string;
-    label: string;
-    checked: boolean;
-};
+interface Permission {
+    id: string;
+    name: string;
+    displayName: string;
+    description: string | null;
+    category: string;
+}
 
-type PermissionGroup = {
-    key: string;
-    title: string;
-    icon: typeof FolderOpen;
-    accent: Accent;
-    accentVar: string;
-    items: PermissionItem[];
-};
+interface ApiUser {
+    id: string;
+    firstName: string;
+    lastName: string;
+    jobTitle?: string | null;
+}
 
-const INITIAL_GROUPS: PermissionGroup[] = [
+const CATEGORY_CONFIG: Record<
+    string,
     {
-        key: 'Organization & User Management',
-        title: 'Organization & User Management',
-        icon: FolderOpen,
+        icon: typeof FolderOpen;
+        accent: Accent;
+        accentVar: string;
+    }
+> = {
+    'Organization & User Management': {
+        icon: Users,
         accent: 'ember',
         accentVar: 'var(--ember)',
-        items: [
-            { key: 'createProjects', label: 'Create Projects', checked: true },
-            { key: 'editProjects', label: 'Edit Projects', checked: true },
-            { key: 'deleteProjects', label: 'Delete Projects', checked: false },
-            { key: 'viewProjects', label: 'View Projects', checked: true },
-            { key: 'createProjects1', label: 'Create Projects', checked: true },
-            { key: 'editProjects1', label: 'Edit Projects', checked: true },
-            { key: 'deleteProjects1', label: 'Delete Projects', checked: false },
-        ],
     },
-    {
-        key: 'project',
-        title: 'Project Permissions',
+
+    'Project Management': {
         icon: FolderOpen,
-        accent: 'ember',
-        accentVar: 'var(--ember)',
-        items: [
-            { key: 'createProjects', label: 'Create Projects', checked: true },
-            { key: 'editProjects', label: 'Edit Projects', checked: true },
-            { key: 'deleteProjects', label: 'Delete Projects', checked: false },
-            { key: 'viewProjects', label: 'View Projects', checked: true },
-            { key: 'createProjects1', label: 'Create Projects', checked: true },
-            { key: 'editProjects1', label: 'Edit Projects', checked: true },
-            { key: 'deleteProjects1', label: 'Delete Projects', checked: false },
-        ],
-    },
-    {
-        key: 'task',
-        title: 'Task Permissions',
-        icon: ClipboardList,
         accent: 'steel',
         accentVar: 'var(--steel)',
-        items: [
-            { key: 'createTasks', label: 'Create Tasks', checked: true },
-            { key: 'editTasks', label: 'Edit Tasks', checked: true },
-            { key: 'deleteTasks', label: 'Delete Tasks', checked: false },
-            { key: 'assignTasks', label: 'Assign Tasks', checked: true },
-            { key: 'createTasks1', label: 'Create Tasks', checked: true },
-            { key: 'editTasks1', label: 'Edit Tasks', checked: true },
-            { key: 'deleteTasks1', label: 'Delete Tasks', checked: false },
-            { key: 'assignTasks1', label: 'Assign Tasks', checked: true },
-        ],
     },
-    {
-        key: 'Collaboration & Communication',
-        title: 'Collaboration & Communication',
+
+    'Task Management': {
+        icon: ClipboardList,
+        accent: 'patina',
+        accentVar: 'var(--patina)',
+    },
+
+    'Collaboration & Communication': {
         icon: Users,
         accent: 'patina',
         accentVar: 'var(--patina)',
-        items: [
-            { key: 'inviteUsers', label: 'Invite Users', checked: false },
-            { key: 'manageRoles', label: 'Manage Roles', checked: false },
-            { key: 'viewTeamMembers', label: 'View Team Members', checked: true },
-            { key: 'inviteUsers1', label: 'Invite Users', checked: false },
-            { key: 'manageRoles1', label: 'Manage Roles', checked: false },
-            { key: 'viewTeamMembers1', label: 'View Team Members', checked: true },
-            { key: 'viewTeamMembers2', label: 'View Team Members', checked: true },
-        ],
     },
-    {
-        key: 'Data & Analytics',
-        title: 'Data & Analytics',
-        icon: Paperclip,
+
+    'Data & Analytics': {
+        icon: BarChart3,
         accent: 'violet',
         accentVar: 'var(--violet)',
-        items: [
-            { key: 'viewFiles', label: 'View Files', checked: true },
-            { key: 'uploadFiles', label: 'Upload Files', checked: true },
-            { key: 'deleteFiles', label: 'Delete Files', checked: false },
-        ],
     },
-    {
-        key: 'Notifications & Invitations',
-        title: 'Notifications & Invitations',
-        icon: BarChart3,
+
+    'Notifications & Invitations': {
+        icon: Paperclip,
         accent: 'gold',
         accentVar: 'var(--gold)',
-        items: [
-            { key: 'viewAnalytics', label: 'View Analytics', checked: true },
-            { key: 'exportData', label: 'Export Data', checked: false },
-        ],
     },
-    {
-        key: 'Search & Administrations',
-        title: 'Search & Administration',
+
+    'Search & Administration': {
         icon: Paperclip,
         accent: 'violet',
         accentVar: 'var(--violet)',
-        items: [
-            { key: 'viewFiles', label: 'View Files', checked: true },
-            { key: 'uploadFiles', label: 'Upload Files', checked: true },
-        ],
     },
-];
+};
 
-const ASSIGNED_USERS = [
-    { initials: 'PS', name: 'Priya Shah', role: 'QA Engineer', accent: 'var(--violet)' },
-    { initials: 'RP', name: 'Raj Patel', role: 'QA Engineer', accent: 'var(--violet)' },
-];
+const EMPTY_FORM: CreateRoleData = {
+    name: '',
+    displayName: '',
+    description: '',
+    permissionIds: [],
+    userIds: [],
+};
 
-export default function AddRoleForm() {
+export default function AddRoleForm({
+    mode,
+    role,
+    assignedUsers: initialAssignedUsers = [],
+    onAddUsers,
+    onSubmit,
+}: RoleFormProps) {
+    /*
+     * ============================================================
+     * Permissions
+     * ============================================================
+     */
+    console.log(role,'selected roleeeee')
     const {
         data: permissions,
-        isLoading,
-        isError,
+        isLoading: isPermissionsLoading,
+        isError: isPermissionsError,
     } = usePermissions();
 
-    if (isLoading) {
-        return <div>Loading permissions...</div>;
-    }
+    /*
+     * ============================================================
+     * Users
+     * ============================================================
+     *
+     * Change useUsers() here if your actual hook has a
+     * different name.
+     */
 
-    if (isError) {
-        return <div>Failed to load permissions.</div>;
-    }
-    
-    const [groups, setGroups] = useState(INITIAL_GROUPS);
-    const [assignedUsers, setAssignedUsers] = useState(ASSIGNED_USERS);
+    const {
+        data: users = [],
+        isLoading: isUsersLoading,
+        isError: isUsersError,
+    } = useUsers();
 
-    if (!open) return null;
+    /*
+     * ============================================================
+     * Form state
+     * ============================================================
+     */
 
-    const togglePermission = (groupKey: string, itemKey: string) => {
-        setGroups((prev) =>
-            prev.map((g) =>
-                g.key !== groupKey
-                    ? g
-                    : {
-                        ...g,
-                        items: g.items.map((it) =>
-                            it.key === itemKey ? { ...it, checked: !it.checked } : it
-                        ),
-                    }
-            )
+    const [form, setForm] =
+        useState<CreateRoleData>(EMPTY_FORM);
+
+    /*
+     * ============================================================
+     * Assigned users
+     * ============================================================
+     */
+
+    const [assignedUsers, setAssignedUsers] =
+        useState<RoleUser[]>(initialAssignedUsers);
+
+    /*
+     * ============================================================
+     * Readonly state
+     * ============================================================
+     */
+
+    const isSystemRole = role?.isSystem ?? false;
+
+    const isReadOnly =
+        mode === 'view' ||
+        (mode === 'edit' && isSystemRole);
+
+    /*
+     * ============================================================
+     * Convert API users into RoleUser objects used by the UI
+     * ============================================================
+     */
+
+    const userOptions: RoleUser[] = (
+        users as ApiUser[]
+    ).map((user) => ({
+        id: user.id,
+
+        initials:
+            `${user.firstName?.[0] ?? ''}` +
+            `${user.lastName?.[0] ?? ''}`,
+
+        name:
+            `${user.firstName ?? ''} ` +
+            `${user.lastName ?? ''}`.trim(),
+
+        role: user.jobTitle ?? 'User',
+
+        accent: 'var(--violet)',
+    }));
+
+    /*
+     * ============================================================
+     * Initialize form when mode / role changes
+     * ============================================================
+     */
+
+    useEffect(() => {
+        /*
+         * CREATE
+         */
+
+        if (mode === 'create' || !role) {
+            const usersForCreate =
+                initialAssignedUsers ?? [];
+
+            setAssignedUsers(usersForCreate);
+
+            setForm({
+                ...EMPTY_FORM,
+
+                userIds: usersForCreate.map(
+                    (user) => user.id,
+                ),
+            });
+
+            return;
+        }
+
+        /*
+         * VIEW / EDIT
+         *
+         * Load existing role.
+         */
+
+        const existingUsers =
+            role.users ?? [];
+
+        setForm({
+            name: role.name ?? '',
+
+            displayName:
+                role.displayName ??
+                role.name ??
+                '',
+
+            description:
+                role.description ?? '',
+
+            permissionIds:
+                role.rolePermissions.map(permission=>permission?.permissionId) ?? [],
+
+            userIds:
+                role.userIds ??
+                existingUsers.map(
+                    (user) => user.id,
+                ),
+        });
+
+        setAssignedUsers(existingUsers);
+    }, [
+        mode,
+        role,
+        initialAssignedUsers,
+    ]);
+
+    /*
+     * ============================================================
+     * Group permissions by category
+     * ============================================================
+     */
+
+    const groupedPermissions = (
+        permissions ?? []
+    ).reduce(
+        (
+            groups: Record<
+                string,
+                Permission[]
+            >,
+            permission: Permission,
+        ) => {
+            if (!groups[permission.category]) {
+                groups[permission.category] = [];
+            }
+
+            groups[permission.category].push(
+                permission,
+            );
+
+            return groups;
+        },
+        {},
+    );
+
+    /*
+     * ============================================================
+     * Input handling
+     * ============================================================
+     */
+
+    const handleInputChange = (
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement
+        >,
+    ) => {
+        if (isReadOnly) {
+            return;
+        }
+
+        const {
+            name,
+            value,
+        } = e.target;
+
+        setForm((prev) => ({
+            ...prev,
+
+            [name]: value,
+
+            /*
+             * Keep displayName synced with name.
+             */
+            ...(name === 'name'
+                ? {
+                    displayName: value,
+                }
+                : {}),
+        }));
+    };
+
+    /*
+     * ============================================================
+     * Permission handling
+     * ============================================================
+     */
+
+    const togglePermission = (
+        permissionId: string,
+    ) => {
+        if (isReadOnly) {
+            return;
+        }
+
+        setForm((prev) => ({
+            ...prev,
+
+            permissionIds:
+                prev.permissionIds.includes(
+                    permissionId,
+                )
+                    ? prev.permissionIds.filter(
+                        (id) =>
+                            id !==
+                            permissionId,
+                    )
+                    : [
+                        ...prev.permissionIds,
+                        permissionId,
+                    ],
+        }));
+    };
+
+    /*
+     * ============================================================
+     * User handling
+     * ============================================================
+     */
+
+    const handleUsersChange = (
+        newUsers: RoleUser[],
+    ) => {
+        if (isReadOnly) {
+            return;
+        }
+
+        setAssignedUsers(newUsers);
+
+        setForm((prev) => ({
+            ...prev,
+
+            userIds: newUsers.map(
+                (user) => user.id,
+            ),
+        }));
+    };
+
+    /*
+     * ============================================================
+     * Remove individual user
+     * ============================================================
+     */
+
+    const removeUser = (
+        userId: string,
+    ) => {
+        if (isReadOnly) {
+            return;
+        }
+
+        const updatedUsers =
+            assignedUsers.filter(
+                (user) =>
+                    user.id !== userId,
+            );
+
+        handleUsersChange(
+            updatedUsers,
         );
     };
 
-    const removeUser = (initials: string) => {
-        setAssignedUsers((prev) => prev.filter((u) => u.initials !== initials));
+    /*
+     * ============================================================
+     * Form submission
+     * ============================================================
+     */
+
+    const handleSubmit = (
+        e: React.FormEvent<HTMLFormElement>,
+    ) => {
+        e.preventDefault();
+
+        if (isReadOnly) {
+            return;
+        }
+
+        /*
+         * Make absolutely sure userIds is
+         * synchronized with the visible users.
+         */
+
+        const data: CreateRoleData = {
+            ...form,
+
+            userIds:
+                assignedUsers.map(
+                    (user) => user.id,
+                ),
+        };
+
+        console.log(
+            'FORM SUBMIT DATA:',
+            data,
+        );
+
+        onSubmit?.(data);
     };
 
+    /*
+     * ============================================================
+     * Loading
+     * ============================================================
+     */
+
+    if (
+        isPermissionsLoading ||
+        isUsersLoading
+    ) {
+        return (
+            <div className="role-modal-card">
+                Loading...
+            </div>
+        );
+    }
+
+    /*
+     * ============================================================
+     * Errors
+     * ============================================================
+     */
+
+    if (
+        isPermissionsError ||
+        isUsersError
+    ) {
+        return (
+            <div className="role-modal-card">
+                Failed to load role data.
+            </div>
+        );
+    }
+
+    /*
+     * ============================================================
+     * Render
+     * ============================================================
+     */
+
     return (
-        <div className="role-modal-card">
+        <form
+            id="role-form"
+            className="role-modal-card"
+            onSubmit={handleSubmit}
+        >
             <div className="role-modal-grid">
 
-                {/* =========================
-            Role Details
-        ========================== */}
+                {/* =================================================
+                    LEFT COLUMN
+                ================================================= */}
+
                 <div>
                     <div className="role-section-label">
                         Role Details
                     </div>
 
-                    {/* Role Name */}
+                    {/* =================================================
+                        System role warning
+                    ================================================= */}
+
+                    {isSystemRole && (
+                        <div className="role-system-warning">
+                            <Shield size={14} />
+
+                            <span>
+                                System roles cannot be
+                                modified.
+                            </span>
+                        </div>
+                    )}
+
+                    {/* =================================================
+                        Role Name
+                    ================================================= */}
+
                     <div className="form-field">
                         <label className="form-label">
                             Role Name
-                            <span className="required">*</span>
+
+                            {mode === 'create' && (
+                                <span className="required">
+                                    *
+                                </span>
+                            )}
                         </label>
 
-                        <input
-                            className="form-input"
-                            type="text"
-                            name="name"
-                            placeholder="Enter role name"
-                        />
+                        {isReadOnly ? (
+                            <div className="form-input role-readonly-value">
+                                {form.name || '—'}
+                            </div>
+                        ) : (
+                            <input
+                                className="form-input"
+                                type="text"
+                                name="name"
+                                placeholder="Enter role name"
+                                value={form.name}
+                                onChange={
+                                    handleInputChange
+                                }
+                            />
+                        )}
 
                         <span className="form-help-text">
                             Unique name for this role
                         </span>
                     </div>
 
-                    {/* Description */}
+                    {/* =================================================
+                        Description
+                    ================================================= */}
+
                     <div className="form-field">
                         <label className="form-label">
                             Description
                         </label>
 
-                        <textarea
-                            className="form-textarea"
-                            name="description"
-                            placeholder="Describe this role..."
-                            style={{ height: '300px' }}
-                        />
+                        {isReadOnly ? (
+                            <div
+                                className="form-input role-readonly-value"
+                                style={{
+                                    minHeight:
+                                        '300px',
+                                    whiteSpace:
+                                        'pre-wrap',
+                                }}
+                            >
+                                {form.description ||
+                                    'No description'}
+                            </div>
+                        ) : (
+                            <textarea
+                                className="form-textarea"
+                                name="description"
+                                placeholder="Describe this role..."
+                                style={{
+                                    height: '300px',
+                                }}
+                                value={
+                                    form.description
+                                }
+                                onChange={
+                                    handleInputChange
+                                }
+                            />
+                        )}
                     </div>
 
-                    {/* Based On */}
+                    {/* =================================================
+                        Based On
+                    ================================================= */}
+
                     <div
                         className="form-field"
-                        style={{ marginBottom: 0 }}
+                        style={{
+                            marginBottom: 0,
+                        }}
                     >
                         <label className="form-label">
                             Based On
                         </label>
 
-                        <button
-                            className="form-select-btn"
-                            type="button"
-                        >
-                            <span className="form-select-btn-left">
-                                Developer
-                            </span>
+                        {isReadOnly ? (
+                            <div className="form-input role-readonly-value">
+                                {role?.basedOnRoleName ??
+                                    '—'}
+                            </div>
+                        ) : (
+                            <button
+                                className="form-select-btn"
+                                type="button"
+                            >
+                                <span className="form-select-btn-left">
+                                    {role?.basedOnRoleName ??
+                                        'Developer'}
+                                </span>
 
-                            <ChevronDown
-                                size={14}
-                                className="chevron"
-                            />
-                        </button>
+                                <ChevronDown
+                                    size={14}
+                                    className="chevron"
+                                />
+                            </button>
+                        )}
 
                         <span className="form-help-text">
-                            Start with permissions from an existing role
+                            Start with permissions
+                            from an existing role
                         </span>
                     </div>
 
-                    {/* Status */}
+                    {/* =================================================
+                        Status
+                    ================================================= */}
+
                     <div className="form-field">
                         <label className="form-label">
                             Status
                         </label>
 
-                        <div>
-                            {/* TODO: Add active/inactive switch */}
-                        </div>
+                        {isReadOnly ? (
+                            <div className="form-input role-readonly-value">
+                                {role?.isActive
+                                    ? 'Active'
+                                    : 'Inactive'}
+                            </div>
+                        ) : (
+                            <div>
+                                {/* TODO: Add active/inactive switch */}
+                            </div>
+                        )}
                     </div>
 
-                    {/* =========================
-          Assigned Users
-      ========================== */}
+                    {/* =================================================
+                        Assigned Users
+                    ================================================= */}
+
                     <div className="assigned-users-section">
                         <div className="assigned-users-header-row">
-
                             <div
                                 className="form-section-header"
-                                style={{ margin: 0 }}
+                                style={{
+                                    margin: 0,
+                                }}
                             >
                                 <Users size={15} />
 
@@ -287,121 +713,313 @@ export default function AddRoleForm() {
                             </div>
 
                             <span className="assigned-users-count-badge">
-                                {assignedUsers.length} users
+                                {
+                                    assignedUsers.length
+                                }{' '}
+                                {assignedUsers.length ===
+                                    1
+                                    ? 'user'
+                                    : 'users'}
                             </span>
                         </div>
 
-                        <div className="assigned-users-row">
+                        {/* =================================================
+                            USER AUTOCOMPLETE
+                        ================================================= */}
 
-                            {assignedUsers.map((user) => (
-                                <div
-                                    className="selected-member-chip"
-                                    key={user.initials}
-                                >
-                                    <span
-                                        className="owner-avatar"
+                        <div className="assigned-users-row">
+                            <Autocomplete
+                                multiple
+                                fullWidth
+                                options={userOptions}
+                                value={
+                                    assignedUsers
+                                }
+                                disabled={
+                                    isReadOnly
+                                }
+                                onChange={(
+                                    _event,
+                                    newValue,
+                                ) => {
+                                    handleUsersChange(
+                                        newValue,
+                                    );
+                                }}
+                                getOptionLabel={(
+                                    user,
+                                ) =>
+                                    user.name
+                                }
+                                isOptionEqualToValue={(
+                                    option,
+                                    value,
+                                ) =>
+                                    option.id ===
+                                    value.id
+                                }
+                                filterSelectedOptions
+                                openOnFocus
+                                disableCloseOnSelect
+                                renderInput={(
+                                    params,
+                                ) => (
+                                    <TextField
+                                        {...params}
+                                        placeholder={
+                                            assignedUsers.length ===
+                                                0
+                                                ? 'Add users...'
+                                                : 'Add another user...'
+                                        }
+                                    />
+                                )}
+                                renderOption={(
+                                    props,
+                                    user,
+                                ) => (
+                                    <li
+                                        {...props}
+                                        key={
+                                            user.id
+                                        }
                                         style={{
-                                            background: user.accent,
-                                            color: '#fff',
+                                            display:
+                                                'flex',
+                                            alignItems:
+                                                'center',
+                                            gap: '10px',
                                         }}
                                     >
-                                        {user.initials}
-                                    </span>
-
-                                    <span className="selected-member-chip-info">
-                                        <span className="selected-member-chip-name">
-                                            {user.name}
+                                        <span
+                                            className="owner-avatar"
+                                            style={{
+                                                background:
+                                                    user.accent,
+                                                color:
+                                                    '#fff',
+                                            }}
+                                        >
+                                            {
+                                                user.initials
+                                            }
                                         </span>
 
-                                        <span className="selected-member-chip-role">
-                                            {user.role}
+                                        <span className="selected-member-chip-info">
+                                            <span className="selected-member-chip-name">
+                                                {
+                                                    user.name
+                                                }
+                                            </span>
+
+                                            <span className="selected-member-chip-role">
+                                                {
+                                                    user.role
+                                                }
+                                            </span>
                                         </span>
-                                    </span>
+                                    </li>
+                                )}
 
-                                    <button
-                                        className="selected-member-chip-remove"
-                                        type="button"
-                                        aria-label={`Remove ${user.name}`}
-                                        onClick={() =>
-                                            removeUser(user.initials)
-                                        }
-                                    >
-                                        <X size={14} />
-                                    </button>
-                                </div>
-                            ))}
+                                renderValue={(value, getItemProps) =>
+                                    value.map((user, index) => {
+                                        const {
+                                            key,
+                                            ...itemProps
+                                        } = getItemProps({
+                                            index,
+                                        });
 
-                            <button
-                                className="add-users-chip-btn"
-                                type="button"
-                            // onClick={onAddUsers}
-                            >
-                                <Plus size={14} />
-                                Add Users
-                            </button>
+                                        return (
+                                            <div
+                                                {...itemProps}
+                                                key={key}
+                                                className="selected-member-chip"
+                                            >
+                                                <span
+                                                    className="owner-avatar"
+                                                    style={{
+                                                        background: user.accent,
+                                                        color: '#fff',
+                                                    }}
+                                                >
+                                                    {user.initials}
+                                                </span>
 
+                                                <span className="selected-member-chip-info">
+                                                    <span className="selected-member-chip-name">
+                                                        {user.name}
+                                                    </span>
+
+                                                    <span className="selected-member-chip-role">
+                                                        {user.role}
+                                                    </span>
+                                                </span>
+
+                                                {!isReadOnly && (
+                                                    <button
+                                                        type="button"
+                                                        className="selected-member-chip-remove"
+                                                        aria-label={`Remove ${user.name}`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+
+                                                            removeUser(user.id);
+                                                        }}
+                                                    >
+                                                        <X size={14} />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        );
+                                    })
+                                }
+                                sx={{
+                                    /*
+                                     * We are intentionally
+                                     * keeping MUI's visual
+                                     * footprint minimal.
+                                     *
+                                     * Your existing chip
+                                     * classes control the
+                                     * selected user appearance.
+                                     */
+                                    '& .MuiOutlinedInput-root':
+                                    {
+                                        padding:
+                                            '4px 8px',
+                                    },
+
+                                    '& .MuiAutocomplete-input':
+                                    {
+                                        padding:
+                                            '6px 4px !important',
+                                    },
+
+                                    '& .MuiAutocomplete-tag':
+                                    {
+                                        margin: 0,
+                                    },
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
 
-                {/* =========================
-            Permissions
-        ========================== */}
+                {/* =================================================
+                    RIGHT COLUMN - PERMISSIONS
+                ================================================= */}
+
                 <div>
                     <div className="role-section-label">
                         Permissions
                     </div>
 
-                    {groups.map((group) => (
-                        <div
-                            className="permission-group"
-                            key={group.key}
-                        >
-                            <div className="permission-group-header">
-                                <group.icon
-                                    size={15}
-                                    color={group.accentVar}
-                                />
+                    {Object.entries(
+                        groupedPermissions,
+                    ).map(
+                        ([
+                            category,
+                            categoryPermissions,
+                        ]) => {
+                            const config =
+                                CATEGORY_CONFIG[
+                                category
+                                ] ?? {
+                                    icon: FolderOpen,
+                                    accent:
+                                        'ember' as Accent,
+                                    accentVar:
+                                        'var(--ember)',
+                                };
 
-                                <span className="permission-group-title">
-                                    {group.title}
-                                </span>
-                            </div>
+                            const Icon =
+                                config.icon;
 
-                            <div className="permission-checkbox-grid">
-                                {group.items.map((item: any) => (
-                                    <button
-                                        key={item.key}
-                                        className="permission-checkbox-row"
-                                        type="button"
-                                        onClick={() =>
-                                            togglePermission(
-                                                group.key,
-                                                item.key
-                                            )
-                                        }
-                                    >
-                                        <span
-                                            className={`role-checkbox${item.checked
-                                                ? ` checked-${group.accent}`
-                                                : ''
-                                                }`}
-                                        >
-                                            {item.checked && (
-                                                <Check size={12} />
-                                            )}
+                            return (
+                                <div
+                                    className="permission-group"
+                                    key={category}
+                                >
+                                    {/* Category Header */}
+
+                                    <div className="permission-group-header">
+                                        <Icon
+                                            size={15}
+                                            color={
+                                                config.accentVar
+                                            }
+                                        />
+
+                                        <span className="permission-group-title">
+                                            {category}
                                         </span>
+                                    </div>
 
-                                        {item.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                                    {/* Permissions */}
+
+                                    <div className="permission-checkbox-grid">
+                                        {categoryPermissions.map(
+                                            (
+                                                permission,
+                                            ) => {
+                                                const checked =
+                                                    form.permissionIds.includes(
+                                                        permission.id,
+                                                    );
+
+                                                return (
+                                                    <button
+                                                        key={
+                                                            permission.id
+                                                        }
+                                                        className={`permission-checkbox-row ${isReadOnly
+                                                            ? 'readonly'
+                                                            : ''
+                                                            }`}
+                                                        type="button"
+                                                        disabled={
+                                                            isReadOnly
+                                                        }
+                                                        onClick={() =>
+                                                            togglePermission(
+                                                                permission.id,
+                                                            )
+                                                        }
+                                                        title={
+                                                            permission.description ??
+                                                            undefined
+                                                        }
+                                                    >
+                                                        <span
+                                                            className={`role-checkbox${checked
+                                                                ? ` checked-${config.accent}`
+                                                                : ''
+                                                                }`}
+                                                        >
+                                                            {checked && (
+                                                                <Check
+                                                                    size={
+                                                                        12
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </span>
+
+                                                        {
+                                                            permission.displayName
+                                                        }
+                                                    </button>
+                                                );
+                                            },
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        },
+                    )}
                 </div>
             </div>
-
-
-        </div>
+        </form>
     );
 }

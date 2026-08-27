@@ -15,18 +15,32 @@ const MODAL_WIDTHS: Record<ModalSize, string> = {
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-
     title: string;
     icon?: ReactNode;
-
     children: ReactNode;
+
     size?: ModalSize;
 
-    onSubmit?: () => void;
+    /*
+     * ID of the form that the submit button
+     * should submit.
+     *
+     * Example:
+     *
+     * <form id="role-form">
+     */
+    submitFormId?: string;
+
     submitLabel?: string;
     submitIcon?: ReactNode;
 
     cancelLabel?: string;
+
+    /*
+     * Whether the modal should show
+     * the primary submit button.
+     */
+    showSubmit?: boolean;
 
     width?: string;
 }
@@ -38,10 +52,11 @@ export default function Modal({
     icon,
     children,
     size = 'md',
-    onSubmit,
+    submitFormId,
     submitLabel = 'Save',
     submitIcon,
     cancelLabel = 'Cancel',
+    showSubmit = true,
     width = '1120px',
 }: ModalProps) {
     if (!isOpen) return null;
@@ -61,7 +76,10 @@ export default function Modal({
                     width: `min(${MODAL_WIDTHS[size]}, 100%)`,
                 }}
             >
-                {/* Header */}
+                {/* =========================
+                    Header
+                ========================== */}
+
                 <div className="modal-header">
                     <div className="modal-header-left">
                         {icon && (
@@ -85,12 +103,18 @@ export default function Modal({
                     </button>
                 </div>
 
-                {/* Body */}
+                {/* =========================
+                    Body
+                ========================== */}
+
                 <div className="modal-body">
                     {children}
                 </div>
 
-                {/* Footer */}
+                {/* =========================
+                    Footer
+                ========================== */}
+
                 <div className="modal-footer">
                     <button
                         className="btn-secondary"
@@ -100,11 +124,11 @@ export default function Modal({
                         {cancelLabel}
                     </button>
 
-                    {onSubmit && (
+                    {showSubmit && submitFormId && (
                         <button
                             className="btn-primary"
-                            type="button"
-                            onClick={onSubmit}
+                            type="submit"
+                            form={submitFormId}
                         >
                             {submitIcon}
                             {submitLabel}

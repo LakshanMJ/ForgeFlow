@@ -18,15 +18,31 @@ export interface LoginResponse {
   };
 }
 
-export const authApi = {
-  login: async (
-    data: LoginRequest,
-  ): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>(
-      '/auth/login',
-      data,
-    );
+export const login = async (
+  data: LoginRequest,
+): Promise<LoginResponse> => {
+  const response = await api.post<LoginResponse>(
+    '/auth/login',
+    data,
+  );
 
-    return response.data;
-  },
+  return response.data;
+};
+
+export const refreshToken = async () => {
+  const refreshToken =
+    localStorage.getItem('refreshToken');
+
+  if (!refreshToken) {
+    throw new Error('No refresh token');
+  }
+
+  const response = await api.post(
+    '/auth/refresh',
+    {
+      refreshToken,
+    },
+  );
+
+  return response.data;
 };

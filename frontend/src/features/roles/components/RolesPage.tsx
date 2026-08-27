@@ -46,13 +46,6 @@ export default function RolesPage() {
           </button>
         </div> */}
       </div>
-      <div>
-        {roles?.map((role) => (
-          <div key={role.id}>
-            {role.name}
-          </div>
-        ))}
-      </div>
       <div className="users-stat-row" style={{ marginBottom: 20 }}>
         <div className="users-stat-card">
           <span

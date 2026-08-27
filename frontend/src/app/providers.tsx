@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 
 export default function Providers({
   children,
@@ -17,12 +18,14 @@ export default function Providers({
             refetchOnWindowFocus: false,
           },
         },
-      })
+      }),
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <AppRouterCacheProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </AppRouterCacheProvider>
   );
 }

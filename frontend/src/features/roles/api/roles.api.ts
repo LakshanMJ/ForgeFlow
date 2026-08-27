@@ -2,8 +2,8 @@
 import api from '@/lib/axios';
 import type {
   Role,
-  CreateRoleInput,
-  UpdateRoleInput,
+  CreateRoleData,
+  UpdateRoleData,
 } from '../types/role.types.ts';
 
 // GET /roles
@@ -15,7 +15,7 @@ export const getRoles = async (): Promise<Role[]> => {
 
 // POST /roles
 export const createRole = async (
-  data: CreateRoleInput
+  data: CreateRoleData
 ): Promise<Role> => {
   const response = await api.post<Role>('/roles', data);
 
@@ -34,7 +34,7 @@ export const getRole = async (
 // PATCH /roles/:id
 export const updateRole = async (
   id: string,
-  data: UpdateRoleInput
+  data: UpdateRoleData
 ): Promise<Role> => {
   const response = await api.patch<Role>(
     `/roles/${id}`,

@@ -1,39 +1,48 @@
+'use client';
+
 import DataTable from '@/shared/components/DataTable';
+
 import {
     Crown,
     Shield,
-    KeyRound,
-    UserCircle,
-    Users as UsersIcon,
+    Eye,
     Download,
     Plus,
     Search,
     ChevronDown,
     ClipboardList,
-    LayoutGrid,
-    UsersRound,
-    Laptop,
-    Eye,
-    FlaskConical,
-    FileText,
+    Users as UsersIcon,
+    Save,
     Lock,
     Pencil,
     Trash2,
     GripVertical,
-    ChevronLeft,
-    ChevronRight,
-    Save
 } from 'lucide-react';
+
 import { useState } from 'react';
+
 import Modal from '@/shared/components/Modal';
-import RoleForm from './AddRoleForm';
 import AddRoleForm from './AddRoleForm';
+import { useRoles } from '../hooks/useRoles';
+import type { CreateRoleData, Role, UpdateRoleData } from '../types/role.types';
+import { useCreateRole } from '../hooks/useCreateRole';
+import { useUpdateRole } from '../hooks/useUpdateRole';
 
 type RoleType = 'SYSTEM' | 'CUSTOM';
+
 type RoleStatus = 'Active' | 'Inactive';
 
-type Role = {
+type ApiRole = {
+    id: string;
+    organizationId: string;
     name: string;
+    description: string;
+    isSystem: boolean;
+    createdAt: string;
+    updatedAt: string;
+};
+
+type RoleRow = ApiRole & {
     icon: typeof Crown;
     iconColor: string;
     users: number;
@@ -43,63 +52,193 @@ type Role = {
     status: RoleStatus;
 };
 
-const ROLES: Role[] = [
-    { name: 'Owner', icon: Crown, iconColor: 'var(--ember)', users: 1, permissions: 12, type: 'SYSTEM', typeChip: 'chip-outline-steel', status: 'Active' },
-    { name: 'Admin', icon: Shield, iconColor: 'var(--ember)', users: 2, permissions: 10, type: 'SYSTEM', typeChip: 'chip-outline-steel', status: 'Active' },
-    { name: 'Project Manager', icon: ClipboardList, iconColor: 'var(--gold)', users: 3, permissions: 8, type: 'SYSTEM', typeChip: 'chip-outline-steel', status: 'Active' },
-    { name: 'Developer', icon: Laptop, iconColor: 'var(--steel)', users: 8, permissions: 6, type: 'SYSTEM', typeChip: 'chip-outline-steel', status: 'Active' },
-    { name: 'Viewer', icon: Eye, iconColor: 'var(--gold)', users: 4, permissions: 3, type: 'SYSTEM', typeChip: 'chip-outline-steel', status: 'Active' },
-    { name: 'QA Engineer', icon: FlaskConical, iconColor: 'var(--patina)', users: 2, permissions: 5, type: 'CUSTOM', typeChip: 'chip-outline-gold', status: 'Active' },
-    { name: 'Intern', icon: FileText, iconColor: 'var(--patina)', users: 1, permissions: 2, type: 'CUSTOM', typeChip: 'chip-outline-gold', status: 'Inactive' },
-];
-
 const STATUS_COLOR: Record<RoleStatus, string> = {
     Active: 'var(--patina)',
     Inactive: 'var(--gold)',
 };
 
+const getRoleIcon = (roleName: string) => {
+    switch (roleName) {
+        case 'OWNER':
+            return {
+                icon: Crown,
+                iconColor: 'var(--ember)',
+            };
+
+        case 'ADMIN':
+            return {
+                icon: Shield,
+                iconColor: 'var(--ember)',
+            };
+
+        case 'PROJECT_MANAGER':
+            return {
+                icon: ClipboardList,
+                iconColor: 'var(--gold)',
+            };
+
+        case 'VIEWER':
+            return {
+                icon: Eye,
+                iconColor: 'var(--gold)',
+            };
+
+        case 'MEMBER':
+            return {
+                icon: UsersIcon,
+                iconColor: 'var(--steel)',
+            };
+
+        default:
+            return {
+                icon: Shield,
+                iconColor: 'var(--patina)',
+            };
+    }
+};
+
 const RolesList = () => {
+    // const [isCreateRoleOpen, setIsCreateRoleOpen] =
+    //     useState(false);
+    const [isRoleModalOpen, setIsRoleModalOpen] =
+        useState(false);
 
-    const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false);
+    const [roleModalMode, setRoleModalMode] =
+        useState<'create' | 'view' | 'edit'>('create');
 
-    const roleColumns: Column<Role>[] = [
+    const [selectedRole, setSelectedRole] =
+        useState<Role | undefined>(undefined);
+
+    const createRoleMutation = useCreateRole();
+    const updateRoleMutation = useUpdateRole();
+
+    const {
+        data: roles,
+        isLoading,
+        isError,
+        error,
+    } = useRoles();
+
+    if (isLoading) {
+        return (
+            <div>
+                Loading roles...
+            </div>
+        );
+    }
+
+    if (isError) {
+        return (
+            <div>
+                Failed to load roles.
+                <br />
+
+                {error instanceof Error
+                    ? error.message
+                    : 'Unknown error'}
+            </div>
+        );
+    }
+
+    /*
+     * Convert API roles into the structure
+     * required by the DataTable.
+     */
+    const roleRows: RoleRow[] = (
+        roles ?? []
+    ).map((role: ApiRole) => {
+        const {
+            icon,
+            iconColor,
+        } = getRoleIcon(role.name);
+
+        return {
+            ...role,
+
+            icon,
+            iconColor,
+
+            /*
+             * These are temporary until the backend
+             * returns actual counts.
+             */
+            // users: 0,
+            // permissions: 0,
+
+            type: role.isSystem
+                ? 'SYSTEM'
+                : 'CUSTOM',
+
+            typeChip: role.isSystem
+                ? 'chip-outline-steel'
+                : 'chip-outline-gold',
+
+            status: 'Active',
+        };
+    });
+
+    const roleColumns: Column<RoleRow>[] = [
         {
             key: 'name',
             label: 'Role Name',
+
             render: (role) => (
                 <div className="role-name-cell">
                     <span
                         className="role-icon"
-                        style={{ background: 'var(--surface-3)', color: role.iconColor }}
+                        style={{
+                            background:
+                                'var(--surface-3)',
+                            color: role.iconColor,
+                        }}
                     >
                         <role.icon size={16} />
                     </span>
-                    <span className="role-name-text">{role.name}</span>
+
+                    <span className="role-name-text">
+                        {role.displayName}
+                    </span>
                 </div>
             ),
         },
+
         {
             key: 'users',
             label: 'Users',
-            render: (role) => role.users,
+
+            render: (role) => (
+                role._count.userRoles
+            ),
         },
+
         {
             key: 'permissions',
             label: 'Permissions',
+
             render: (role) => (
-                <span className="permissions-count-link">{role.permissions}</span>
+                <span className="permissions-count-link">
+                    {role._count.rolePermissions}
+                </span>
             ),
         },
+
         {
             key: 'type',
             label: 'Type',
+
             render: (role) => (
-                <span className={`chip ${role.typeChip}`}>{role.type}</span>
+                <span
+                    className={`chip ${role.typeChip}`}
+                >
+                    {role.type}
+                </span>
             ),
         },
+
         {
             key: 'status',
             label: 'Status',
+
             render: (role) => (
                 <span className="user-status-cell">
                     <span
@@ -107,38 +246,82 @@ const RolesList = () => {
                             width: 7,
                             height: 7,
                             borderRadius: '50%',
-                            background: STATUS_COLOR[role.status],
+                            background:
+                                STATUS_COLOR[
+                                role.status
+                                ],
                             flexShrink: 0,
                         }}
                     />
+
                     {role.status}
                 </span>
             ),
         },
+
         {
             key: 'actions',
             label: 'Actions',
+
             render: (role) => (
                 <span className="actions-cell-group">
                     {role.type === 'SYSTEM' ? (
                         <>
-                            <button className="kebab-btn" type="button" aria-label="Locked">
+                            <button
+                                className="kebab-btn"
+                                type="button"
+                                aria-label="Locked"
+                            >
                                 <Lock size={15} />
                             </button>
-                            <button className="kebab-btn" type="button" aria-label={`View ${role.name}`}>
+
+                            <button
+                                className="kebab-btn"
+                                type="button"
+                                aria-label={`View ${role.name}`}
+                                onClick={() => {
+                                    setSelectedRole(role);
+                                    setRoleModalMode('view');
+                                    setIsRoleModalOpen(true);
+                                }}
+                            >
                                 <Eye size={15} />
                             </button>
                         </>
                     ) : (
                         <>
-                            <button className="kebab-btn" type="button" aria-label={`Edit ${role.name}`}>
+                            <button
+                                className="kebab-btn"
+                                type="button"
+                                aria-label={`Edit ${role.name}`}
+                                onClick={() => {
+                                    setSelectedRole(role);
+                                    setRoleModalMode('edit');
+                                    setIsRoleModalOpen(true);
+                                }}
+                            >
                                 <Pencil size={15} />
                             </button>
-                            <button className="kebab-btn" type="button" aria-label={`Delete ${role.name}`}>
+
+                            <button
+                                className="kebab-btn"
+                                type="button"
+                                aria-label={`Delete ${role.name}`}
+                            >
                                 <Trash2 size={15} />
                             </button>
-                            <button className="kebab-btn" type="button" aria-label="Reorder" style={{ cursor: 'grab' }}>
-                                <GripVertical size={15} />
+
+                            <button
+                                className="kebab-btn"
+                                type="button"
+                                aria-label="Reorder"
+                                style={{
+                                    cursor: 'grab',
+                                }}
+                            >
+                                <GripVertical
+                                    size={15}
+                                />
                             </button>
                         </>
                     )}
@@ -147,57 +330,177 @@ const RolesList = () => {
         },
     ];
 
+    const handleCreateRole = () => {
+        setSelectedRole(undefined);
+        setRoleModalMode('create');
+        setIsRoleModalOpen(true);
+    };
+
+
+
+    const handleRoleSubmit = (
+        data: CreateRoleData | UpdateRoleData,
+    ) => {
+        console.log('HANDLE ROLE SUBMIT:', data);
+        console.log('PERMISSION IDS:', data.permissionIds);
+        if (roleModalMode === 'create') {
+            createRoleMutation.mutate(data as CreateRoleData, {
+                onSuccess: () => {
+                    setIsRoleModalOpen(false);
+                },
+            });
+
+            return;
+        }
+
+        if (roleModalMode === 'edit') {
+            if (!selectedRole) {
+                return;
+            }
+
+            updateRoleMutation.mutate(
+                {
+                    id: selectedRole.id,
+                    data: data as UpdateRoleData,
+                },
+                {
+                    onSuccess: () => {
+                        setIsRoleModalOpen(false);
+                    },
+                },
+            );
+        }
+    };
+
     return (
         <>
+            {/* =========================
+                Create Role Modal
+            ========================== */}
 
-            <Modal
-                isOpen={isCreateRoleOpen}
-                onClose={() => setIsCreateRoleOpen(false)}
+            {/* <Modal
+                isOpen={isRoleModalOpen}
+                onClose={() =>
+                    setIsRoleModalOpen(false)
+                }
                 title="Create New Role"
                 icon={<Shield size={18} />}
                 size="xl"
                 submitLabel="Save Role"
                 submitIcon={<Save size={14} />}
-                onSubmit={()=>{}}
+                onSubmit={() => {
+                    // We'll connect this to
+                    // useCreateRole next.
+                }}
             >
-                <AddRoleForm />
+                <AddRoleForm mode={ } />
+            </Modal> */}
+
+            <Modal
+                isOpen={isRoleModalOpen}
+                onClose={() => setIsRoleModalOpen(false)}
+                title={
+                    roleModalMode === 'create'
+                        ? 'Create New Role'
+                        : roleModalMode === 'edit'
+                            ? 'Edit Role'
+                            : 'View Role'
+                }
+                icon={<Shield size={18} />}
+                size="xl"
+                submitFormId="role-form"
+                showSubmit={roleModalMode !== 'view'}
+                submitLabel={
+                    roleModalMode === 'edit'
+                        ? 'Save Changes'
+                        : 'Save Role'
+                }
+                submitIcon={<Save size={14} />}
+            >
+                <AddRoleForm
+                    mode={roleModalMode}
+                    role={selectedRole}
+                    onSubmit={handleRoleSubmit}
+                />
             </Modal>
-            {/* <CreateRoleModal open={isCreateRoleOpen} onClose={() => setIsCreateRoleOpen(false)} /> */}
+
+            {/* =========================
+                Filters / Header
+            ========================== */}
+
             <div className="filter-bar">
+                {/* Search */}
+
                 <div className="search-input">
                     <Search size={14} />
-                    <input type="text" placeholder="Search roles..." />
+
+                    <input
+                        type="text"
+                        placeholder="Search roles..."
+                    />
                 </div>
-                <button className="filter-select" type="button">
+
+                {/* Type */}
+
+                <button
+                    className="filter-select"
+                    type="button"
+                >
                     All Types
                     <ChevronDown size={14} />
                 </button>
-                <button className="filter-select" type="button">
+
+                {/* Status */}
+
+                <button
+                    className="filter-select"
+                    type="button"
+                >
                     All Status
                     <ChevronDown size={14} />
                 </button>
-                <div className="header-actions" style={{ marginLeft: 'auto' }}>
-                    <button className="btn-secondary" type="button">
+
+                {/* Actions */}
+
+                <div
+                    className="header-actions"
+                    style={{
+                        marginLeft: 'auto',
+                    }}
+                >
+                    <button
+                        className="btn-secondary"
+                        type="button"
+                    >
                         <Download size={14} />
                         Export
                     </button>
-                    <button className="btn-primary" type="button" onClick={() => setIsCreateRoleOpen(true)}>
+
+                    <button
+                        className="btn-primary"
+                        type="button"
+                        onClick={handleCreateRole}
+                    >
                         <Plus size={14} />
                         Create New Role
                     </button>
                 </div>
             </div>
 
+            {/* =========================
+                Roles Table
+            ========================== */}
+
             <DataTable
                 columns={roleColumns}
-                data={ROLES}
-                totalItems={7}
+                data={roleRows}
+                totalItems={roleRows.length}
                 currentPage={1}
                 totalPages={1}
                 columnWidths="2fr 1fr 1.2fr 1fr 1fr 110px"
             />
         </>
-    )
-}
+    );
+};
 
 export default RolesList;
