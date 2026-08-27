@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -20,7 +21,7 @@ import type { JwtUser } from '../auth/interfaces/jwt-user.interface';
 export class UsersController {
   constructor(
     private usersService: UsersService,
-  ) {}
+  ) { }
 
   @Post()
   @Roles('OWNER')
@@ -31,6 +32,16 @@ export class UsersController {
     return this.usersService.createUser(
       dto,
       user.organizationId,
+    );
+  }
+
+  @Get()
+  async getUsers(
+    @CurrentUser() user: JwtUser,
+  ) {
+    return this.usersService.getUsers(
+      user.organizationId,
+      user.userId,
     );
   }
 }

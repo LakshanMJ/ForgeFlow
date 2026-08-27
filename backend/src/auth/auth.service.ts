@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import type { SignOptions } from 'jsonwebtoken';
+import { createDefaultRoles } from 'src/roles/defaults/default-roles.helper';
 
 @Injectable()
 export class AuthService {
@@ -97,6 +98,7 @@ export class AuthService {
     const result = await this.prisma.$transaction(
       async (tx) => {
 
+        // 1. Create organization
         const organization =
           await tx.organization.create({
             data: {
@@ -107,7 +109,7 @@ export class AuthService {
             },
           });
 
-
+        // 2. Create first user
         const user =
           await tx.user.create({
             data: {
@@ -119,30 +121,13 @@ export class AuthService {
             },
           });
 
-
-        const ownerRole = await tx.role.create({
-          data: {
-            organizationId: organization.id,
-            name: 'OWNER',
-            description: 'Organization owner',
-          },
-        });
-
-
-        if (!ownerRole) {
-          throw new Error(
-            'OWNER role missing',
-          );
-        }
-
-
-        await tx.userRole.create({
-          data: {
-            userId: user.id,
-            roleId: ownerRole.id,
-          },
-        });
-
+        // 3. Create all default system roles
+        //    and assign OWNER to first user
+        await createDefaultRoles(
+          tx,
+          organization.id,
+          user.id,
+        );
 
         return {
           user,
@@ -151,27 +136,122 @@ export class AuthService {
       },
     );
 
-
+    // 4. Generate tokens
     const accessToken =
       this.jwtService.sign({
         sub: result.user.id,
-        organizationId:
-          result.organization.id,
+        organizationId: result.organization.id,
+        email: result.user.email,
       });
-
 
     return {
       accessToken,
+
       user: {
         id: result.user.id,
         email: result.user.email,
-        name:
-          `${result.user.firstName} ${result.user.lastName}`,
+        name: `${result.user.firstName} ${result.user.lastName}`,
       },
-      organization:
-        result.organization,
+
+      organization: result.organization,
     };
   }
+  // async register(dto: RegisterDto) {
+  //   const existingUser = await this.prisma.user.findUnique({
+  //     where: {
+  //       email: dto.email,
+  //     },
+  //   });
+
+  //   if (existingUser) {
+  //     throw new ConflictException(
+  //       'Email already registered',
+  //     );
+  //   }
+
+  //   const passwordHash = await bcrypt.hash(
+  //     dto.password,
+  //     12,
+  //   );
+
+  //   const result = await this.prisma.$transaction(
+  //     async (tx) => {
+
+  //       const organization =
+  //         await tx.organization.create({
+  //           data: {
+  //             name: dto.organizationName,
+  //             slug: dto.organizationName
+  //               .toLowerCase()
+  //               .replace(/\s+/g, '-'),
+  //           },
+  //         });
+
+
+  //       const user =
+  //         await tx.user.create({
+  //           data: {
+  //             firstName: dto.firstName,
+  //             lastName: dto.lastName,
+  //             email: dto.email,
+  //             passwordHash,
+  //             organizationId: organization.id,
+  //           },
+  //         });
+
+
+  //       const ownerRole = await tx.role.create({
+  //         data: {
+  //           organizationId: organization.id,
+  //           name: 'OWNER',
+  //           description: 'Organization owner',
+  //         },
+  //       });
+
+
+  //       if (!ownerRole) {
+  //         throw new Error(
+  //           'OWNER role missing',
+  //         );
+  //       }
+
+
+  //       await tx.userRole.create({
+  //         data: {
+  //           userId: user.id,
+  //           roleId: ownerRole.id,
+  //         },
+  //       });
+
+
+  //       return {
+  //         user,
+  //         organization,
+  //       };
+  //     },
+  //   );
+
+
+  //   const accessToken =
+  //     this.jwtService.sign({
+  //       sub: result.user.id,
+  //       organizationId:
+  //         result.organization.id,
+  //     });
+
+
+  //   return {
+  //     accessToken,
+  //     user: {
+  //       id: result.user.id,
+  //       email: result.user.email,
+  //       name:
+  //         `${result.user.firstName} ${result.user.lastName}`,
+  //     },
+  //     organization:
+  //       result.organization,
+  //   };
+  // }
 
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({
@@ -223,6 +303,88 @@ export class AuthService {
         roles: user.userRoles.map((r) => r.role.name),
       },
     };
+  }
+
+  async refresh(refreshToken: string) {
+    try {
+      // 1. Verify refresh token
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET!,
+      });
+      // 2. Find active refresh tokens for this user
+      const storedTokens = await this.prisma.refreshToken.findMany({
+        where: {
+          userId: payload.sub,
+          revokedAt: null,
+          expiresAt: {
+            gt: new Date(),
+          },
+        },
+      });
+      // 3. Find the matching hashed token
+      let matchingToken:
+        (typeof storedTokens)[number] | null = null;
+
+      for (const token of storedTokens) {
+        const matches = await bcrypt.compare(
+          refreshToken,
+          token.tokenHash,
+        );
+
+        if (matches) {
+          matchingToken = token;
+          break;
+        }
+      }
+
+      if (!matchingToken) {
+        throw new UnauthorizedException(
+          'Invalid refresh token',
+        );
+      }
+
+      // 4. Get the user
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: payload.sub,
+        },
+      });
+
+      if (!user) {
+        throw new UnauthorizedException(
+          'User no longer exists',
+        );
+      }
+
+      // 5. Generate new tokens
+      const newTokens = await this.generateTokens(
+        user.id,
+        user.organizationId,
+        user.email,
+      );
+
+      // 6. Revoke old refresh token
+      await this.prisma.refreshToken.update({
+        where: {
+          id: matchingToken.id,
+        },
+        data: {
+          revokedAt: new Date(),
+        },
+      });
+
+      // 7. Save new refresh token
+      await this.saveRefreshToken(
+        user.id,
+        newTokens.refreshToken,
+      );
+
+      return newTokens;
+    } catch (error) {
+      throw new UnauthorizedException(
+        'Invalid or expired refresh token',
+      );
+    }
   }
 
   async logout(refreshToken: string) {

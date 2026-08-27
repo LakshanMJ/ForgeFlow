@@ -18,7 +18,6 @@ export class PermissionsController {
 
   @Get()
   findAll() {
-    console.log('inside cont')
     return this.permissionsService.findAll();
   }
 

@@ -11,7 +11,6 @@ export class PermissionsService {
   ) {}
 
   async findAll() {
-    console.log('inside')
     return this.prisma.permission.findMany({
       orderBy: {
         name: 'asc',

@@ -12,15 +12,41 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 export class RolesService {
   constructor(
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
+
+  // async findAll(organizationId: string) {
+  //   return this.prisma.role.findMany({
+  //     where: {
+  //       organizationId,
+  //     },
+  //     orderBy: {
+  //       name: 'asc',
+  //     },
+  //   });
+  // }
 
   async findAll(organizationId: string) {
     return this.prisma.role.findMany({
       where: {
         organizationId,
       },
+
       orderBy: {
         name: 'asc',
+      },
+
+      include: {
+        _count: {
+          select: {
+            userRoles: true,
+            rolePermissions: true,
+          },
+        },
+        rolePermissions: {
+          include: {
+            permission: true, // Include the full permission object if needed
+          },
+        },
       },
     });
   }
@@ -47,11 +73,18 @@ export class RolesService {
     organizationId: string,
     dto: CreateRoleDto,
   ) {
+
+    const name = dto.displayName
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, '_');
+
+    // Check duplicate using the normalized name
     const existingRole =
       await this.prisma.role.findFirst({
         where: {
           organizationId,
-          name: dto.name,
+          name,
         },
       });
 
@@ -64,8 +97,41 @@ export class RolesService {
     return this.prisma.role.create({
       data: {
         organizationId,
-        name: dto.name,
-        description: dto.description,
+        name,
+        displayName: dto.displayName.trim(),
+        description: dto.description?.trim() || null,
+
+        // Create RolePermission records
+        rolePermissions: {
+          create: dto.permissionIds.map(
+            (permissionId) => ({
+              permissionId,
+            }),
+          ),
+        },
+
+        // Create UserRole records
+        userRoles: {
+          create: dto.userIds.map(
+            (userId) => ({
+              userId,
+            }),
+          ),
+        },
+      },
+
+      // Return the relationships too
+      include: {
+        rolePermissions: {
+          include: {
+            permission: true,
+          },
+        },
+        userRoles: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
   }
