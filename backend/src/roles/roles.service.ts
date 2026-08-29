@@ -47,6 +47,18 @@ export class RolesService {
             permission: true, // Include the full permission object if needed
           },
         },
+        userRoles: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+          },
+        },
       },
     });
   }

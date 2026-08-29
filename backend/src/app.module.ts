@@ -6,6 +6,7 @@ import { ProjectsModule } from './projects/projects.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.modules';
+import { DepartmentsModule } from './departments/departments.modules';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { PermissionsModule } from './permissions/permissions.modules';
     ProjectsModule,
     UsersModule,
     RolesModule,
-    PermissionsModule
+    PermissionsModule,
+    DepartmentsModule,
   ],
   controllers: [
     AppController,

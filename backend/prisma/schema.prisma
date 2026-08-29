@@ -17,6 +17,7 @@ model Organization {
   country  String?
   timezone String?
 
+  departments Department[]
   users     User[]
   roles Role[]
   projects  Project[]
@@ -33,7 +34,7 @@ model Organization {
 model User {
   id             String @id @default(uuid())
   organizationId String
-
+  
   firstName    String
   lastName     String
   email        String     @unique @db.VarChar(255)
@@ -45,11 +46,15 @@ model User {
 
   isSuperAdmin Boolean @default(false)
 
+  departmentId String?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   organization       Organization    @relation(fields: [organizationId], references: [id])
+  department Department? @relation(fields: [departmentId],references: [id])
+
   ownedProjects      Project[]       @relation("ProjectOwner")
   projectMemberships ProjectMember[]
   reportedTasks      Task[]          @relation("TaskReporter")
@@ -62,6 +67,7 @@ model User {
   refreshTokens      RefreshToken[]
 
   @@index([organizationId])
+  @@index([departmentId])
   @@map("users")
 }
 
@@ -133,6 +139,26 @@ model RolePermission {
   @@index([roleId])
   @@index([permissionId])
   @@map("role_permissions")
+}
+
+model Department {
+  id             String   @id @default(uuid())
+  organizationId String
+
+  name           String
+  description    String?
+  isActive       Boolean  @default(true)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId],references: [id])
+
+  users User[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("departments")
 }
 
 model Project {
