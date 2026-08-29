@@ -5,13 +5,13 @@ import {
     ChevronLeft,
     ChevronRight,
 } from 'lucide-react';
+import type { ReactNode } from 'react';
 
-export type Column<T> = {
-    key: string;
+export interface Column<T> {
+    key: keyof T | string;
     label: string;
-    sortable?: boolean;
-    render: (item: T) => React.ReactNode;
-};
+    render?: (row: T) => ReactNode;
+}
 
 type DataTableProps<T> = {
     columns: Column<T>[];
@@ -38,7 +38,6 @@ export default function DataTable<T>({
             <div className="table-scroll">
                 <div
                     className="table-grid"
-
                 >
                     {/* Header */}
                     <div

@@ -3152,3 +3152,92 @@ button {
   border-color: var(--ember);
   color: var(--ember);
 }
+
+/* ==== Departments page ==== */
+
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+.breadcrumb-trail a {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.breadcrumb-trail a:hover {
+  color: var(--text);
+}
+.breadcrumb-trail .crumb-current {
+  color: var(--text);
+  font-weight: 500;
+}
+.breadcrumb-trail .crumb-sep {
+  color: var(--text-tertiary);
+}
+
+.department-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.department-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.department-name-text {
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.manager-link {
+  color: var(--steel);
+  font-weight: 500;
+  font-size: 13px;
+  text-decoration: none;
+}
+.manager-link:hover {
+  text-decoration: underline;
+}
+.manager-dash {
+  color: var(--text-tertiary);
+}
+
+.members-count-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.open-positions-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 22px;
+  border-radius: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 8px;
+}
+
+/* Departments table needs its own 6-column layout, same override pattern
+   used for the users/roles tables. */
+.departments-table-grid {
+  min-width: 980px;
+}
+.departments-table-row {
+  grid-template-columns: 2fr 1.2fr 1fr 1.2fr 1fr 120px;
+}

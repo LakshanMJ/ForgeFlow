@@ -1,6 +1,6 @@
 'use client';
 
-import DataTable from '@/shared/components/DataTable';
+import DataTable, { type Column } from '@/shared/components/DataTable';
 
 import {
     Crown,
@@ -32,23 +32,27 @@ type RoleType = 'SYSTEM' | 'CUSTOM';
 
 type RoleStatus = 'Active' | 'Inactive';
 
-type ApiRole = {
-    id: string;
-    organizationId: string;
-    name: string;
-    description: string;
-    isSystem: boolean;
-    createdAt: string;
-    updatedAt: string;
-};
+// type ApiRole = {
+//     id: string;
+//     organizationId: string;
+//     name: string;
+//     description: string;
+//     isSystem: boolean;
+//     createdAt: string;
+//     updatedAt: string;
+//     _count: {
+//         userRoles: number;
+//         rolePermissions: number;
+//     };
+// };
 
-type RoleRow = ApiRole & {
+type RoleRow = Role & {
     icon: typeof Crown;
     iconColor: string;
     users: number;
     permissions: number;
-    type: RoleType;
     typeChip: string;
+    type: RoleType;
     status: RoleStatus;
 };
 
@@ -98,16 +102,10 @@ const getRoleIcon = (roleName: string) => {
 };
 
 const RolesList = () => {
-    // const [isCreateRoleOpen, setIsCreateRoleOpen] =
-    //     useState(false);
-    const [isRoleModalOpen, setIsRoleModalOpen] =
-        useState(false);
 
-    const [roleModalMode, setRoleModalMode] =
-        useState<'create' | 'view' | 'edit'>('create');
-
-    const [selectedRole, setSelectedRole] =
-        useState<Role | undefined>(undefined);
+    const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+    const [roleModalMode, setRoleModalMode] = useState<'create' | 'view' | 'edit'>('create');
+    const [selectedRole, setSelectedRole] = useState<Role | undefined>(undefined);
 
     const createRoleMutation = useCreateRole();
     const updateRoleMutation = useUpdateRole();
@@ -132,7 +130,6 @@ const RolesList = () => {
             <div>
                 Failed to load roles.
                 <br />
-
                 {error instanceof Error
                     ? error.message
                     : 'Unknown error'}
@@ -140,42 +137,30 @@ const RolesList = () => {
         );
     }
 
-    /*
-     * Convert API roles into the structure
-     * required by the DataTable.
-     */
-    const roleRows: RoleRow[] = (
-        roles ?? []
-    ).map((role: ApiRole) => {
-        const {
-            icon,
-            iconColor,
-        } = getRoleIcon(role.name);
+    // Convert API roles into the structure required by the DataTable.
 
-        return {
-            ...role,
+    const roleRows: RoleRow[] = (roles ?? []).map(
+        (role) => {
+            const { icon, iconColor } =
+                getRoleIcon(role.name);
 
-            icon,
-            iconColor,
-
-            /*
-             * These are temporary until the backend
-             * returns actual counts.
-             */
-            // users: 0,
-            // permissions: 0,
-
-            type: role.isSystem
-                ? 'SYSTEM'
-                : 'CUSTOM',
-
-            typeChip: role.isSystem
-                ? 'chip-outline-steel'
-                : 'chip-outline-gold',
-
-            status: 'Active',
-        };
-    });
+            return {
+                ...role,
+                icon,
+                iconColor,
+                users: role._count.userRoles,
+                permissions:
+                    role._count.rolePermissions,
+                type: role.isSystem
+                    ? 'SYSTEM'
+                    : 'CUSTOM',
+                typeChip: role.isSystem
+                    ? 'chip-outline-steel'
+                    : 'chip-outline-gold',
+                status: 'Active',
+            };
+        },
+    );
 
     const roleColumns: Column<RoleRow>[] = [
         {
@@ -201,7 +186,6 @@ const RolesList = () => {
                 </div>
             ),
         },
-
         {
             key: 'users',
             label: 'Users',
@@ -210,7 +194,6 @@ const RolesList = () => {
                 role._count.userRoles
             ),
         },
-
         {
             key: 'permissions',
             label: 'Permissions',
@@ -221,7 +204,6 @@ const RolesList = () => {
                 </span>
             ),
         },
-
         {
             key: 'type',
             label: 'Type',
@@ -234,7 +216,6 @@ const RolesList = () => {
                 </span>
             ),
         },
-
         {
             key: 'status',
             label: 'Status',
@@ -258,11 +239,9 @@ const RolesList = () => {
                 </span>
             ),
         },
-
         {
             key: 'actions',
             label: 'Actions',
-
             render: (role) => (
                 <span className="actions-cell-group">
                     {role.type === 'SYSTEM' ? (
@@ -336,8 +315,6 @@ const RolesList = () => {
         setIsRoleModalOpen(true);
     };
 
-
-
     const handleRoleSubmit = (
         data: CreateRoleData | UpdateRoleData,
     ) => {
@@ -349,7 +326,6 @@ const RolesList = () => {
                     setIsRoleModalOpen(false);
                 },
             });
-
             return;
         }
 
@@ -357,7 +333,6 @@ const RolesList = () => {
             if (!selectedRole) {
                 return;
             }
-
             updateRoleMutation.mutate(
                 {
                     id: selectedRole.id,
@@ -374,28 +349,6 @@ const RolesList = () => {
 
     return (
         <>
-            {/* =========================
-                Create Role Modal
-            ========================== */}
-
-            {/* <Modal
-                isOpen={isRoleModalOpen}
-                onClose={() =>
-                    setIsRoleModalOpen(false)
-                }
-                title="Create New Role"
-                icon={<Shield size={18} />}
-                size="xl"
-                submitLabel="Save Role"
-                submitIcon={<Save size={14} />}
-                onSubmit={() => {
-                    // We'll connect this to
-                    // useCreateRole next.
-                }}
-            >
-                <AddRoleForm mode={ } />
-            </Modal> */}
-
             <Modal
                 isOpen={isRoleModalOpen}
                 onClose={() => setIsRoleModalOpen(false)}
@@ -420,20 +373,16 @@ const RolesList = () => {
                 <AddRoleForm
                     mode={roleModalMode}
                     role={selectedRole}
+                    assignedUsers={selectedRole?.userRoles}
                     onSubmit={handleRoleSubmit}
                 />
             </Modal>
-
-            {/* =========================
-                Filters / Header
-            ========================== */}
 
             <div className="filter-bar">
                 {/* Search */}
 
                 <div className="search-input">
                     <Search size={14} />
-
                     <input
                         type="text"
                         placeholder="Search roles..."
@@ -486,10 +435,6 @@ const RolesList = () => {
                     </button>
                 </div>
             </div>
-
-            {/* =========================
-                Roles Table
-            ========================== */}
 
             <DataTable
                 columns={roleColumns}

@@ -28,6 +28,7 @@ const ADMIN_SUBMENU = [
   { label: 'General Settings', href: '/admin/general' },
   { label: 'User Management', href: '/admin/users' },
   { label: 'Roles & Permissions', href: '/admin/roles' },
+  { label: 'Departments', href: '/admin/departments' },
   { label: 'Integrations', href: '/admin/integrations' },
   { label: 'Audit Logs', href: '/admin/audit-logs' },
 ];

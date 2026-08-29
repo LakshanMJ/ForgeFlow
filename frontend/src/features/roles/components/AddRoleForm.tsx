@@ -1,7 +1,6 @@
 'use client';
 
 import { usePermissions } from '@/features/permissions/hooks/usePermissions';
-
 import {
     Check,
     ChevronDown,
@@ -13,12 +12,10 @@ import {
     BarChart3,
     Shield,
 } from 'lucide-react';
-
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-
 import { useEffect, useState } from 'react';
-
+import type { User } from '@/features/users/types/user.types';
 import type {
     CreateRoleData,
     UpdateRoleData,
@@ -31,34 +28,9 @@ type RoleFormMode = 'create' | 'view' | 'edit';
 
 interface RoleFormProps {
     mode: RoleFormMode;
-
-    /**
-     * Existing role.
-     *
-     * Required for view/edit.
-     * Not required for create.
-     */
     role?: Role;
-
-    /**
-     * Optional initial users.
-     *
-     * Mainly useful if the parent already
-     * has selected users.
-     */
     assignedUsers?: RoleUser[];
-
-    /**
-     * Kept for compatibility.
-     *
-     * No longer required because the
-     * Autocomplete handles user selection.
-     */
     onAddUsers?: () => void;
-
-    /**
-     * Called when the form is submitted.
-     */
     onSubmit?: (
         data: CreateRoleData | UpdateRoleData,
     ) => void;
@@ -79,12 +51,6 @@ interface Permission {
     category: string;
 }
 
-interface ApiUser {
-    id: string;
-    firstName: string;
-    lastName: string;
-    jobTitle?: string | null;
-}
 
 const CATEGORY_CONFIG: Record<
     string,
@@ -152,26 +118,12 @@ export default function AddRoleForm({
     onAddUsers,
     onSubmit,
 }: RoleFormProps) {
-    /*
-     * ============================================================
-     * Permissions
-     * ============================================================
-     */
-    console.log(role,'selected roleeeee')
+
     const {
         data: permissions,
         isLoading: isPermissionsLoading,
         isError: isPermissionsError,
     } = usePermissions();
-
-    /*
-     * ============================================================
-     * Users
-     * ============================================================
-     *
-     * Change useUsers() here if your actual hook has a
-     * different name.
-     */
 
     const {
         data: users = [],
@@ -179,80 +131,35 @@ export default function AddRoleForm({
         isError: isUsersError,
     } = useUsers();
 
-    /*
-     * ============================================================
-     * Form state
-     * ============================================================
-     */
-
-    const [form, setForm] =
-        useState<CreateRoleData>(EMPTY_FORM);
-
-    /*
-     * ============================================================
-     * Assigned users
-     * ============================================================
-     */
-
-    const [assignedUsers, setAssignedUsers] =
-        useState<RoleUser[]>(initialAssignedUsers);
-
-    /*
-     * ============================================================
-     * Readonly state
-     * ============================================================
-     */
-
+    const [form, setForm] = useState<CreateRoleData>(EMPTY_FORM);
+    const [assignedUsers, setAssignedUsers] = useState<RoleUser[]>(initialAssignedUsers);
     const isSystemRole = role?.isSystem ?? false;
 
     const isReadOnly =
         mode === 'view' ||
         (mode === 'edit' && isSystemRole);
 
-    /*
-     * ============================================================
-     * Convert API users into RoleUser objects used by the UI
-     * ============================================================
-     */
 
-    const userOptions: RoleUser[] = (
-        users as ApiUser[]
-    ).map((user) => ({
+    // Convert API users into RoleUser objects used by the UI
+
+    const userOptions: RoleUser[] = (users ?? []).map((user) => ({
         id: user.id,
-
-        initials:
-            `${user.firstName?.[0] ?? ''}` +
-            `${user.lastName?.[0] ?? ''}`,
-
-        name:
-            `${user.firstName ?? ''} ` +
-            `${user.lastName ?? ''}`.trim(),
-
+        firstName: user.firstName,
+        lastName: user.lastName,
+        initials: `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`,
         role: user.jobTitle ?? 'User',
-
         accent: 'var(--violet)',
     }));
 
-    /*
-     * ============================================================
-     * Initialize form when mode / role changes
-     * ============================================================
-     */
-
     useEffect(() => {
-        /*
-         * CREATE
-         */
-
+        // CREATE
         if (mode === 'create' || !role) {
-            const usersForCreate =
-                initialAssignedUsers ?? [];
+            const usersForCreate = initialAssignedUsers ?? [];
 
             setAssignedUsers(usersForCreate);
 
             setForm({
                 ...EMPTY_FORM,
-
                 userIds: usersForCreate.map(
                     (user) => user.id,
                 ),
@@ -261,14 +168,30 @@ export default function AddRoleForm({
             return;
         }
 
-        /*
-         * VIEW / EDIT
-         *
-         * Load existing role.
-         */
+        // VIEW / EDIT
+        const existingUsers: RoleUser[] =
+            (role.userRoles ?? []).map(
+                (userRole) => {
+                    const user = userRole.user;
 
-        const existingUsers =
-            role.users ?? [];
+                    return {
+                        id: user.id,
+
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+
+                        initials:
+                            `${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`,
+
+                        role:
+                            user.jobTitle ??
+                            role.displayName ??
+                            role.name,
+
+                        accent: 'var(--ember)',
+                    };
+                },
+            );
 
         setForm({
             name: role.name ?? '',
@@ -282,10 +205,12 @@ export default function AddRoleForm({
                 role.description ?? '',
 
             permissionIds:
-                role.rolePermissions.map(permission=>permission?.permissionId) ?? [],
+                role.rolePermissions.map(
+                    (permission) =>
+                        permission.permissionId,
+                ),
 
             userIds:
-                role.userIds ??
                 existingUsers.map(
                     (user) => user.id,
                 ),
@@ -297,7 +222,6 @@ export default function AddRoleForm({
         role,
         initialAssignedUsers,
     ]);
-
     /*
      * ============================================================
      * Group permissions by category
@@ -480,11 +404,6 @@ export default function AddRoleForm({
         onSubmit?.(data);
     };
 
-    /*
-     * ============================================================
-     * Loading
-     * ============================================================
-     */
 
     if (
         isPermissionsLoading ||
@@ -496,12 +415,6 @@ export default function AddRoleForm({
             </div>
         );
     }
-
-    /*
-     * ============================================================
-     * Errors
-     * ============================================================
-     */
 
     if (
         isPermissionsError ||
@@ -732,12 +645,8 @@ export default function AddRoleForm({
                                 multiple
                                 fullWidth
                                 options={userOptions}
-                                value={
-                                    assignedUsers
-                                }
-                                disabled={
-                                    isReadOnly
-                                }
+                                value={assignedUsers}
+                                disabled={isReadOnly}
                                 onChange={(
                                     _event,
                                     newValue,
@@ -749,7 +658,7 @@ export default function AddRoleForm({
                                 getOptionLabel={(
                                     user,
                                 ) =>
-                                    user.name
+                                    `${user.firstName} ${user.lastName}`
                                 }
                                 isOptionEqualToValue={(
                                     option,
@@ -808,7 +717,7 @@ export default function AddRoleForm({
                                         <span className="selected-member-chip-info">
                                             <span className="selected-member-chip-name">
                                                 {
-                                                    user.name
+                                                    `${user.firstName} ${user.lastName}`
                                                 }
                                             </span>
 
@@ -848,19 +757,19 @@ export default function AddRoleForm({
 
                                                 <span className="selected-member-chip-info">
                                                     <span className="selected-member-chip-name">
-                                                        {user.name}
+                                                        {`${user.firstName} ${user.lastName}`}
                                                     </span>
 
-                                                    <span className="selected-member-chip-role">
+                                                    {/* <span className="selected-member-chip-role">
                                                         {user.role}
-                                                    </span>
+                                                    </span> */}
                                                 </span>
 
                                                 {!isReadOnly && (
                                                     <button
                                                         type="button"
                                                         className="selected-member-chip-remove"
-                                                        aria-label={`Remove ${user.name}`}
+                                                        aria-label={`Remove ${`${user.firstName} ${user.lastName}`}`}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
 
@@ -875,29 +784,50 @@ export default function AddRoleForm({
                                     })
                                 }
                                 sx={{
-                                    /*
-                                     * We are intentionally
-                                     * keeping MUI's visual
-                                     * footprint minimal.
-                                     *
-                                     * Your existing chip
-                                     * classes control the
-                                     * selected user appearance.
-                                     */
-                                    '& .MuiOutlinedInput-root':
-                                    {
-                                        padding:
-                                            '4px 8px',
+                                    '& .MuiOutlinedInput-root': {
+                                        background: 'var(--surface)',
+                                        border: '1px solid var(--border)',
+                                        borderRadius: '6px',
+                                        padding: '3px 8px',
+                                        fontSize: '13px',
+                                        color: 'var(--text)',
+                                        fontFamily: 'inherit',
+                                        outline: 'none',
+                                        width: '100%',
+
+                                        '& fieldset': {
+                                            border: 'none',
+                                        },
+
+                                        '&:hover fieldset': {
+                                            border: 'none',
+                                        },
+
+                                        '&.Mui-focused fieldset': {
+                                            border: 'none',
+                                        },
+
+                                        '&.Mui-focused': {
+                                            borderColor: 'var(--border-strong)',
+                                        },
                                     },
 
-                                    '& .MuiAutocomplete-input':
-                                    {
-                                        padding:
-                                            '6px 4px !important',
+                                    '& .MuiAutocomplete-input': {
+                                        padding: '6px 4px !important',
+                                        fontSize: '13px',
+                                        color: 'var(--text)',
+
+                                        '&::placeholder': {
+                                            color: 'var(--text-tertiary)',
+                                            opacity: 1,
+                                        },
                                     },
 
-                                    '& .MuiAutocomplete-tag':
-                                    {
+                                    '& .MuiAutocomplete-inputRoot': {
+                                        padding: '3px 8px !important',
+                                    },
+
+                                    '& .MuiAutocomplete-tag': {
                                         margin: 0,
                                     },
                                 }}

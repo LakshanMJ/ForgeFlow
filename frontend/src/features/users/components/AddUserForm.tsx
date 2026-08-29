@@ -13,7 +13,12 @@ import {
     Mail,
     Check,
     UserCircle,
+    CircleCheck
 } from 'lucide-react';
+import type { UserFormProps } from '../types/user.types';
+import { useRoles } from '@/features/roles/hooks/useRoles';
+import Dropdown from '@/shared/components/Dropdown';
+import { useDepartments } from '@/features/departments/hooks/useDepartments';
 
 type PermissionKey =
     | 'viewTasks'
@@ -36,12 +41,53 @@ const PERMISSIONS: { key: PermissionKey; label: string; granted: boolean }[] = [
     { key: 'uploadFiles', label: 'Upload Files', granted: true },
 ];
 
-export default function AddUserForm() {
+export default function AddUserForm({
+    mode,
+    existingUserDetail,
+    onSubmit
+}: UserFormProps) {
+
+    const {
+        data: roles = [],
+        isLoading: isRolesLoading,
+        isError: isRolesError,
+    } = useRoles();
+
+    const {
+        data: departments = [],
+        isLoading: departmentsLoading,
+    } = useDepartments();
+
+    console.log(JSON.stringify(roles))
     const [sendInvite, setSendInvite] = useState(true);
     const [requirePasswordChange, setRequirePasswordChange] = useState(true);
     const [addToDefaultProject, setAddToDefaultProject] = useState(false);
+    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedDepartment, setSelectedDepartment] = useState('');
+    const selectedRoleData = roles.find((role) => role.id === selectedRole,
+    );
 
     if (!open) return null;
+
+    if (
+        isRolesLoading
+    ) {
+        return (
+            <div className="role-modal-card">
+                Loading...
+            </div>
+        );
+    }
+
+    if (
+        isRolesError
+    ) {
+        return (
+            <div className="role-modal-card">
+                Failed to load role data.
+            </div>
+        );
+    }
 
     return (
         <div className="modal-body">
@@ -57,14 +103,14 @@ export default function AddUserForm() {
                         <label className="form-label">
                             First Name<span className="required">*</span>
                         </label>
-                        <input className="form-input" type="text" defaultValue="John" />
+                        <input className="form-input" type="text" />
                     </div>
 
                     <div className="form-field">
                         <label className="form-label">
                             Last Name<span className="required">*</span>
                         </label>
-                        <input className="form-input" type="text" defaultValue="Doe" />
+                        <input className="form-input" type="text" />
                     </div>
 
                     <div className="form-field">
@@ -74,7 +120,6 @@ export default function AddUserForm() {
                         <input
                             className="form-input"
                             type="email"
-                            defaultValue="john.doe@acme.com"
                         />
                     </div>
 
@@ -83,7 +128,6 @@ export default function AddUserForm() {
                         <input
                             className="form-input"
                             type="text"
-                            defaultValue="Senior Developer"
                         />
                     </div>
                 </div>
@@ -142,7 +186,7 @@ export default function AddUserForm() {
                 </div>
 
                 <div className="form-field">
-                    <label className="form-label">
+                    {/* <label className="form-label">
                         Role<span className="required">*</span>
                     </label>
                     <button className="form-select-btn" type="button">
@@ -151,28 +195,40 @@ export default function AddUserForm() {
                             Developer
                         </span>
                         <ChevronDown size={14} className="chevron" />
-                    </button>
+                    </button> */}
+
+                    <Dropdown
+                        label="Role"
+                        required
+                        icon={<Users size={14} />}
+                        placeholder="Select a role"
+                        value={selectedRole}
+                        onChange={setSelectedRole}
+                        options={roles.map((role) => ({
+                            value: role.id,
+                            label: role.displayName,
+                        }))}
+                    />
+
                 </div>
 
                 <div className="role-access-grid">
                     <div>
                         <div className="permission-overview-label">Permission Overview</div>
                         <div className="permission-grid">
-                            {PERMISSIONS.map((perm) => (
-                                <div className="permission-item" key={perm.key}>
-                                    <span
-                                        className={`permission-icon ${perm.granted ? 'granted' : 'denied'}`}
-                                    >
-                                        <Check size={11} />
+                            {selectedRoleData?.rolePermissions.map((perm) => (
+                                <div className="permission-item" key={perm.id}>
+                                    <span className="permission-icon">
+                                        <CircleCheck size={22} />
                                     </span>
-                                    {perm.label}
+                                    {perm?.permission?.displayName}
                                 </div>
                             ))}
                         </div>
                     </div>
 
                     <div className="form-field" style={{ marginBottom: 0 }}>
-                        <label className="form-label">
+                        {/* <label className="form-label">
                             Department<span className="required">*</span>
                         </label>
                         <button className="form-select-btn" type="button">
@@ -181,7 +237,18 @@ export default function AddUserForm() {
                                 Engineering
                             </span>
                             <ChevronDown size={14} className="chevron" />
-                        </button>
+                        </button> */}
+                        <Dropdown
+                            label="Department"
+                            placeholder="Select a department"
+                            value={selectedDepartment}
+                            onChange={setSelectedDepartment}
+                            options={departments.map((department) => ({
+                                value: department.id,
+                                label: department.name,
+                            }))}
+                            disabled={departmentsLoading}
+                        />
                     </div>
                 </div>
             </div>

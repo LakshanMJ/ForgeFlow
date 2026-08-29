@@ -1,6 +1,6 @@
 'use client';
 
-import DataTable from '@/shared/components/DataTable';
+import DataTable, { type Column } from '@/shared/components/DataTable';
 import {
   Search,
   ChevronDown,
@@ -14,12 +14,20 @@ import {
   ChevronLeft,
   Shield,
   Save,
+  Pencil,
+  Trash2,
+  Eye,
 } from 'lucide-react';
 import { useState } from 'react';
-import AddUserModal from './AddUserModal';
 import SearchInput from '@/shared/components/SearchInput';
 import Modal from '@/shared/components/Modal';
 import AddUserForm from './AddUserForm';
+import { useUsers } from '../hooks/useUsers';
+import type { CreateUserData, UpdateUserData, User } from '../types/user.types';
+import { useCreateRole } from '@/features/roles/hooks/useCreateRole';
+import { useUpdateRole } from '@/features/roles/hooks/useUpdateRole';
+import { useCreateUser } from '../hooks/useCreateUser';
+import { useUpdateUser } from '../hooks/useUpdateUser';
 
 type Status = 'Online' | 'Away' | 'Offline';
 
@@ -29,31 +37,6 @@ const STATUS_COLOR: Record<Status, string> = {
   Offline: 'var(--ember)',
 };
 
-type UserRow = {
-  initials: string;
-  name: string;
-  email: string;
-  isYou?: boolean;
-  role: string;
-  roleClass: string;
-  status: Status;
-  department: string;
-  joined: string;
-  accent: string;
-};
-
-export type User = {
-  name: string;
-  email: string;
-  initials: string;
-  accent: string;
-  isYou?: boolean;
-  role: string;
-  roleClass: string;
-  status: 'Active' | 'Inactive' | 'Pending'; // adjust to match your data
-  department: string;
-  joined: string;
-};
 
 const USERS: UserRow[] = [
   { initials: 'WS', name: 'Wile Smith', email: 'wile.smith@acmecorp.com', isYou: true, role: 'OWNER', roleClass: 'chip-outline-ember', status: 'Online', department: 'Engineering', joined: 'Dec 1, 2024', accent: 'var(--steel)' },
@@ -68,8 +51,19 @@ const USERS: UserRow[] = [
 
 export default function UsersPage() {
 
-  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const {
+    data: users = [],
+    isLoading: isUsersLoading,
+    isError: isUsersError,
+  } = useUsers();
 
+  // const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [userModalMode, setUserModalMode] = useState<'create' | 'view' | 'edit'>('create');
+  const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+
+  const createUserMutation = useCreateUser();
+  const updateUserMutation = useUpdateUser();
 
   const STATUS_COLOR: Record<string, string> = {
     Active: '#10B981',
@@ -87,11 +81,12 @@ export default function UsersPage() {
             className="owner-avatar"
             style={{ width: 34, height: 34, background: user.accent, color: '#fff' }}
           >
-            {user.initials}
+            {user.firstName?.[0]}
+            {user.lastName?.[0]}
           </span>
           <div>
             <div className="project-info-name">
-              {user.name}
+              {`${user.firstName} ${user.lastName}`}
               {user.isYou && <span className="you-tag">YOU</span>}
             </div>
             <div className="project-info-desc">{user.email}</div>
@@ -103,7 +98,9 @@ export default function UsersPage() {
       key: 'role',
       label: 'Role',
       render: (user) => (
-        <span className={`chip ${user.roleClass}`}>{user.role}</span>
+        <span className={`chip ${user.roleClass}`}>
+          {user.roles?.map((role) => role.displayName).join(', ') || 'No role'}
+        </span>
       ),
     },
     {
@@ -129,23 +126,117 @@ export default function UsersPage() {
       label: 'Department',
       render: (user) => user.department,
     },
+    // {
+    //   key: 'joined',
+    //   label: 'Joined',
+    //   render: (user) => user.createdAt,
+    // },
     {
       key: 'joined',
       label: 'Joined',
-      render: (user) => user.joined,
+      render: (user) => (
+        <span>
+          {new Date(user.createdAt).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        </span>
+      ),
     },
     {
       key: 'actions',
       label: 'Actions',
-      render: () => (
-        <div className="kebab-cell">
-          <button className="kebab-btn" type="button" aria-label="User actions">
-            <MoreVertical size={15} />
+      render: (user) => (
+        <span className="actions-cell-group">
+          <button
+            className="kebab-btn"
+            type="button"
+            aria-label={`View ${user.name}`}
+            onClick={() => {
+              setSelectedUser(user);
+              setUserModalMode('view');
+              setIsUserModalOpen(true);
+            }}
+          >
+            <Eye size={15} />
           </button>
-        </div>
+          <button
+            className="kebab-btn"
+            type="button"
+            aria-label={`Edit ${'role.name'}`}
+            onClick={() => {
+              setSelectedUser(user);
+              setUserModalMode('edit');
+              setIsUserModalOpen(true);
+            }}
+          >
+            <Pencil size={15} />
+          </button>
+
+          <button
+            className="kebab-btn"
+            type="button"
+            aria-label={`Delete ${'role.name'}`}
+          >
+            <Trash2 size={15} />
+          </button>
+        </span>
       ),
     },
   ];
+
+
+  if (
+    isUsersLoading
+  ) {
+    return (
+      <div className="role-modal-card">
+        Loading...
+      </div>
+    );
+  }
+
+  if (
+    isUsersError
+  ) {
+    return (
+      <div className="role-modal-card">
+        Failed to load user data.
+      </div>
+    );
+  }
+
+  const handleUserSubmit = (
+    data: CreateUserData | UpdateUserData,
+  ) => {
+
+    if (userModalMode === 'create') {
+      createUserMutation.mutate(data as CreateUserData, {
+        onSuccess: () => {
+          setIsUserModalOpen(false);
+        },
+      });
+      return;
+    }
+
+    if (userModalMode === 'edit') {
+      if (!selectedUser) {
+        return;
+      }
+      updateUserMutation.mutate(
+        {
+          id: selectedUser.id,
+          data: data as UpdateUserData,
+        },
+        {
+          onSuccess: () => {
+            setIsUserModalOpen(false);
+          },
+        },
+      );
+    }
+  };
 
   return (
     <>
@@ -158,8 +249,7 @@ export default function UsersPage() {
         </p>
       </div>
 
-      {/* <AddUserModal open={isAddUserOpen} onClose={() => setIsAddUserOpen(false)} /> */}
-      <Modal
+      {/* <Modal
         isOpen={isAddUserOpen}
         onClose={() => setIsAddUserOpen(false)}
         title="Create New Role"
@@ -170,8 +260,35 @@ export default function UsersPage() {
         onSubmit={() => { }}
       >
         <AddUserForm />
-      </Modal>
+      </Modal> */}
 
+      <Modal
+        isOpen={isUserModalOpen}
+        onClose={() => setIsUserModalOpen(false)}
+        title={
+          userModalMode === 'create'
+            ? 'Create New User'
+            : userModalMode === 'edit'
+              ? 'Edit User'
+              : 'View User'
+        }
+        icon={<Shield size={18} />}
+        size="xl"
+        submitFormId="user-form"
+        showSubmit={userModalMode !== 'view'}
+        submitLabel={
+          userModalMode === 'edit'
+            ? 'Save Changes'
+            : 'Save User'
+        }
+        submitIcon={<Save size={14} />}
+      >
+        <AddUserForm
+          mode={userModalMode}
+          existingUserDetail={'efwefwe'}
+          onSubmit={handleUserSubmit}
+        />
+      </Modal>
       <div className="users-stat-row" style={{ marginBottom: 20 }}>
         <div className="users-stat-card">
           <span
@@ -270,7 +387,7 @@ export default function UsersPage() {
           All Departments
           <ChevronDown size={14} />
         </button>
-        <button className="btn-primary" type="button" style={{ marginLeft: 'auto' }} onClick={() => setIsAddUserOpen(true)}>
+        <button className="btn-primary" type="button" style={{ marginLeft: 'auto' }} onClick={() => setIsUserModalOpen(true)}>
           <Plus size={14} />
           Add User
         </button>
@@ -278,11 +395,11 @@ export default function UsersPage() {
 
       <DataTable<User>
         columns={userColumns}
-        data={USERS}
+        data={users}
         totalItems={24}
         currentPage={1}
         totalPages={3}
-        columnWidths="2.5fr 1.2fr 1.2fr 1.5fr 1.2fr 80px"
+        columnWidths="2.5fr 1.2fr 1.2fr 1.5fr 1.2fr 100px"
       />
     </>
   );
