@@ -39,15 +39,15 @@ import { useUpdateDepartment } from '../hooks/useUpdateDepartment';
 //   created: string;
 // };
 
-const INITIAL_DEPARTMENTS: Department[] = [
-  { name: 'Engineering', description: 'Builds and maintains all core platform software.', icon: Code2, accent: 'var(--steel)', accentTint: 'var(--steel-tint)', manager: 'Sarah Chen', parentDepartment: '', members: 24, openPositions: 3, created: 'Jan 2024' },
-  { name: 'Marketing', description: 'Owns brand, campaigns, and customer acquisition.', icon: Megaphone, accent: 'var(--patina)', accentTint: 'var(--patina-tint)', manager: 'Alex Rivera', parentDepartment: '', members: 18, openPositions: 1, created: 'Jan 2024' },
-  { name: 'Sales', description: 'Drives revenue through new business and renewals.', icon: TrendingUp, accent: 'var(--violet)', accentTint: 'var(--violet-tint)', manager: null, parentDepartment: '', members: 12, openPositions: 4, created: 'Feb 2024' },
-  { name: 'Product', description: 'Defines product strategy and roadmap.', icon: Package, accent: 'var(--gold)', accentTint: 'var(--gold-tint)', manager: 'Jamie Wong', parentDepartment: '', members: 9, openPositions: 0, created: 'Mar 2024' },
-  { name: 'HR', description: 'Manages hiring, benefits, and employee relations.', icon: User, accent: 'var(--steel)', accentTint: 'var(--steel-tint)', manager: 'Michael Lee', parentDepartment: '', members: 6, openPositions: 2, created: 'Apr 2024' },
-  { name: 'Finance', description: 'Oversees budgeting, payroll, and financial reporting.', icon: DollarSign, accent: 'var(--gold)', accentTint: 'var(--gold-tint)', manager: null, parentDepartment: '', members: 5, openPositions: 1, created: 'May 2024' },
-  { name: 'Operations', description: 'Keeps internal tooling and processes running smoothly.', icon: Cog, accent: 'var(--ember)', accentTint: 'var(--ember-tint)', manager: null, parentDepartment: '', members: 4, openPositions: 0, created: 'Jun 2024' },
-];
+// const INITIAL_DEPARTMENTS: Department[] = [
+//   { name: 'Engineering', description: 'Builds and maintains all core platform software.', icon: Code2, accent: 'var(--steel)', accentTint: 'var(--steel-tint)', manager: 'Sarah Chen', parentDepartment: '', members: 24, openPositions: 3, created: 'Jan 2024' },
+//   { name: 'Marketing', description: 'Owns brand, campaigns, and customer acquisition.', icon: Megaphone, accent: 'var(--patina)', accentTint: 'var(--patina-tint)', manager: 'Alex Rivera', parentDepartment: '', members: 18, openPositions: 1, created: 'Jan 2024' },
+//   { name: 'Sales', description: 'Drives revenue through new business and renewals.', icon: TrendingUp, accent: 'var(--violet)', accentTint: 'var(--violet-tint)', manager: null, parentDepartment: '', members: 12, openPositions: 4, created: 'Feb 2024' },
+//   { name: 'Product', description: 'Defines product strategy and roadmap.', icon: Package, accent: 'var(--gold)', accentTint: 'var(--gold-tint)', manager: 'Jamie Wong', parentDepartment: '', members: 9, openPositions: 0, created: 'Mar 2024' },
+//   { name: 'HR', description: 'Manages hiring, benefits, and employee relations.', icon: User, accent: 'var(--steel)', accentTint: 'var(--steel-tint)', manager: 'Michael Lee', parentDepartment: '', members: 6, openPositions: 2, created: 'Apr 2024' },
+//   { name: 'Finance', description: 'Oversees budgeting, payroll, and financial reporting.', icon: DollarSign, accent: 'var(--gold)', accentTint: 'var(--gold-tint)', manager: null, parentDepartment: '', members: 5, openPositions: 1, created: 'May 2024' },
+//   { name: 'Operations', description: 'Keeps internal tooling and processes running smoothly.', icon: Cog, accent: 'var(--ember)', accentTint: 'var(--ember-tint)', manager: null, parentDepartment: '', members: 4, openPositions: 0, created: 'Jun 2024' },
+// ];
 
 function openPositionsStyle(count: number): { background: string; color: string } {
   if (count === 0) return { background: 'var(--patina-tint)', color: 'var(--patina-tint-text)' };
@@ -56,7 +56,6 @@ function openPositionsStyle(count: number): { background: string; color: string 
 }
 
 export default function DepartmentsPage() {
-  // const [departments, setDepartments] = useState(INITIAL_DEPARTMENTS);
   const [modalMode, setModalMode] = useState<'create' | 'edit' | null>(null);
   const [editingDept, setEditingDept] = useState<Department | null>(null);
   const initialFormData: DepartmentFormData | undefined = editingDept
@@ -72,7 +71,7 @@ export default function DepartmentsPage() {
     data: departments = [],
     isLoading,
   } = useDepartments();
-
+  // console.log(departments, 'departments')
   const createDepartment = useCreateDepartment();
   const updateDepartment = useUpdateDepartment();
 
@@ -123,15 +122,6 @@ export default function DepartmentsPage() {
       },
     );
   };
-
-  // const initialFormData: DepartmentFormData | undefined = editingDept
-  //   ? {
-  //     name: editingDept.name,
-  //     description: editingDept.description,
-  //     managerName: editingDept.manager ?? '',
-  //     parentDepartmentName: editingDept.parentDepartment,
-  //   }
-  //   : undefined;
 
   return (
     <>
@@ -219,7 +209,14 @@ export default function DepartmentsPage() {
                   </span>
                 </div>
 
-                <div>{dept?.created}</div>
+                {/* <div>{dept?.createdAt}</div> */}
+                <div>
+                  {new Date(dept.createdAt).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </div>
 
                 <div>
                   <span className="actions-cell-group">

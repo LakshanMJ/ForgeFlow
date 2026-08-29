@@ -2868,14 +2868,20 @@ button {
   justify-content: center;
   flex-shrink: 0;
 }
-.permission-icon.granted {
+
+.permission-icon {
+  background: var(--patina-tint);
+  color: var(--patina);
+}
+
+/* .permission-icon.granted {
   background: var(--patina-tint);
   color: var(--patina);
 }
 .permission-icon.denied {
   background: var(--ember-tint);
   color: var(--ember);
-}
+} */
 
 /* ---- Invitation settings ---- */
 .invitation-settings-row {
@@ -3240,4 +3246,63 @@ button {
 }
 .departments-table-row {
   grid-template-columns: 2fr 1.2fr 1fr 1.2fr 1fr 120px;
+}
+
+
+.form-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.form-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+
+    padding: 4px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.form-dropdown-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: none;
+    background: transparent;
+
+    padding: 9px 10px;
+    border-radius: 4px;
+
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+
+    cursor: pointer;
+    text-align: left;
+}
+
+.form-dropdown-option:hover {
+    background: var(--surface-2);
+}
+
+.form-dropdown-option-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
 }

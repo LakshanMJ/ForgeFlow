@@ -318,8 +318,8 @@ const RolesList = () => {
     const handleRoleSubmit = (
         data: CreateRoleData | UpdateRoleData,
     ) => {
-        console.log('HANDLE ROLE SUBMIT:', data);
-        console.log('PERMISSION IDS:', data.permissionIds);
+        // console.log('HANDLE ROLE SUBMIT:', data);
+        // console.log('PERMISSION IDS:', data.permissionIds);
         if (roleModalMode === 'create') {
             createRoleMutation.mutate(data as CreateRoleData, {
                 onSuccess: () => {

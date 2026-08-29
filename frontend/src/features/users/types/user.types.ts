@@ -27,6 +27,16 @@ export interface CreateUserData {
     role?: string;
 }
 
+export interface InviteUserData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    jobTitle?: string;
+    department?: string;
+    role?: string;
+    avatar?: File | null;
+}
+
 export interface UpdateUserData {
     firstName?: string;
     lastName?: string;

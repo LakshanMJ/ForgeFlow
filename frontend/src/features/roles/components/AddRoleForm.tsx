@@ -396,10 +396,10 @@ export default function AddRoleForm({
                 ),
         };
 
-        console.log(
-            'FORM SUBMIT DATA:',
-            data,
-        );
+        // console.log(
+        //     'FORM SUBMIT DATA:',
+        //     data,
+        // );
 
         onSubmit?.(data);
     };
