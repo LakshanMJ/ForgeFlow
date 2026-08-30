@@ -2832,7 +2832,7 @@ button {
 /* ---- Role & access ---- */
 .role-access-grid {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 10px;
   gap: 24px;
   align-items: start;
   margin-top: 18px;
@@ -2845,7 +2845,7 @@ button {
 }
 .permission-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
 .permission-item {
@@ -3304,5 +3304,21 @@ button {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
+}
+
+.role-access-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.role-field {
+    flex: 7;
+    min-width: 0;
+}
+
+.department-field {
+    flex: 3;
     min-width: 0;
 }

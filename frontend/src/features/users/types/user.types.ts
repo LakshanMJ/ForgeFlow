@@ -17,6 +17,7 @@ export interface User {
     roles: UserRole[];
 }
 
+// This is used to create the first user of the organization, which is the owner
 export interface CreateUserData {
     firstName: string;
     lastName: string;
@@ -27,6 +28,7 @@ export interface CreateUserData {
     role?: string;
 }
 
+// This is used by the owner to create users without a password. users create their own password upon invitation
 export interface InviteUserData {
     firstName: string;
     lastName: string;
@@ -35,6 +37,11 @@ export interface InviteUserData {
     department?: string;
     role?: string;
     avatar?: File | null;
+}
+
+export interface SetPasswordData {
+    password: string;
+    confirmPassword: string;
 }
 
 export interface UpdateUserData {
@@ -50,9 +57,7 @@ export interface UpdateUserData {
 export type UserFormMode = 'create' | 'view' | 'edit';
 
 export interface UserFormProps {
-    mode: UserFormMode;
+    mode: 'create' | 'edit' | 'view';
     existingUserDetail?: User;
-    onSubmit?: (
-        data: CreateUserData | UpdateUserData,
-    ) => void;
+    onSubmit: (data: InviteUserData) => void;
 }

@@ -76,7 +76,7 @@ export default function AddUserForm({
     const [requirePasswordChange, setRequirePasswordChange] = useState(true);
     const [addToDefaultProject, setAddToDefaultProject] = useState(false);
     const [selectedRole, setSelectedRole] = useState('');
-    const [selectedDepartment, setSelectedDepartment] = useState('');
+    // const [selectedDepartment, setSelectedDepartment] = useState('');
     const selectedRoleData = roles.find((role) => role.id === selectedRole,
     );
 
@@ -124,160 +124,198 @@ export default function AddUserForm({
         }));
     };
 
+    const handleSubmit = (
+        e: React.FormEvent<HTMLFormElement>,
+    ) => {
+        e.preventDefault();
+        console.log('🔥 ADD USER FORM SUBMITTED');
+        if (isReadOnly) {
+
+            return;
+        }
+
+        const data: InviteUserData = {
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            jobTitle: form.jobTitle,
+            department: form.department,
+            role: form.role,
+            avatar: form.avatar,
+        };
+        console.log('🔥 FORM DATA:', data);
+    console.log('🔥 FORM DATA TYPE:', typeof data);
+    console.log('🔥 ON_SUBMIT:', onSubmit);
+        onSubmit?.(data);
+    };
+
     return (
-        <div className="modal-body">
-            {/* ---- User Details + Profile Picture ---- */}
-            <div className="add-user-grid-2">
-                <div className="form-section">
-                    <div className="form-section-header">
-                        <Users size={15} />
-                        <span className="form-section-title">User Details</span>
-                    </div>
+        <form
+            id="user-form"
+            className="role-modal-card"
+            onSubmit={handleSubmit}
+        >
+            <div className="modal-body">
+                {/* ---- User Details + Profile Picture ---- */}
+                <div className="add-user-grid-2">
+                    <div className="form-section">
+                        <div className="form-section-header">
+                            <Users size={15} />
+                            <span className="form-section-title">User Details</span>
+                        </div>
 
-                    <div className="form-field">
-                        <label className="form-label">
-                            First Name<span className="required">*</span>
-                        </label>
-                        <input
-                            className="form-input"
-                            name="firstName"
-                            type="text"
-                            value={form?.firstName}
-                            onChange={
-                                handleInputChange
-                            }
-                        />
-                    </div>
+                        <div className="form-field">
+                            <label className="form-label">
+                                First Name<span className="required">*</span>
+                            </label>
+                            <input
+                                className="form-input"
+                                name="firstName"
+                                type="text"
+                                value={form?.firstName}
+                                onChange={
+                                    handleInputChange
+                                }
+                            />
+                        </div>
 
-                    <div className="form-field">
-                        <label className="form-label">
-                            Last Name<span className="required">*</span>
-                        </label>
-                        <input
-                            className="form-input"
-                            name="lastName"
-                            type="text"
-                            value={form.lastName}
-                            onChange={
-                                handleInputChange
-                            }
-                        />
-                    </div>
+                        <div className="form-field">
+                            <label className="form-label">
+                                Last Name<span className="required">*</span>
+                            </label>
+                            <input
+                                className="form-input"
+                                name="lastName"
+                                type="text"
+                                value={form.lastName}
+                                onChange={
+                                    handleInputChange
+                                }
+                            />
+                        </div>
 
-                    <div className="form-field">
-                        <label className="form-label">
-                            Email<span className="required">*</span>
-                        </label>
-                        <input
-                            className="form-input"
-                            name="email"
-                            type="email"
-                            value={form.email}
-                            onChange={
-                                handleInputChange
-                            }
-                        />
-                    </div>
+                        <div className="form-field">
+                            <label className="form-label">
+                                Email<span className="required">*</span>
+                            </label>
+                            <input
+                                className="form-input"
+                                name="email"
+                                type="email"
+                                value={form.email}
+                                onChange={
+                                    handleInputChange
+                                }
+                            />
+                        </div>
 
-                    <div className="form-field">
-                        <label className="form-label">Job Title</label>
-                        <input
-                            className="form-input"
-                            name="jobTitle"
-                            type="text"
-                            value={form.jobTitle}
-                            onChange={
-                                handleInputChange
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div className="form-section">
-                    <PhotoUpload
-                        value={form.avatar ? URL.createObjectURL(form.avatar) : null}
-                        onChange={handleAvatarChange}
-                    />
-                </div>
-            </div>
-
-            {/* ---- Role & Access ---- */}
-            <div className="form-section">
-                <div className="form-section-header">
-                    <Shield size={15} />
-                    <span className="form-section-title">Role &amp; Access</span>
-                </div>
-
-                <div className="role-access-row">
-                    <div className="role-field">
-                        <Dropdown
-                            label="Role"
-                            required
-                            icon={<Users size={14} />}
-                            placeholder="Select a role"
-                            value={selectedRole}
-                            onChange={setSelectedRole}
-                            options={roles.map((role) => ({
-                                value: role.id,
-                                label: role.displayName,
-                            }))}
-                        />
-                    </div>
-
-                    <div className="department-field">
-                        <Dropdown
-                            label="Department"
-                            placeholder="Select a department"
-                            value={selectedDepartment}
-                            onChange={setSelectedDepartment}
-                            options={departments.map((department) => ({
-                                value: department.id,
-                                label: department.name,
-                            }))}
-                            disabled={departmentsLoading}
-                        />
-                    </div>
-                </div>
-
-                <div className="role-access-grid">
-                    <div>
-                        <div className="permission-overview-label">Permission Overview</div>
-                        <div className="permission-grid">
-                            {selectedRoleData?.rolePermissions.map((perm) => (
-                                <div className="permission-item" key={perm.id}>
-                                    <span className="permission-icon">
-                                        <CircleCheck size={22} />
-                                    </span>
-                                    {perm?.permission?.displayName}
-                                </div>
-                            ))}
+                        <div className="form-field">
+                            <label className="form-label">Job Title</label>
+                            <input
+                                className="form-input"
+                                name="jobTitle"
+                                type="text"
+                                value={form.jobTitle}
+                                onChange={
+                                    handleInputChange
+                                }
+                            />
                         </div>
                     </div>
 
-
-                </div>
-            </div>
-
-            {/* ---- Invitation Settings ---- */}
-            <div className="form-section">
-                <div className="form-section-header">
-                    <Mail size={15} />
-                    <span className="form-section-title">Invitation Settings</span>
+                    <div className="form-section">
+                        <PhotoUpload
+                            value={form.avatar ? URL.createObjectURL(form.avatar) : null}
+                            onChange={handleAvatarChange}
+                        />
+                    </div>
                 </div>
 
-                <div className="invitation-settings-row">
-                    <div className="invitation-checks-col">
-                        <button
-                            className="form-checkbox-row"
-                            type="button"
-                            onClick={() => setSendInvite((v) => !v)}
-                        >
-                            <span className={`form-checkbox${sendInvite ? ' checked' : ''}`}>
-                                {sendInvite && <Check size={12} />}
-                            </span>
-                            Send invitation email to user
-                        </button>
-                        <button
+                {/* ---- Role & Access ---- */}
+                <div className="form-section">
+                    <div className="form-section-header">
+                        <Shield size={15} />
+                        <span className="form-section-title">Role &amp; Access</span>
+                    </div>
+
+                    <div className="role-access-row">
+                        <div className="role-field">
+                            <Dropdown
+                                label="Role"
+                                required
+                                icon={<Users size={14} />}
+                                placeholder="Select a role"
+                                value={form?.role}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        role: value,
+                                    }))
+                                }
+                                options={roles.map((role) => ({
+                                    value: role.id,
+                                    label: role.displayName,
+                                }))}
+                            />
+                        </div>
+
+                        <div className="department-field">
+                            <Dropdown
+                                label="Department"
+                                placeholder="Select a department"
+                                value={form?.department}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        department: value,
+                                    }))
+                                }
+                                options={departments.map((department) => ({
+                                    value: department.id,
+                                    label: department.name,
+                                }))}
+                                disabled={departmentsLoading}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="role-access-grid">
+                        <div>
+                            <div className="permission-overview-label">Permission Overview</div>
+                            <div className="permission-grid">
+                                {selectedRoleData?.rolePermissions.map((perm) => (
+                                    <div className="permission-item" key={perm.id}>
+                                        <span className="permission-icon">
+                                            <CircleCheck size={22} />
+                                        </span>
+                                        {perm?.permission?.displayName}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ---- Invitation Settings ---- */}
+                <div className="form-section">
+                    <div className="form-section-header">
+                        <Mail size={15} />
+                        <span className="form-section-title">Invitation Settings</span>
+                    </div>
+
+                    <div className="invitation-settings-row">
+                        <div className="invitation-checks-col">
+                            <button
+                                className="form-checkbox-row"
+                                type="button"
+                                onClick={() => setSendInvite((v) => !v)}
+                            >
+                                <span className={`form-checkbox${sendInvite ? ' checked' : ''}`}>
+                                    {sendInvite && <Check size={12} />}
+                                </span>
+                                Send invitation email to user
+                            </button>
+                            {/* <button
                             className="form-checkbox-row"
                             type="button"
                             onClick={() => setRequirePasswordChange((v) => !v)}
@@ -286,32 +324,33 @@ export default function AddUserForm({
                                 {requirePasswordChange && <Check size={12} />}
                             </span>
                             Require password change on first login
-                        </button>
-                    </div>
+                        </button> */}
+                        </div>
 
-                    <div className="default-project-row">
-                        <button
-                            className="form-checkbox-row"
-                            type="button"
-                            onClick={() => setAddToDefaultProject((v) => !v)}
-                        >
-                            <span className={`form-checkbox${addToDefaultProject ? ' checked' : ''}`}>
-                                {addToDefaultProject && <Check size={12} />}
-                            </span>
-                            Add to default project:
-                        </button>
-                        <button
-                            className={`form-select-btn default-project-select${addToDefaultProject ? '' : ' disabled'
-                                }`}
-                            type="button"
-                            disabled={!addToDefaultProject}
-                        >
-                            <span className="form-select-btn-left">Acme Platform Redesign</span>
-                            <ChevronDown size={14} className="chevron" />
-                        </button>
+                        <div className="default-project-row">
+                            <button
+                                className="form-checkbox-row"
+                                type="button"
+                                onClick={() => setAddToDefaultProject((v) => !v)}
+                            >
+                                <span className={`form-checkbox${addToDefaultProject ? ' checked' : ''}`}>
+                                    {addToDefaultProject && <Check size={12} />}
+                                </span>
+                                Add to default project:
+                            </button>
+                            <button
+                                className={`form-select-btn default-project-select${addToDefaultProject ? '' : ' disabled'
+                                    }`}
+                                type="button"
+                                disabled={!addToDefaultProject}
+                            >
+                                <span className="form-select-btn-left">Acme Platform Redesign</span>
+                                <ChevronDown size={14} className="chevron" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     );
 }

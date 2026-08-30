@@ -23,11 +23,12 @@ import SearchInput from '@/shared/components/SearchInput';
 import Modal from '@/shared/components/Modal';
 import AddUserForm from './AddUserForm';
 import { useUsers } from '../hooks/useUsers';
-import type { CreateUserData, UpdateUserData, User } from '../types/user.types';
+import type { CreateUserData, InviteUserData, UpdateUserData, User } from '../types/user.types';
 import { useCreateRole } from '@/features/roles/hooks/useCreateRole';
 import { useUpdateRole } from '@/features/roles/hooks/useUpdateRole';
 import { useCreateUser } from '../hooks/useCreateUser';
 import { useUpdateUser } from '../hooks/useUpdateUser';
+import { useInviteUser } from '../hooks/useInviteUser';
 
 type Status = 'Online' | 'Away' | 'Offline';
 
@@ -62,7 +63,8 @@ export default function UsersPage() {
   const [userModalMode, setUserModalMode] = useState<'create' | 'view' | 'edit'>('create');
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
 
-  const createUserMutation = useCreateUser();
+  const createUserMutation = useInviteUser();
+  const inviteUserMutation = useInviteUser();
   const updateUserMutation = useUpdateUser();
 
   const STATUS_COLOR: Record<string, string> = {
@@ -124,7 +126,7 @@ export default function UsersPage() {
     {
       key: 'department',
       label: 'Department',
-      render: (user) => user.department,
+      render: (user) => user?.department?.name,
     },
     // {
     //   key: 'joined',
@@ -207,35 +209,19 @@ export default function UsersPage() {
     );
   }
 
-  const handleUserSubmit = (
-    data: CreateUserData | UpdateUserData,
-  ) => {
+  const handleSubmit = (data: InviteUserData) => {
+    console.log('🔥 PARENT RECEIVED:', data);
+    console.log('🔥 PARENT TYPE:', typeof data);
 
-    if (userModalMode === 'create') {
-      createUserMutation.mutate(data as CreateUserData, {
-        onSuccess: () => {
-          setIsUserModalOpen(false);
-        },
-      });
-      return;
-    }
-
-    if (userModalMode === 'edit') {
-      if (!selectedUser) {
-        return;
-      }
-      updateUserMutation.mutate(
-        {
-          id: selectedUser.id,
-          data: data as UpdateUserData,
-        },
-        {
-          onSuccess: () => {
-            setIsUserModalOpen(false);
-          },
-        },
-      );
-    }
+    inviteUserMutation.mutate(data, {
+      onSuccess: (response) => {
+        console.log('✅ USER INVITED:', response);
+        setIsUserModalOpen(false);
+      },
+      onError: (error) => {
+        console.error('❌ INVITE USER ERROR:', error);
+      },
+    });
   };
 
   return (
@@ -286,7 +272,7 @@ export default function UsersPage() {
         <AddUserForm
           mode={userModalMode}
           existingUserDetail={'efwefwe'}
-          onSubmit={handleUserSubmit}
+          onSubmit={handleSubmit}
         />
       </Modal>
       <div className="users-stat-row" style={{ marginBottom: 20 }}>

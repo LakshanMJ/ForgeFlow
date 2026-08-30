@@ -377,7 +377,6 @@ export default function AddRoleForm({
         e: React.FormEvent<HTMLFormElement>,
     ) => {
         e.preventDefault();
-
         if (isReadOnly) {
             return;
         }
@@ -389,18 +388,11 @@ export default function AddRoleForm({
 
         const data: CreateRoleData = {
             ...form,
-
             userIds:
                 assignedUsers.map(
                     (user) => user.id,
                 ),
         };
-
-        // console.log(
-        //     'FORM SUBMIT DATA:',
-        //     data,
-        // );
-
         onSubmit?.(data);
     };
 
