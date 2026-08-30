@@ -272,6 +272,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    if (!user.passwordHash) {
+      throw new UnauthorizedException('User does not have a password set');
+    }
+
     const passwordMatches = await bcrypt.compare(
       dto.password,
       user.passwordHash,

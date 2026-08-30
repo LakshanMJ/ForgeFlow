@@ -38,11 +38,12 @@ model User {
   firstName    String
   lastName     String
   email        String     @unique @db.VarChar(255)
-  passwordHash String
+  passwordHash String?
   avatar       String?
   jobTitle     String?
   status       UserStatus @default(ACTIVE)
   lastLogin    DateTime?
+  invitations Invitation[]
 
   isSuperAdmin Boolean @default(false)
 
@@ -69,6 +70,23 @@ model User {
   @@index([organizationId])
   @@index([departmentId])
   @@map("users")
+}
+
+model Invitation {
+  id     String @id @default(uuid())
+  userId String
+
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("invitations")
 }
 
 model Role {
@@ -393,6 +411,7 @@ model RefreshToken {
 
 enum UserStatus {
   ACTIVE
+  INVITED
   INACTIVE
   SUSPENDED
 }

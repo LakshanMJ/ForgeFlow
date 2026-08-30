@@ -15,6 +15,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 import type { JwtUser } from '../auth/interfaces/jwt-user.interface';
+import { InviteUserDto } from './dto/invite-user.dto';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -34,6 +35,36 @@ export class UsersController {
       user.organizationId,
     );
   }
+
+  @Post('invite')
+  @Roles('OWNER')
+  inviteUser(
+    @Body() dto: InviteUserDto,
+    @CurrentUser() user: JwtUser,
+  ) {
+    console.log('🔥 CONTROLLER DTO:', dto);
+    console.log('🔥 CONTROLLER TYPE:', typeof dto);
+
+    return this.usersService.inviteUser(
+      dto,
+      user.organizationId,
+    );
+  }
+
+  // @Post('invite')
+  // @Roles('OWNER')
+  // inviteUser(
+  //   @Body() dto: any,
+  //   @CurrentUser() user: JwtUser,
+  // ) {
+  //   console.log('🔥 RAW BODY:', dto);
+  //   console.log('🔥 TYPE:', typeof dto);
+
+  //   return this.usersService.inviteUser(
+  //     dto,
+  //     user.organizationId,
+  //   );
+  // }
 
   @Get()
   async getUsers(
