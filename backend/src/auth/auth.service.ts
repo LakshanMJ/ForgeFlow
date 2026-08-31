@@ -10,6 +10,11 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import type { SignOptions } from 'jsonwebtoken';
 import { createDefaultRoles } from 'src/roles/defaults/default-roles.helper';
+import {
+  BadRequestException,
+} from '@nestjs/common';
+import { createHash } from 'crypto';
+import type { AcceptInviteDto } from 'src/users/dto/accept-invite.dto';
 
 @Injectable()
 export class AuthService {
@@ -308,6 +313,85 @@ export class AuthService {
       },
     };
   }
+
+  async acceptInvite(dto: AcceptInviteDto) {
+    // Hash the token from the URL so we can find
+    // the invitation without storing the raw token.
+    const tokenHash = createHash('sha256')
+      .update(dto.token)
+      .digest('hex');
+
+    const invitation =
+      await this.prisma.invitation.findUnique({
+        where: {
+          tokenHash,
+        },
+        include: {
+          user: true,
+        },
+      });
+
+    if (!invitation) {
+      throw new BadRequestException(
+        'Invalid invitation token',
+      );
+    }
+
+    if (invitation.usedAt) {
+      throw new BadRequestException(
+        'This invitation has already been used',
+      );
+    }
+
+    if (invitation.expiresAt < new Date()) {
+      throw new BadRequestException(
+        'This invitation has expired',
+      );
+    }
+
+    const passwordHash = await bcrypt.hash(
+      dto.password,
+      12,
+    );
+
+    const user = await this.prisma.$transaction(
+      async (tx) => {
+        const updatedUser = await tx.user.update({
+          where: {
+            id: invitation.userId,
+          },
+          data: {
+            passwordHash,
+            status: 'ACTIVE',
+          },
+          select: {
+            id: true,
+            email: true,
+            firstName: true,
+            lastName: true,
+            status: true,
+          },
+        });
+
+        await tx.invitation.update({
+          where: {
+            id: invitation.id,
+          },
+          data: {
+            usedAt: new Date(),
+          },
+        });
+
+        return updatedUser;
+      },
+    );
+
+    return {
+      message: 'Invitation accepted successfully',
+      user,
+    };
+  }
+
 
   async refresh(refreshToken: string) {
     try {

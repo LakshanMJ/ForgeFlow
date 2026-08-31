@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.modules';
 import { DepartmentsModule } from './departments/departments.modules';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DepartmentsModule } from './departments/departments.modules';
     RolesModule,
     PermissionsModule,
     DepartmentsModule,
+    MailModule,
   ],
   controllers: [
     AppController,
@@ -24,4 +26,4 @@ import { DepartmentsModule } from './departments/departments.modules';
     AppService,
   ],
 })
-export class AppModule {}
+export class AppModule { }

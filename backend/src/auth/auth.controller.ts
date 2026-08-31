@@ -9,6 +9,7 @@ import { LogoutDto } from './dto/logout.dto';
 import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
 import { RefreshDto } from './dto/refresh.dto';
+import { AcceptInviteDto } from 'src/users/dto/accept-invite.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,13 @@ export class AuthController {
     return this.authService.register(dto);
   }
 
+  @Post('accept-invite')
+  acceptInvite(
+    @Body() dto: AcceptInviteDto,
+  ) {
+    return this.authService.acceptInvite(dto);
+  }
+  
   @Post('login')
   login(
     @Body() dto: LoginDto,
