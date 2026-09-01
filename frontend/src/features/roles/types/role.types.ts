@@ -1,3 +1,5 @@
+import type { Permission } from "@/features/permissions/types/permission.types";
+
 export interface RoleUser {
     id: string;
     firstName: string;
@@ -9,8 +11,10 @@ export interface RoleUser {
 
 export interface RolePermission {
     id: string;
-    permissionId: string;
     roleId: string;
+    permissionId: string;
+    createdAt: string;
+    permission: Permission;
 }
 
 export interface RoleAssignedUser {

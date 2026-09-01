@@ -8,7 +8,7 @@ export const useInviteUser = () => {
     return useMutation({
         mutationFn: async (data: InviteUserData): Promise<User> => {
             console.log('🔥 MUTATION RECEIVED:', data);
-    console.log('🔥 MUTATION TYPE:', typeof data);
+            console.log('🔥 MUTATION TYPE:', typeof data);
             const response = await api.post<User>(
                 '/users/invite',
                 data

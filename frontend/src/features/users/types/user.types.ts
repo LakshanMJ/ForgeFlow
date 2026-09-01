@@ -4,18 +4,36 @@ export interface UserRole {
     displayName: string;
 }
 
+export interface UserDepartment {
+    id: string;
+    name: string;
+}
+
 export interface User {
     id: string;
     firstName: string;
     lastName: string;
     email: string;
     jobTitle?: string | null;
-    department?: string | null;
+    department?: UserDepartment | null;
     avatar?: string | null;
     status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
     createdAt: string;
     roles: UserRole[];
 }
+
+// export interface User {
+//     id: string;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     jobTitle?: string | null;
+//     department?: string | null;
+//     avatar?: string | null;
+//     status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
+//     createdAt: string;
+//     roles: UserRole[];
+// }
 
 // This is used to create the first user of the organization, which is the owner
 export interface CreateUserData {
@@ -34,8 +52,8 @@ export interface InviteUserData {
     lastName: string;
     email: string;
     jobTitle?: string;
-    department?: string;
-    role?: string;
+    departmentId?: string;
+    roleId?: string;
     avatar?: File | null;
 }
 

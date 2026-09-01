@@ -32,20 +32,6 @@ type RoleType = 'SYSTEM' | 'CUSTOM';
 
 type RoleStatus = 'Active' | 'Inactive';
 
-// type ApiRole = {
-//     id: string;
-//     organizationId: string;
-//     name: string;
-//     description: string;
-//     isSystem: boolean;
-//     createdAt: string;
-//     updatedAt: string;
-//     _count: {
-//         userRoles: number;
-//         rolePermissions: number;
-//     };
-// };
-
 type RoleRow = Role & {
     icon: typeof Crown;
     iconColor: string;
@@ -318,8 +304,6 @@ const RolesList = () => {
     const handleRoleSubmit = (
         data: CreateRoleData | UpdateRoleData,
     ) => {
-        // console.log('HANDLE ROLE SUBMIT:', data);
-        // console.log('PERMISSION IDS:', data.permissionIds);
         if (roleModalMode === 'create') {
             createRoleMutation.mutate(data as CreateRoleData, {
                 onSuccess: () => {

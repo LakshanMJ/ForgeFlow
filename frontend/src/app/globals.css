@@ -2832,7 +2832,7 @@ button {
 /* ---- Role & access ---- */
 .role-access-grid {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 20px;
   gap: 24px;
   align-items: start;
   margin-top: 18px;
@@ -2845,7 +2845,7 @@ button {
 }
 .permission-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 .permission-item {
@@ -2867,15 +2867,17 @@ button {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  background: var(--patina-tint);
+  color: var(--patina);
 }
-.permission-icon.granted {
+/* .permission-icon.granted {
   background: var(--patina-tint);
   color: var(--patina);
 }
 .permission-icon.denied {
   background: var(--ember-tint);
   color: var(--ember);
-}
+} */
 
 /* ---- Invitation settings ---- */
 .invitation-settings-row {

@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import {
     UserPlus,
     X,
@@ -47,8 +47,8 @@ const EMPTY_FORM: InviteUserData = {
     lastName: '',
     email: '',
     jobTitle: '',
-    department: '',
-    role: '',
+    departmentId: '',
+    roleId: '',
     avatar: null
 };
 
@@ -69,15 +69,13 @@ export default function AddUserForm({
         isLoading: departmentsLoading,
     } = useDepartments();
 
-    // console.log(JSON.stringify(roles))
     const [form, setForm] = useState<InviteUserData>(EMPTY_FORM);
-    console.log(form, 'user form detail')
     const [sendInvite, setSendInvite] = useState(true);
-    const [requirePasswordChange, setRequirePasswordChange] = useState(true);
     const [addToDefaultProject, setAddToDefaultProject] = useState(false);
     const [selectedRole, setSelectedRole] = useState('');
+    const [requirePasswordChange, setRequirePasswordChange] = useState(true);
     // const [selectedDepartment, setSelectedDepartment] = useState('');
-    const selectedRoleData = roles.find((role) => role.id === selectedRole,
+    const selectedRoleData = roles.find((role) => role.id === form?.roleId,
     );
 
     const isReadOnly =
@@ -128,7 +126,6 @@ export default function AddUserForm({
         e: React.FormEvent<HTMLFormElement>,
     ) => {
         e.preventDefault();
-        console.log('🔥 ADD USER FORM SUBMITTED');
         if (isReadOnly) {
 
             return;
@@ -139,15 +136,31 @@ export default function AddUserForm({
             lastName: form.lastName,
             email: form.email,
             jobTitle: form.jobTitle,
-            department: form.department,
-            role: form.role,
+            departmentId: form.departmentId,
+            roleId: form.roleId,
             avatar: form.avatar,
         };
-        console.log('🔥 FORM DATA:', data);
-    console.log('🔥 FORM DATA TYPE:', typeof data);
-    console.log('🔥 ON_SUBMIT:', onSubmit);
         onSubmit?.(data);
     };
+
+    useEffect(() => {
+        if (mode === 'create') {
+            setForm(EMPTY_FORM);
+            return;
+        }
+
+        if ((mode === 'edit' || mode === 'view') && existingUserDetail) {
+            setForm({
+                firstName: existingUserDetail.firstName,
+                lastName: existingUserDetail.lastName,
+                email: existingUserDetail.email,
+                jobTitle: existingUserDetail.jobTitle ?? '',
+                departmentId: existingUserDetail.department?.id ?? '',
+                roleId: existingUserDetail.roles?.[0]?.id ?? '',
+                avatar: null,
+            });
+        }
+    }, [mode, existingUserDetail]);
 
     return (
         <form
@@ -245,11 +258,11 @@ export default function AddUserForm({
                                 required
                                 icon={<Users size={14} />}
                                 placeholder="Select a role"
-                                value={form?.role}
+                                value={form?.roleId}
                                 onChange={(value) =>
                                     setForm((prev) => ({
                                         ...prev,
-                                        role: value,
+                                        roleId: value,
                                     }))
                                 }
                                 options={roles.map((role) => ({
@@ -263,11 +276,11 @@ export default function AddUserForm({
                             <Dropdown
                                 label="Department"
                                 placeholder="Select a department"
-                                value={form?.department}
+                                value={form?.departmentId}
                                 onChange={(value) =>
                                     setForm((prev) => ({
                                         ...prev,
-                                        department: value,
+                                        departmentId: value,
                                     }))
                                 }
                                 options={departments.map((department) => ({
