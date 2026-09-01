@@ -1,21 +1,14 @@
 
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-    UserPlus,
-    X,
     Users,
-    Camera,
-    Upload,
-    Trash2,
     Shield,
     ChevronDown,
-    Building2,
     Mail,
     Check,
-    UserCircle,
     CircleCheck
 } from 'lucide-react';
-import type { CreateUserData, InviteUserData, UserFormProps } from '../types/user.types';
+import type { InviteUserData, UserFormProps } from '../types/user.types';
 import { useRoles } from '@/features/roles/hooks/useRoles';
 import Dropdown from '@/shared/components/Dropdown';
 import { useDepartments } from '@/features/departments/hooks/useDepartments';
@@ -57,7 +50,6 @@ export default function AddUserForm({
     existingUserDetail,
     onSubmit
 }: UserFormProps) {
-
     const {
         data: roles = [],
         isLoading: isRolesLoading,
@@ -69,18 +61,35 @@ export default function AddUserForm({
         isLoading: departmentsLoading,
     } = useDepartments();
 
+    // const [selectedRole, setSelectedRole] = useState('');
+    // const [requirePasswordChange, setRequirePasswordChange] = useState(true);
+    // const [selectedDepartment, setSelectedDepartment] = useState('');
     const [form, setForm] = useState<InviteUserData>(EMPTY_FORM);
     const [sendInvite, setSendInvite] = useState(true);
     const [addToDefaultProject, setAddToDefaultProject] = useState(false);
-    const [selectedRole, setSelectedRole] = useState('');
-    const [requirePasswordChange, setRequirePasswordChange] = useState(true);
-    // const [selectedDepartment, setSelectedDepartment] = useState('');
     const selectedRoleData = roles.find((role) => role.id === form?.roleId,
     );
 
-    const isReadOnly =
-        mode === 'view' ||
-        (mode === 'edit');
+    const isReadOnly = mode === 'view'
+
+    useEffect(() => {
+        if (mode === 'create') {
+            setForm(EMPTY_FORM);
+            return;
+        }
+
+        if ((mode === 'edit' || mode === 'view') && existingUserDetail) {
+            setForm({
+                firstName: existingUserDetail.firstName,
+                lastName: existingUserDetail.lastName,
+                email: existingUserDetail.email,
+                jobTitle: existingUserDetail.jobTitle ?? '',
+                departmentId: existingUserDetail.department?.id ?? '',
+                roleId: existingUserDetail.roles?.[0]?.id ?? '',
+                avatar: null,
+            });
+        }
+    }, [mode, existingUserDetail]);
 
     if (!open) return null;
 
@@ -143,25 +152,6 @@ export default function AddUserForm({
         onSubmit?.(data);
     };
 
-    useEffect(() => {
-        if (mode === 'create') {
-            setForm(EMPTY_FORM);
-            return;
-        }
-
-        if ((mode === 'edit' || mode === 'view') && existingUserDetail) {
-            setForm({
-                firstName: existingUserDetail.firstName,
-                lastName: existingUserDetail.lastName,
-                email: existingUserDetail.email,
-                jobTitle: existingUserDetail.jobTitle ?? '',
-                departmentId: existingUserDetail.department?.id ?? '',
-                roleId: existingUserDetail.roles?.[0]?.id ?? '',
-                avatar: null,
-            });
-        }
-    }, [mode, existingUserDetail]);
-
     return (
         <form
             id="user-form"
@@ -189,6 +179,7 @@ export default function AddUserForm({
                                 onChange={
                                     handleInputChange
                                 }
+                                disabled={isReadOnly}
                             />
                         </div>
 
@@ -204,6 +195,7 @@ export default function AddUserForm({
                                 onChange={
                                     handleInputChange
                                 }
+                                disabled={isReadOnly}
                             />
                         </div>
 
@@ -219,6 +211,7 @@ export default function AddUserForm({
                                 onChange={
                                     handleInputChange
                                 }
+                                disabled={isReadOnly}
                             />
                         </div>
 
@@ -232,6 +225,7 @@ export default function AddUserForm({
                                 onChange={
                                     handleInputChange
                                 }
+                                disabled={isReadOnly}
                             />
                         </div>
                     </div>
@@ -240,6 +234,7 @@ export default function AddUserForm({
                         <PhotoUpload
                             value={form.avatar ? URL.createObjectURL(form.avatar) : null}
                             onChange={handleAvatarChange}
+                            disabled={isReadOnly}
                         />
                     </div>
                 </div>
@@ -269,6 +264,7 @@ export default function AddUserForm({
                                     value: role.id,
                                     label: role.displayName,
                                 }))}
+                                disabled={isReadOnly}
                             />
                         </div>
 
@@ -287,7 +283,7 @@ export default function AddUserForm({
                                     value: department.id,
                                     label: department.name,
                                 }))}
-                                disabled={departmentsLoading}
+                                disabled={departmentsLoading || isReadOnly}
                             />
                         </div>
                     </div>
