@@ -83,6 +83,7 @@ import {
   Controller,
   Get,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 
@@ -125,6 +126,7 @@ export class UsersController {
     @Body() dto: InviteUserDto,
     @CurrentUser() user: JwtUser,
   ) {
+    console.log('DTO IN CONTROLLER:', dto);
     return this.usersService.inviteUser(
       dto,
       user.organizationId,

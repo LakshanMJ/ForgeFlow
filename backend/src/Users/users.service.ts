@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import type { InviteUserDto } from './dto/invite-user.dto';
+import { InviteUserDto } from './dto/invite-user.dto';
 import { randomBytes, createHash } from 'crypto';
 import type { AcceptInviteDto } from './dto/accept-invite.dto';
 // import type { MailService } from 'src/mail/mail.service';
@@ -137,112 +137,6 @@ export class UsersService {
 		};
 	}
 
-	// async inviteUser(
-	// 	dto: InviteUserDto,
-	// 	organizationId: string,
-	// ) {
-	// 	console.log('🔥 SERVICE DTO:', dto);
-	// 	console.log('🔥 SERVICE TYPE:', typeof dto);
-	// 	console.log('🔥 EMAIL:', dto.email);
-	// 	const existingUser = await this.prisma.user.findUnique({
-	// 		where: {
-	// 			email: dto.email,
-	// 		},
-	// 	});
-
-	// 	if (existingUser) {
-	// 		throw new BadRequestException(
-	// 			'A user with this email already exists',
-	// 		);
-	// 	}
-
-	// 	// Validate role belongs to this organization
-	// 	if (dto.roleId) {
-	// 		const role = await this.prisma.role.findFirst({
-	// 			where: {
-	// 				id: dto.roleId,
-	// 				organizationId,
-	// 			},
-	// 		});
-
-	// 		if (!role) {
-	// 			throw new NotFoundException(
-	// 				'Role does not exist',
-	// 			);
-	// 		}
-	// 	}
-
-	// 	// Validate department belongs to this organization
-	// 	if (dto.departmentId) {
-	// 		const department =
-	// 			await this.prisma.department.findFirst({
-	// 				where: {
-	// 					id: dto.departmentId,
-	// 					organizationId,
-	// 				},
-	// 			});
-
-	// 		if (!department) {
-	// 			throw new NotFoundException(
-	// 				'Department does not exist',
-	// 			);
-	// 		}
-	// 	}
-
-	// 	const user = await this.prisma.user.create({
-	// 		data: {
-	// 			firstName: dto.firstName,
-	// 			lastName: dto.lastName,
-	// 			email: dto.email,
-	// 			jobTitle: dto.jobTitle,
-	// 			organizationId,
-	// 			status: 'INVITED',
-	// 			departmentId: dto.departmentId ?? null,
-
-	// 			...(dto.roleId
-	// 				? {
-	// 					userRoles: {
-	// 						create: {
-	// 							roleId: dto.roleId,
-	// 						},
-	// 					},
-	// 				}
-	// 				: {}),
-	// 		},
-
-	// 		include: {
-	// 			department: true,
-	// 			userRoles: {
-	// 				include: {
-	// 					role: true,
-	// 				},
-	// 			},
-	// 		},
-	// 	});
-
-	// 	return {
-	// 		id: user.id,
-	// 		email: user.email,
-	// 		firstName: user.firstName,
-	// 		lastName: user.lastName,
-	// 		jobTitle: user.jobTitle,
-	// 		status: user.status,
-
-	// 		department: user.department
-	// 			? {
-	// 				id: user.department.id,
-	// 				name: user.department.name,
-	// 			}
-	// 			: null,
-
-	// 		organizationId: user.organizationId,
-
-	// 		roles: user.userRoles.map(
-	// 			(userRole) => userRole.role,
-	// 		),
-	// 	};
-	// }
-
 	async inviteUser(
 		dto: InviteUserDto,
 		organizationId: string,
@@ -252,7 +146,7 @@ export class UsersService {
 				email: dto.email,
 			},
 		});
-
+		console.log(dto,'dto inside service');
 		if (existingUser) {
 			throw new BadRequestException(
 				'A user with this email already exists',
@@ -355,11 +249,11 @@ export class UsersService {
 		// Database transaction succeeded.
 		// Now send the invitation email.
 		try {
-			await this.mailService.sendInvitationEmail(
-				result.email,
-				result.firstName,
-				rawToken,
-			);
+			// await this.mailService.sendInvitationEmail(
+			// 	result.email,
+			// 	result.firstName,
+			// 	rawToken,
+			// );
 		} catch (error) {
 			console.error(
 				'❌ Invitation email failed:',
@@ -512,6 +406,7 @@ export class UsersService {
 				avatar: true,
 				jobTitle: true,
 				status: true,
+				createdAt: true,
 
 				department: {
 					select: {
