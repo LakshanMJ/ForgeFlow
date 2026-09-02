@@ -18,7 +18,7 @@ import { useRoles } from '../hooks/useRoles';
 import Card from '@/shared/components/Card';
 
 export default function RolesPage() {
-	const [tab, setTab] = useState('list');
+	const [tab, setTab] = useState('assignments');
 	const {
 		data: roles,
 		isLoading,

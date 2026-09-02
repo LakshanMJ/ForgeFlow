@@ -24,67 +24,14 @@ import { useState } from 'react';
 import Modal from '@/shared/components/Modal';
 import AddRoleForm from './AddRoleForm';
 import { useRoles } from '../hooks/useRoles';
-import type { CreateRoleData, Role, UpdateRoleData } from '../types/role.types';
+import type { CreateRoleData, Role, RoleRow, RoleStatus, RoleType, UpdateRoleData } from '../types/role.types';
 import { useCreateRole } from '../hooks/useCreateRole';
 import { useUpdateRole } from '../hooks/useUpdateRole';
-
-type RoleType = 'SYSTEM' | 'CUSTOM';
-
-type RoleStatus = 'Active' | 'Inactive';
-
-type RoleRow = Role & {
-    icon: typeof Crown;
-    iconColor: string;
-    users: number;
-    permissions: number;
-    typeChip: string;
-    type: RoleType;
-    status: RoleStatus;
-};
+import { RoleIcon } from './RoleIcon';
 
 const STATUS_COLOR: Record<RoleStatus, string> = {
     Active: 'var(--patina)',
     Inactive: 'var(--gold)',
-};
-
-const getRoleIcon = (roleName: string) => {
-    switch (roleName) {
-        case 'OWNER':
-            return {
-                icon: Crown,
-                iconColor: 'var(--ember)',
-            };
-
-        case 'ADMIN':
-            return {
-                icon: Shield,
-                iconColor: 'var(--ember)',
-            };
-
-        case 'PROJECT_MANAGER':
-            return {
-                icon: ClipboardList,
-                iconColor: 'var(--gold)',
-            };
-
-        case 'VIEWER':
-            return {
-                icon: Eye,
-                iconColor: 'var(--gold)',
-            };
-
-        case 'MEMBER':
-            return {
-                icon: UsersIcon,
-                iconColor: 'var(--steel)',
-            };
-
-        default:
-            return {
-                icon: Shield,
-                iconColor: 'var(--patina)',
-            };
-    }
 };
 
 const RolesList = () => {
@@ -102,7 +49,8 @@ const RolesList = () => {
         isError,
         error,
     } = useRoles();
-
+    
+    console.log('rolessssss', roles);
     if (isLoading) {
         return (
             <div>
@@ -127,13 +75,8 @@ const RolesList = () => {
 
     const roleRows: RoleRow[] = (roles ?? []).map(
         (role) => {
-            const { icon, iconColor } =
-                getRoleIcon(role.name);
-
             return {
                 ...role,
-                icon,
-                iconColor,
                 users: role._count.userRoles,
                 permissions:
                     role._count.rolePermissions,
@@ -152,19 +95,9 @@ const RolesList = () => {
         {
             key: 'name',
             label: 'Role Name',
-
             render: (role) => (
                 <div className="role-name-cell">
-                    <span
-                        className="role-icon"
-                        style={{
-                            background:
-                                'var(--surface-3)',
-                            color: role.iconColor,
-                        }}
-                    >
-                        <role.icon size={16} />
-                    </span>
+                    <RoleIcon roleName={role.name} />
 
                     <span className="role-name-text">
                         {role.displayName}

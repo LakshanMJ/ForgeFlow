@@ -1,4 +1,5 @@
 import type { Permission } from "@/features/permissions/types/permission.types";
+import type { Crown } from "lucide-react";
 
 export interface RoleUser {
     id: string;
@@ -74,3 +75,41 @@ export interface UpdateRoleData {
     permissionIds?: string[];
     userIds?: string[];
 }
+
+// type RoleType = 'System Role' | 'Custom Role';
+
+export type RoleType = 'SYSTEM' | 'CUSTOM';
+
+export type RoleStatus = 'Active' | 'Inactive';
+
+export type Status = 'Online' | 'Away' | 'Offline';
+
+type AssignedUser = {
+    initials: string;
+    name: string;
+    email: string;
+    accent: string;
+    department: string;
+    status: Status;
+};
+
+export type RoleColumn = {
+    key: string;
+    label: string;
+    icon: typeof Crown;
+    color: string;
+    count: number;
+    permissions: number;
+    type: RoleType;
+    active: boolean;
+    sidebarBadge?: { text: string; className: string };
+    users: AssignedUser[];
+};
+
+export type RoleRow = Role & {
+    users: number;
+    permissions: number;
+    typeChip: string;
+    type: RoleType;
+    status: RoleStatus;
+};

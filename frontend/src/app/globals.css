@@ -574,11 +574,17 @@ button {
 }
 
 /* ---- Page header ---- */
-.page-header-row {
+/* .page-header-row {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 4px;
+} */
+.page-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 /* ---- Filter bar ---- */

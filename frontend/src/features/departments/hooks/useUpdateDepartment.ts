@@ -1,10 +1,6 @@
 import api from '@/lib/axios';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-
-export interface UpdateDepartmentData {
-    name?: string;
-    description?: string;
-}
+import type { UpdateDepartmentData } from '../types/departments.types';
 
 export function useUpdateDepartment() {
     const queryClient = useQueryClient();

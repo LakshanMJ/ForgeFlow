@@ -12,14 +12,14 @@ import {
 	ChevronLeft,
 	ChevronRight,
 } from 'lucide-react';
-import type { DepartmentFormData } from './DepartmentFormModal';
+
 import DepartmentFormModal from './DepartmentFormModal';
 import { useDepartments } from '../hooks/useDepartments';
 import { useCreateDepartment } from '../hooks/useCreateDepartment';
-import type { Department } from '../types/departments.types';
 import { useUpdateDepartment } from '../hooks/useUpdateDepartment';
 import DataTable from '@/shared/components/DataTable';
 import PageHeader from '@/shared/components/PageHeader';
+import type { Department, DepartmentColumn, DepartmentFormData } from '../types/departments.types';
 
 function openPositionsStyle(count: number): { background: string; color: string } {
 	if (count === 0) return { background: 'var(--patina-tint)', color: 'var(--patina-tint-text)' };
@@ -29,14 +29,15 @@ function openPositionsStyle(count: number): { background: string; color: string 
 
 export default function DepartmentsPage() {
 
-	const [modalMode, setModalMode] = useState<'create' | 'edit' | null>(null);
+	const [modalMode, setModalMode] = useState<'create' | 'edit' | 'view' | null>(null);
 	const [editingDept, setEditingDept] = useState<Department | null>(null);
 	const initialFormData: DepartmentFormData | undefined = editingDept
 		? {
 			name: editingDept.name,
 			description: editingDept.description ?? '',
-			managerName: '',
+			managerId: editingDept.managerId ?? '',
 			parentDepartmentName: '',
+			openPositions: editingDept.openPositions,
 		}
 		: undefined;
 
@@ -48,7 +49,7 @@ export default function DepartmentsPage() {
 	const createDepartment = useCreateDepartment();
 	const updateDepartment = useUpdateDepartment();
 
-	const departmentColumns = [
+	const departmentColumns : DepartmentColumn[] = [
 		{
 			key: 'name',
 			label: 'Department',
@@ -61,12 +62,12 @@ export default function DepartmentsPage() {
 			),
 		},
 		{
-			key: 'manager',
+			key: 'managerId',
 			label: 'Manager',
 			render: (dept) =>
-				dept.manager ? (
-					<a href="#" className="manager-link">
-						{dept.manager || '--'}
+				dept.managerId ? (
+					<a href="#" className="manager-link">	
+						{dept.manager?.firstName} {dept.manager?.lastName}
 					</a>
 				) : (
 					<span className="manager-dash">&mdash;</span>
@@ -78,7 +79,7 @@ export default function DepartmentsPage() {
 			render: (dept) => (
 				<span className="members-count-cell">
 					<Users size={14} color="var(--text-tertiary)" />
-					{dept.members || '--'}
+					{dept._count?.users || '--'}
 				</span>
 			),
 		},
@@ -113,6 +114,7 @@ export default function DepartmentsPage() {
 						className="kebab-btn"
 						type="button"
 						aria-label={`View ${dept.name}`}
+						onClick={() => openViewModal(dept)}
 					>
 						<Eye size={15} />
 					</button>
@@ -148,6 +150,11 @@ export default function DepartmentsPage() {
 		setModalMode('edit');
 	};
 
+	const openViewModal = (dept: Department) => {
+		setEditingDept(dept);
+		setModalMode('view');
+	};
+
 	const closeModal = () => {
 		setModalMode(null);
 		setEditingDept(null);
@@ -161,6 +168,8 @@ export default function DepartmentsPage() {
 					data: {
 						name: data.name,
 						description: data.description,
+						managerId: data.managerId,
+						openPositions: data.openPositions,
 					},
 				},
 				{
@@ -169,14 +178,14 @@ export default function DepartmentsPage() {
 					},
 				},
 			);
-
 			return;
 		}
-
 		createDepartment.mutate(
 			{
 				name: data.name,
 				description: data.description,
+				managerId: data.managerId,
+				openPositions: data.openPositions,
 			},
 			{
 				onSuccess: () => {
@@ -196,40 +205,23 @@ export default function DepartmentsPage() {
 				onSubmit={handleSubmit}
 			/>
 
-			{/* <div className="breadcrumb-trail">
-				<Link href="/dashboard/settings">Settings</Link>
-				<span className="crumb-sep">/</span>
-				<span className="crumb-current">Departments</span>
-			</div>
-
-			<div className="page-header-row">
-				<div>
-					<h1 className="page-title">Departments</h1>
-					<p className="page-subtitle" style={{ marginBottom: 0 }}>
-						Manage organizational departments and their members
-					</p>
-				</div>
-				<button className="btn-primary" type="button" onClick={openCreateModal}>
-					<Plus size={15} />
-					Add Department
-				</button>
-			</div> */}
 			<div className="page-header-row">
 				<PageHeader
-					parentLabel="Settings"
-					parentHref="/dashboard/settings"
+					parentLabel="Admin"
+					parentHref="#"
 					title="Departments"
 					subtitle="Manage organizational departments and their members"
 				/>
+
+				<button
+					className="btn-primary"
+					type="button"
+					onClick={openCreateModal}
+				>
+					<Plus size={15} />
+					Add Department
+				</button>
 			</div>
-			<button
-				className="btn-primary"
-				type="button"
-				onClick={openCreateModal}
-			>
-				<Plus size={15} />
-				Add Department
-			</button>
 			<div className="card" style={{ margin: '20px 0' }}>
 				<div className="search-input">
 					<Search size={14} />
@@ -245,97 +237,6 @@ export default function DepartmentsPage() {
 				totalPages={1}
 				columnWidths="2fr 1fr 1.2fr 1fr 1fr 110px"
 			/>
-
-			{/* Make this into a table !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-			{/* <div className="table-card">
-				<div className="table-scroll">
-					<div className="table-grid departments-table-grid">
-						<div className="table-head departments-table-row">
-							<div>Department</div>
-							<div>Manager</div>
-							<div>Members</div>
-							<div>Open Positions</div>
-							<div>Created</div>
-							<div>Actions</div>
-						</div>
-
-						{departments.map((dept) => (
-							<div className="table-row departments-table-row" key={dept.name}>
-								<div className="department-name-cell">
-									<span className="department-name-text">{dept.name}</span>
-								</div>
-
-								<div>
-									{dept?.manager ? (
-										<a href="#" className="manager-link">
-											{dept?.manager}
-										</a>
-									) : (
-										<span className="manager-dash">&mdash;</span>
-									)}
-								</div>
-
-								<div>
-									<span className="members-count-cell">
-										<Users size={14} color="var(--text-tertiary)" />
-										{dept?.members}
-									</span>
-								</div>
-
-								<div>
-									<span
-										className="open-positions-badge"
-										style={openPositionsStyle(dept?.openPositions)}
-									>
-										{dept?.openPositions}
-									</span>
-								</div>
-								<div>
-									{new Date(dept.createdAt).toLocaleDateString('en-US', {
-										month: 'short',
-										day: 'numeric',
-										year: 'numeric',
-									})}
-								</div>
-
-								<div>
-									<span className="actions-cell-group">
-										<button className="kebab-btn" type="button" aria-label={`View ${dept.name}`}>
-											<Eye size={15} />
-										</button>
-										<button
-											className="kebab-btn"
-											type="button"
-											aria-label={`Edit ${dept.name}`}
-											onClick={() => openEditModal(dept)}
-										>
-											<Pencil size={15} />
-										</button>
-										<button className="kebab-btn" type="button" aria-label="More actions">
-											<MoreVertical size={15} />
-										</button>
-									</span>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-
-				<div className="table-footer">
-					<span>Showing 1 to {departments.length} of {departments.length} items</span>
-					<div className="pagination">
-						<button className="page-btn" type="button" aria-label="Previous page">
-							<ChevronLeft size={14} />
-						</button>
-						<button className="page-btn active" type="button">
-							1
-						</button>
-						<button className="page-btn" type="button" aria-label="Next page">
-							<ChevronRight size={14} />
-						</button>
-					</div>
-				</div>
-			</div> */}
 		</>
 	);
 }
