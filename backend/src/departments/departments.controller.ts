@@ -49,10 +49,6 @@ export class DepartmentsController {
         @Req() req: any,
         @Body() dto: UpdateDepartmentDto,
     ) {
-        console.log('PATCH CONTROLLER HIT');
-        console.log('PARAM ID:', id);
-        console.log('BODY:', dto);
-
         return this.departmentsService.updateDepartment(
             id,
             dto,

@@ -54,7 +54,8 @@ model User {
   deletedAt DateTime?
 
   organization       Organization    @relation(fields: [organizationId], references: [id])
-  department Department? @relation(fields: [departmentId],references: [id])
+  department         Department?  @relation("DepartmentMembers", fields: [departmentId], references: [id])
+  managedDepartments Department[] @relation("DepartmentManager")
 
   ownedProjects      Project[]       @relation("ProjectOwner")
   projectMemberships ProjectMember[]
@@ -167,15 +168,19 @@ model Department {
   description    String?
   isActive       Boolean  @default(true)
 
+  managerId      String?
+  openPositions  Int      @default(0)
+  
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   organization Organization @relation(fields: [organizationId],references: [id])
-
-  users User[]
+  users          User[] @relation("DepartmentMembers")
+  manager        User?    @relation("DepartmentManager", fields: [managerId], references: [id])
 
   @@unique([organizationId, name])
   @@index([organizationId])
+  @@index([managerId])
   @@map("departments")
 }
 

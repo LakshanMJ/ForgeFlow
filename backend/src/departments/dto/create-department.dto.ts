@@ -1,4 +1,5 @@
 import {
+    IsNumber,
     IsOptional,
     IsString,
     MinLength,
@@ -12,4 +13,12 @@ export class CreateDepartmentDto {
     @IsOptional()
     @IsString()
     description?: string;
+
+    @IsOptional()
+    @IsString()
+    managerId?: string;
+
+    @IsOptional()
+    @IsNumber()
+    openPositions?: number;
 }

@@ -31,9 +31,14 @@ export class RolesService {
 				organizationId,
 			},
 
-			orderBy: {
-				createdAt: 'desc',
-			},
+			orderBy: [
+				{
+					isSystem: 'desc',
+				},
+				{
+					createdAt: 'desc',
+				},
+			],
 
 			include: {
 				_count: {
