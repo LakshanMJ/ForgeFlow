@@ -59,6 +59,7 @@ export class RolesService {
 								id: true,
 								firstName: true,
 								lastName: true,
+								department: true,
 								email: true,
 							},
 						},

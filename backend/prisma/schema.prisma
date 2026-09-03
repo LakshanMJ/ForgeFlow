@@ -17,16 +17,17 @@ model Organization {
   country  String?
   timezone String?
 
-  departments Department[]
-  users     User[]
-  roles Role[]
-  projects  Project[]
-  tasks     Task[]
-  labels    Label[]
-  auditLogs AuditLog[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deletedAt DateTime?
+  departments       Department[]
+  users             User[]
+  roles             Role[]
+  projects          Project[]
+  projectCategories ProjectCategory[]
+  tasks             Task[]
+  labels            Label[]
+  auditLogs         AuditLog[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  deletedAt         DateTime?
 
   @@map("organizations")
 }
@@ -34,16 +35,16 @@ model Organization {
 model User {
   id             String @id @default(uuid())
   organizationId String
-  
+
   firstName    String
   lastName     String
-  email        String     @unique @db.VarChar(255)
+  email        String       @unique @db.VarChar(255)
   passwordHash String?
   avatar       String?
   jobTitle     String?
-  status       UserStatus @default(ACTIVE)
+  status       UserStatus   @default(ACTIVE)
   lastLogin    DateTime?
-  invitations Invitation[]
+  invitations  Invitation[]
 
   isSuperAdmin Boolean @default(false)
 
@@ -53,7 +54,7 @@ model User {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  organization       Organization    @relation(fields: [organizationId], references: [id])
+  organization       Organization @relation(fields: [organizationId], references: [id])
   department         Department?  @relation("DepartmentMembers", fields: [departmentId], references: [id])
   managedDepartments Department[] @relation("DepartmentManager")
 
@@ -77,7 +78,7 @@ model Invitation {
   id     String @id @default(uuid())
   userId String
 
-  tokenHash String   @unique
+  tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
 
@@ -91,7 +92,7 @@ model Invitation {
 }
 
 model Role {
-  id             String  @id @default(uuid())
+  id             String @id @default(uuid())
   organizationId String
 
   name        String
@@ -102,8 +103,8 @@ model Role {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userRoles      UserRole[]
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userRoles       UserRole[]
   rolePermissions RolePermission[]
 
   @@unique([organizationId, name])
@@ -116,7 +117,7 @@ model Permission {
   name        String  @unique
   displayName String
   description String?
-   category   String
+  category    String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -161,22 +162,22 @@ model RolePermission {
 }
 
 model Department {
-  id             String   @id @default(uuid())
+  id             String @id @default(uuid())
   organizationId String
 
-  name           String
-  description    String?
-  isActive       Boolean  @default(true)
+  name        String
+  description String?
+  isActive    Boolean @default(true)
 
-  managerId      String?
-  openPositions  Int      @default(0)
-  
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  managerId     String?
+  openPositions Int     @default(0)
 
-  organization Organization @relation(fields: [organizationId],references: [id])
-  users          User[] @relation("DepartmentMembers")
-  manager        User?    @relation("DepartmentManager", fields: [managerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  users        User[]       @relation("DepartmentMembers")
+  manager      User?        @relation("DepartmentManager", fields: [managerId], references: [id])
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -189,6 +190,7 @@ model Project {
 
   organizationId String
   ownerId        String
+  categoryId     String?
 
   name        String
   description String?
@@ -204,14 +206,37 @@ model Project {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  owner        User            @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  owner        User             @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  category     ProjectCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   members      ProjectMember[]
   tasks        Task[]
 
   @@index([organizationId])
   @@index([ownerId])
+  @@index([categoryId])
   @@map("projects")
+}
+
+model ProjectCategory {
+  id             String @id @default(uuid())
+  organizationId String
+
+  name        String
+  description String?
+  color       String?
+  isActive    Boolean @default(true)
+  isSystem    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  projects     Project[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@map("project_categories")
 }
 
 model ProjectMember {
