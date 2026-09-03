@@ -17,10 +17,14 @@ import {
 	ChevronRight,
 	Shield,
 	Save,
+	Eye,
+	Pencil,
+	Trash2,
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import AddProjetForm from './AddProjetForm';
+import AddProjetForm from './ProjectForm';
+import ProjectForm from './ProjectForm';
 
 type StatusKey = 'in-progress' | 'completed' | 'pending' | 'planning' | 'on-hold';
 
@@ -259,7 +263,9 @@ const PROJECTS: Project[] = [
 
 export default function ProjectsPage() {
 
-	const [isCreateOpen, setIsCreateOpen] = useState(false);
+	const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+	const [projectModalMode, setProjectModalMode] = useState<'create' | 'view' | 'edit'>('create');
+	const [selectedProject, setSelectedProject] = useState<Project | undefined>(undefined);
 
 	const projectColumns: Column<Project>[] = [
 		{
@@ -387,23 +393,54 @@ export default function ProjectsPage() {
 			render: (project) => (
 				<div className="updated-cell">
 					<span>{project.updated}</span>
-
-					<button
-						className="kebab-btn"
-						type="button"
-						aria-label={`Actions for ${project.name}`}
-					>
-						<MoreVertical size={15} />
-					</button>
 				</div>
 			),
 		},
 		{
-			key: 'actions', label: '', render: (item) => <button className="kebab-btn" type="button" aria-label="More options">
-				{/* <MoreVertical size={16} /> */}
-			</button>
+			key: 'actions',
+			label: 'Actions',
+			render: (project) => (
+				<span className="actions-cell-group">
+					<button
+						className="kebab-btn"
+						type="button"
+						aria-label={`View ${project.name}`}
+						onClick={() => {
+							setSelectedProject(project);
+							setProjectModalMode('view');
+							setIsProjectModalOpen(true);
+						}}
+					>
+						<Eye size={15} />
+					</button>
+					<button
+						className="kebab-btn"
+						type="button"
+						aria-label={`Edit ${'role.name'}`}
+						onClick={() => {
+							setSelectedProject(project);
+							setProjectModalMode('edit');
+							setIsProjectModalOpen(true);
+						}}
+					>
+						<Pencil size={15} />
+					</button>
+
+					<button
+						className="kebab-btn"
+						type="button"
+						aria-label={`Delete ${'role.name'}`}
+					>
+						<Trash2 size={15} />
+					</button>
+				</span>
+			),
 		},
 	];
+
+	const handleSubmit = () => {
+		alert('inside main page onsubmit')
+	};
 
 	return (
 		<>
@@ -414,7 +451,7 @@ export default function ProjectsPage() {
 						Plan, track and deliver work across all your projects.
 					</p>
 				</div>
-				<button className="btn-primary" type="button" onClick={() => setIsCreateOpen(true)}>
+				<button className="btn-primary" type="button" onClick={() => setIsProjectModalOpen(true)}>
 					<Plus size={15} />
 					New Project
 				</button>
@@ -422,9 +459,9 @@ export default function ProjectsPage() {
 
 			{/* <CreateProjectModal open={isCreateOpen} onClose={() => setIsCreateOpen(false)} /> */}
 
-			<Modal
-				isOpen={isCreateOpen}
-				onClose={() => setIsCreateOpen(false)}
+			{/* <Modal
+				isOpen={isProjectModalOpen}
+				onClose={() => setIsProjectModalOpen(false)}
 				title="Create New Project"
 				icon={<Shield size={18} />}
 				size="xl"
@@ -433,13 +470,37 @@ export default function ProjectsPage() {
 				onSubmit={() => { }}
 			>
 				<AddProjetForm />
+			</Modal> */}
+
+			<Modal
+				isOpen={isProjectModalOpen}
+				onClose={() => setIsProjectModalOpen(false)}
+				title={
+					projectModalMode === 'create'
+						? 'Create New Project'
+						: projectModalMode === 'edit'
+							? 'Edit Project'
+							: 'View Project'
+				}
+				icon={<Shield size={18} />}
+				size="xl"
+				submitFormId="project-form"
+				showSubmit={projectModalMode !== 'view'}
+				submitLabel={
+					projectModalMode === 'edit'
+						? 'Save Changes'
+						: 'Save Project'
+				}
+				submitIcon={<Save size={14} />}
+			>
+				<ProjectForm
+					mode={projectModalMode}
+					existingUserDetail={selectedProject}
+					onSubmit={handleSubmit}
+				/>
 			</Modal>
 
 			<div className="filter-bar">
-				{/* <div className="search-input">
-          <Search size={14} />
-          <input type="text" placeholder="Search projects..." />
-        </div> */}
 				<SearchInput
 					placeholder="Search projects..."
 					iconSize={14}
@@ -478,7 +539,7 @@ export default function ProjectsPage() {
 				totalItems={18}
 				currentPage={1}
 				totalPages={3}
-				columnWidths="2.4fr 1.2fr 1.1fr 1.3fr 1.1fr 0.9fr 32px"
+				columnWidths="2.6fr 1.3fr 1.1fr 1.4fr 1.2fr 1fr 102px"
 			/>
 		</>
 	);

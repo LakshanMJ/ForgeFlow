@@ -22,6 +22,10 @@ export interface RoleAssignedUser {
     id: string;
     firstName: string;
     lastName: string;
+    department?: {
+        id: string;
+        name: string;
+    };
     email: string;
     jobTitle?: string | null;
     avatar?: string | null;
@@ -32,6 +36,10 @@ export interface RoleUserRole {
     id: string;
     userId: string;
     roleId: string;
+    department?: {
+        id: string;
+        name: string;
+    };
     user: RoleAssignedUser;
 }
 

@@ -1,19 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-	Download,
 	Plus,
-	Crown,
-	Shield,
-	ClipboardList,
-	Laptop,
-	Eye,
-	FlaskConical,
-	BookOpen,
-	Users,
-	UserCheck,
-	AlertTriangle,
 	Search,
 	RefreshCw,
 	X,
@@ -29,123 +18,6 @@ const STATUS_COLOR: Record<Status, string> = {
 	Offline: 'var(--text-tertiary)',
 };
 
-
-const ROLES: RoleColumn[] = [
-	{
-		key: 'OWNER',
-		label: 'Owner',
-		icon: Crown,
-		color: 'var(--ember)',
-		count: 1,
-		permissions: 12,
-		type: 'System Role',
-		active: true,
-		users: [
-			{ initials: 'WS', name: 'Wile Smith', email: 'wile.smith@acmecorp.com', accent: 'var(--steel)', department: 'Engineering', status: 'Online' },
-		],
-	},
-	{
-		key: 'ADMIN',
-		label: 'Admin',
-		icon: Shield,
-		color: 'var(--ember)',
-		count: 2,
-		permissions: 10,
-		type: 'System Role',
-		active: true,
-		users: [
-			{ initials: 'SJ', name: 'Sarah Johnson', email: 'sarah.johnson@acmecorp.com', accent: 'var(--ember)', department: 'Engineering', status: 'Online' },
-			{ initials: 'ML', name: 'Michael Lee', email: 'michael.lee@acmecorp.com', accent: 'var(--steel)', department: 'HR', status: 'Away' },
-		],
-	},
-	{
-		key: 'PROJECT_MANAGER',
-		label: 'Project Manager',
-		icon: ClipboardList,
-		color: 'var(--gold)',
-		count: 3,
-		permissions: 8,
-		type: 'System Role',
-		active: true,
-		users: [
-			{ initials: 'JW', name: 'Jamie Wong', email: 'jamie.wong@acmecorp.com', accent: 'var(--gold)', department: 'Product', status: 'Online' },
-			{ initials: 'AR', name: 'Alex Rivera', email: 'alex.rivera@acmecorp.com', accent: 'var(--patina)', department: 'Marketing', status: 'Offline' },
-			{ initials: 'SC', name: 'Sarah Chen', email: 'sarah.chen@acmecorp.com', accent: 'var(--steel)', department: 'Engineering', status: 'Online' },
-		],
-	},
-	{
-		key: 'DEVELOPER',
-		label: 'Developer',
-		icon: Laptop,
-		color: 'var(--steel)',
-		count: 8,
-		permissions: 6,
-		type: 'System Role',
-		active: true,
-		users: [
-			{ initials: 'AT', name: 'Alex Turner', email: 'alex@acme.com', accent: 'var(--steel)', department: 'Design', status: 'Online' },
-			{ initials: 'MB', name: 'Mike Brown', email: 'mike@acme.com', accent: 'var(--patina)', department: 'Engineering', status: 'Online' },
-			{ initials: 'LW', name: 'Lisa Wong', email: 'lisa@acme.com', accent: 'var(--ember)', department: 'Engineering', status: 'Offline' },
-			{ initials: 'PS', name: 'Priya Shah', email: 'priya@acme.com', accent: 'var(--violet)', department: 'QA', status: 'Offline' },
-			{ initials: 'JD', name: 'John Doe', email: 'john@acme.com', accent: 'var(--surface-3)', department: 'Engineering', status: 'Away' },
-			{ initials: 'SP', name: 'Sarah Park', email: 'sarah.park@acme.com', accent: 'var(--violet)', department: 'Engineering', status: 'Online' },
-			{ initials: 'TC', name: 'Tom Chen', email: 'tom@acme.com', accent: 'var(--gold)', department: 'Engineering', status: 'Offline' },
-			{ initials: 'RC', name: 'Ryan Cole', email: 'ryan.cole@acme.com', accent: 'var(--steel)', department: 'Engineering', status: 'Online' },
-		],
-	},
-	{
-		key: 'VIEWER',
-		label: 'Viewer',
-		icon: Eye,
-		color: 'var(--gold)',
-		count: 4,
-		permissions: 3,
-		type: 'System Role',
-		active: true,
-		users: [
-			{ initials: 'DK', name: 'David Kim', email: 'david.kim@acmecorp.com', accent: 'var(--gold)', department: 'Product', status: 'Online' },
-			{ initials: 'EC', name: 'Emily Chen', email: 'emily.chen@acmecorp.com', accent: 'var(--patina)', department: 'Marketing', status: 'Away' },
-			{ initials: 'NP', name: 'Nina Patel', email: 'nina.patel@acmecorp.com', accent: 'var(--steel)', department: 'Sales', status: 'Offline' },
-			{ initials: 'CE', name: 'Chris Evans', email: 'chris.evans@acmecorp.com', accent: 'var(--violet)', department: 'Finance', status: 'Offline' },
-		],
-	},
-	{
-		key: 'qa',
-		label: 'QA Engineer',
-		icon: FlaskConical,
-		color: 'var(--patina)',
-		count: 2,
-		permissions: 5,
-		type: 'Custom Role',
-		active: true,
-		sidebarBadge: { text: 'Custom', className: 'chip-violet' },
-		users: [
-			{ initials: 'PS', name: 'Priya Shah', email: 'priya.shah@acmecorp.com', accent: 'var(--violet)', department: 'QA', status: 'Offline' },
-			{ initials: 'RP', name: 'Raj Patel', email: 'raj.patel@acmecorp.com', accent: 'var(--violet)', department: 'QA', status: 'Online' },
-		],
-	},
-	{
-		key: 'intern',
-		label: 'Intern',
-		icon: BookOpen,
-		color: 'var(--patina)',
-		count: 1,
-		permissions: 2,
-		type: 'Custom Role',
-		active: false,
-		sidebarBadge: { text: 'Inactive', className: 'chip-gold' },
-		users: [
-			{ initials: 'SL', name: 'Sam Lee', email: 'sam.lee@acmecorp.com', accent: 'var(--gold)', department: 'Engineering', status: 'Offline' },
-		],
-	},
-];
-
-const TOTAL_ROLES = ROLES.length;
-const TOTAL_USERS = 24;
-const ASSIGNED_USERS = ROLES.reduce((sum, r) => sum + r.count, 0);
-const COVERAGE_PCT = Math.round((ASSIGNED_USERS / TOTAL_USERS) * 100);
-const UNASSIGNED_USERS = TOTAL_USERS - ASSIGNED_USERS;
-
 export default function RoleAssignments() {
 	const {
 		data: roles,
@@ -154,7 +26,14 @@ export default function RoleAssignments() {
 		error,
 	} = useRoles();
 
-	const [selectedKey, setSelectedKey] = useState('Viewer');
+
+	const [selectedKey, setSelectedKey] = useState<string | undefined>(undefined);
+
+	useEffect(() => {
+		if (roles?.length && !selectedKey) {
+			setSelectedKey(roles[0].id);
+		}
+	}, [roles, selectedKey]);
 
 	const roleRows = (roles ?? []).map((role) => ({
 		...role,
@@ -164,18 +43,21 @@ export default function RoleAssignments() {
 			: 'chip-outline chip-outline-gold',
 	}));
 
-	// const selectedRole = roleRows.find(
-	// 	(role) => role.id === selectedKey
-	// );
+	const selectedRole = roleRows.find((role) => role.id === selectedKey) ?? roleRows[0];
 
-	const selectedRole =
-    roleRows.find((role) => role.id === selectedKey) ?? roleRows[0];
-	
-	// const selectedRole = roles?.find((r) => r.id === selectedKey) ?? roles?.[0];
+	console.log(selectedRole, 'selectedRole');
+	if (isLoading) {
+		return <div>Loading roles...</div>;
+	}
 
+	if (isError) {
+		return <div>Failed to load roles: {error?.message}</div>;
+	}
 
-	console.log(roles, 'rolesz')
-	console.log(selectedRole, 'selectedRole')
+	if (!selectedRole) {
+		return <div>No roles found.</div>;
+	}
+
 	return (
 		<div>
 			<div className="assignments-layout">
@@ -200,7 +82,7 @@ export default function RoleAssignments() {
 						Create New Role
 					</button>
 				</div>
-				{/* ...................................................................................................... */}
+
 				{/* ---- Role detail ---- */}
 				<div className="role-detail-panel">
 					<div className="role-detail-header">
@@ -215,12 +97,6 @@ export default function RoleAssignments() {
 								<span className="role-detail-title">{selectedRole?.displayName}</span>
 								<span className="role-detail-count">({selectedRole?._count?.userRoles} users)</span>
 							</span>
-							{/* <span
-								className="chip chip-violet"
-								style={{ borderRadius: 10, padding: '4px 11px', fontSize: 11.5 }}
-							>
-								{selectedRole?.type}
-							</span> */}
 							<span
 								className={`chip ${selectedRole?.typeChip}`}
 								style={{
@@ -256,9 +132,9 @@ export default function RoleAssignments() {
 							<div className="assigned-user-row" key={user.id}>
 								<span
 									className="owner-avatar"
-									style={{ width: 34, height: 34, background: user.accent, color: '#fff' }}
+									style={{ width: 34, height: 34, background: user.accent, color: '#fff' }} // currently no accent color is being sent from the backend, so this will be a placeholder until accent color is implemented in the backend	
 								>
-									{/* {user.initials} */}
+
 									{`${user?.user?.firstName?.[0] ?? ''}${user?.user?.lastName?.[0] ?? ''}`}
 								</span>
 								<span className="assigned-user-info">
@@ -266,18 +142,18 @@ export default function RoleAssignments() {
 									<div className="assigned-user-email">{user?.user?.email}</div>
 								</span>
 								<span className="assigned-user-meta">
-									<span className="chip chip-neutral">{'user.department'}</span>
+									<span className="chip chip-neutral">{user?.user?.department?.name}</span>
 									<span className="assigned-user-status">
 										<span
 											style={{
 												width: 7,
 												height: 7,
 												borderRadius: '50%',
-												background: STATUS_COLOR[user.status],
+												background: STATUS_COLOR[user.status], // clear this errror after user status is implemented with websocket
 												flexShrink: 0,
 											}}
 										/>
-										{'user.status'}
+										{'user.status'}   // implement this with websocket to get the real-time status of the user
 									</span>
 								</span>
 								<span className="assigned-user-actions">
@@ -306,7 +182,7 @@ export default function RoleAssignments() {
 								Permissions: <strong>{5}</strong>
 							</span>
 							<span>
-								Type: <strong>{selectedRole.type}</strong>
+								Type: <strong>{selectedRole?.type}</strong>
 							</span>
 							<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
 								Status:
@@ -315,15 +191,15 @@ export default function RoleAssignments() {
 										width: 7,
 										height: 7,
 										borderRadius: '50%',
-										background: selectedRole.active ? 'var(--patina)' : 'var(--gold)',
+										background: 'var(--patina)',
 									}}
 								/>
-								<strong>{selectedRole.active ? 'Active' : 'Inactive'}</strong>
+								<strong>Active</strong>
 							</span>
 							<span>
 								Created:{' '}
 								<strong>
-									{selectedRole.type === 'System Role' ? 'Pre-defined' : 'Jan 2026'}
+									{selectedRole?.type === 'SYSTEM' ? 'Pre-defined' : 'Jan 2026'}
 								</strong>
 							</span>
 						</div>

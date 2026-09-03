@@ -14,6 +14,7 @@ import {
     Check,
     ArrowRight,
 } from 'lucide-react';
+import Dropdown from '@/shared/components/Dropdown';
 
 type TeamMember = {
     initials: string;
@@ -38,8 +39,30 @@ const COLOR_OPTIONS = [
     { name: 'violet', value: 'var(--violet)' },
 ];
 
-export default function AddProjectForm() {
+const EMPTY_FORM: CreateProjectData = {
+    name: '',
+    description: '',
+    status: '',
+    priority: '',
+    category: '',
+    color: '',
+    startDate: '',
+    endDate: '',
+    owner:'',
+    members: [],
+};
 
+const statuses = []
+const priorities = []
+const categories = []
+
+export default function ProjectForm({
+    mode,
+    existingProjectDetail,
+    onSubmit
+}: ProjectFormProps) {
+
+    const [form, setForm] = useState<CreateProjectData>(EMPTY_FORM);
     const [members, setMembers] = useState(INITIAL_MEMBERS);
     const [selectedColor, setSelectedColor] = useState('steel');
     const [sendInvites, setSendInvites] = useState(true);
@@ -51,6 +74,8 @@ export default function AddProjectForm() {
         fileAttachments: true,
     });
 
+    const isReadOnly = mode === 'view'
+    
     if (!open) return null;
 
     const removeMember = (initials: string) => {
@@ -80,7 +105,7 @@ export default function AddProjectForm() {
                         <input
                             className="form-input"
                             type="text"
-                            defaultValue="Acme Platform Redesign"
+                            defaultValue=""
                         />
                     </div>
 
@@ -88,7 +113,7 @@ export default function AddProjectForm() {
                         <label className="form-label">
                             Project Key<span className="required">*</span>
                         </label>
-                        <input className="form-input" type="text" defaultValue="ACPR" />
+                        <input className="form-input" type="text" defaultValue="" />
                         <span className="form-help-text">ID: ACPR-001, ACPR-002</span>
                     </div>
 
@@ -96,7 +121,7 @@ export default function AddProjectForm() {
                         <label className="form-label">Description</label>
                         <textarea
                             className="form-textarea"
-                            defaultValue="Complete redesign of the core platform with improved architecture, performance, and user experience."
+                            defaultValue=""
                         />
                     </div>
                 </div>
@@ -109,36 +134,93 @@ export default function AddProjectForm() {
 
                     <div className="settings-grid">
                         <div className="form-field">
-                            <label className="form-label">Status</label>
+                            {/* <label className="form-label">Status</label>
                             <button className="form-select-btn" type="button">
                                 <span className="form-select-btn-left">
                                     <span className="select-dot" style={{ background: 'var(--steel)' }} />
                                     Planning
                                 </span>
                                 <ChevronDown size={14} className="chevron" />
-                            </button>
+                            </button> */}
+
+                            <Dropdown
+                                label="Status"
+                                required
+                                icon={<Users size={14} />}
+                                placeholder="Select a Status"
+                                value={form?.status}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        status: value,
+                                    }))
+                                }
+                                options={statuses.map((status) => ({
+                                    value: status.id,
+                                    label: status.displayName,
+                                }))}
+                                disabled={isReadOnly}
+                            />
                         </div>
 
                         <div className="form-field">
-                            <label className="form-label">Priority</label>
+                            {/* <label className="form-label">Priority</label>
                             <button className="form-select-btn" type="button">
                                 <span className="form-select-btn-left">
                                     <span className="select-dot" style={{ background: 'var(--gold)' }} />
                                     Medium
                                 </span>
                                 <ChevronDown size={14} className="chevron" />
-                            </button>
+                            </button> */}
+
+                            <Dropdown
+                                label="Priority"
+                                required
+                                icon={<Users size={14} />}
+                                placeholder="Select a Priority"
+                                value={form?.priority}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        priority: value,
+                                    }))
+                                }
+                                options={priorities.map((priority) => ({
+                                    value: priority.id,
+                                    label: priority.displayName,
+                                }))}
+                                disabled={isReadOnly}
+                            />
                         </div>
 
                         <div className="form-field">
-                            <label className="form-label">Category</label>
+                            {/* <label className="form-label">Category</label>
                             <button className="form-select-btn" type="button">
                                 <span className="form-select-btn-left">
                                     <span className="select-dot" style={{ background: 'var(--steel)' }} />
                                     Software
                                 </span>
                                 <ChevronDown size={14} className="chevron" />
-                            </button>
+                            </button> */}
+
+                            <Dropdown
+                                label="Category"
+                                required
+                                icon={<Users size={14} />}
+                                placeholder="Select a Category"
+                                value={form?.category}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        category: value,
+                                    }))
+                                }
+                                options={categories.map((category) => ({
+                                    value: category.id,
+                                    label: category.displayName,
+                                }))}
+                                disabled={isReadOnly}
+                            />
                         </div>
 
                         <div className="form-field">

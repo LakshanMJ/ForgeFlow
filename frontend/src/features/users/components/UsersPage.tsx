@@ -21,7 +21,7 @@ import {
 import { useState } from 'react';
 import SearchInput from '@/shared/components/SearchInput';
 import Modal from '@/shared/components/Modal';
-import AddUserForm from './AddUserForm';
+import AddUserForm from './UserForm';
 import { useUsers } from '../hooks/useUsers';
 import type { CreateUserData, InviteUserData, UpdateUserData, User } from '../types/user.types';
 import { useCreateRole } from '@/features/roles/hooks/useCreateRole';
@@ -30,6 +30,7 @@ import { useCreateUser } from '../hooks/useCreateUser';
 import { useUpdateUser } from '../hooks/useUpdateUser';
 import { useInviteUser } from '../hooks/useInviteUser';
 import Card from '@/shared/components/Card';
+import UserForm from './UserForm';
 
 type Status = 'Online' | 'Away' | 'Offline';
 
@@ -257,7 +258,7 @@ export default function UsersPage() {
 				}
 				submitIcon={<Save size={14} />}
 			>
-				<AddUserForm
+				<UserForm
 					mode={userModalMode}
 					existingUserDetail={selectedUser}
 					onSubmit={handleSubmit}

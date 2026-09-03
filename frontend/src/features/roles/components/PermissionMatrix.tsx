@@ -167,7 +167,7 @@ export default function PermissionMatrix() {
   return (
     <div>
       <div className="page-header-row" style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+        {/* <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <h1 className="page-title" style={{ marginBottom: 0 }}>
             Permission Matrix
           </h1>
@@ -177,7 +177,7 @@ export default function PermissionMatrix() {
           >
             7 roles &middot; {TOTAL_PERMISSIONS} permissions
           </span>
-        </div>
+        </div> */}
         <div className="header-actions">
           <button className="btn-secondary" type="button">
             <Download size={14} />
