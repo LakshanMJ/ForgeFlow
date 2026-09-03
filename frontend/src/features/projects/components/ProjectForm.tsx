@@ -15,6 +15,7 @@ import {
     ArrowRight,
 } from 'lucide-react';
 import Dropdown from '@/shared/components/Dropdown';
+import DateSelector from '@/shared/components/DateSelector';
 
 type TeamMember = {
     initials: string;
@@ -31,7 +32,7 @@ const INITIAL_MEMBERS: TeamMember[] = [
     { initials: 'LW', name: 'Lisa Wong', role: 'Developer', accent: 'var(--violet)' },
 ];
 
-const COLOR_OPTIONS = [
+const PROJECT_COLOR_OPTIONS = [
     { name: 'steel', value: 'var(--steel)' },
     { name: 'ember', value: 'var(--ember)' },
     { name: 'patina', value: 'var(--patina)' },
@@ -48,7 +49,7 @@ const EMPTY_FORM: CreateProjectData = {
     color: '',
     startDate: '',
     endDate: '',
-    owner:'',
+    owner: '',
     members: [],
 };
 
@@ -75,7 +76,7 @@ export default function ProjectForm({
     });
 
     const isReadOnly = mode === 'view'
-    
+
     if (!open) return null;
 
     const removeMember = (initials: string) => {
@@ -224,10 +225,10 @@ export default function ProjectForm({
                         </div>
 
                         <div className="form-field">
-                            <label className="form-label">Color</label>
+                            <label className="form-label">Color Label</label>
                             <button className="form-select-btn" type="button">
                                 <span className="color-swatch-row">
-                                    {COLOR_OPTIONS.map((c) => (
+                                    {PROJECT_COLOR_OPTIONS.map((c) => (
                                         <span
                                             key={c.name}
                                             className={`color-swatch${selectedColor === c.name ? ' selected' : ''}`}
@@ -239,7 +240,6 @@ export default function ProjectForm({
                                         />
                                     ))}
                                 </span>
-                                <ChevronDown size={14} className="chevron" />
                             </button>
                         </div>
 
@@ -249,6 +249,18 @@ export default function ProjectForm({
                                 <Calendar size={14} />
                                 Dec 1, 2026
                             </div>
+
+                            <DateSelector
+                                label="Start Date"
+                                required
+                                value={form?.startDate}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        startDate: value,
+                                    }))
+                                }
+                            />
                         </div>
 
                         <div className="form-field">
@@ -257,6 +269,17 @@ export default function ProjectForm({
                                 <Calendar size={14} />
                                 Mar 1, 2027
                             </div>
+                            <DateSelector
+                                label="End Date"
+                                required
+                                value={form?.endDate}
+                                onChange={(value) =>
+                                    setForm((prev) => ({
+                                        ...prev,
+                                        endDate: value,
+                                    }))
+                                }
+                            />
                         </div>
                     </div>
                 </div>

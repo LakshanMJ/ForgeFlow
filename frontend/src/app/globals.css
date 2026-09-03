@@ -2440,11 +2440,11 @@ button {
 .color-swatch-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 35px;
 }
 .color-swatch {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   flex-shrink: 0;
   cursor: pointer;
@@ -2453,6 +2453,7 @@ button {
 }
 .color-swatch.selected {
   border-color: var(--text);
+  border: 3px solid 
 }
 
 .date-input-row {
@@ -3627,4 +3628,46 @@ button {
 .role-detail-footer-meta strong {
   color: var(--text);
   font-weight: 600;
+}
+
+/* stylings for the date picker */
+
+.form-field .MuiFormControl-root {
+    width: 100%;
+}
+
+.form-field .MuiOutlinedInput-root {
+    background: var(--surface);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.form-field .MuiOutlinedInput-notchedOutline {
+    border-color: var(--border);
+}
+
+.form-field .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: var(--border);
+}
+
+.form-field .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--accent);
+    border-width: 1px;
+}
+
+.form-field .MuiOutlinedInput-input {
+    padding: 9px 12px;
+    font-size: 13px;
+    color: var(--text);
+    font-family: inherit;
+}
+
+.form-field .MuiInputAdornment-root {
+    margin-left: 0;
+}
+
+.form-field .MuiIconButton-root {
+    color: var(--text-muted);
 }
