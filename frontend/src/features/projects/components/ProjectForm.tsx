@@ -16,6 +16,10 @@ import {
 } from 'lucide-react';
 import Dropdown from '@/shared/components/Dropdown';
 import DateSelector from '@/shared/components/DateSelector';
+import AddItemAutocomplete from '@/shared/components/ForgeFlowAutocomplete';
+import { useUsers } from '@/features/users/hooks/useUsers';
+import UserAssigneePicker from '@/shared/components/UserAssigneePicker';
+import ForgeFlowAutocomplete from '@/shared/components/ForgeFlowAutocomplete';
 
 type TeamMember = {
     initials: string;
@@ -63,8 +67,26 @@ export default function ProjectForm({
     onSubmit
 }: ProjectFormProps) {
 
+    const {
+        data: users = [],
+        isLoading: isUsersLoading,
+        isError: isUsersError,
+    } = useUsers();
+
     const [form, setForm] = useState<CreateProjectData>(EMPTY_FORM);
-    const [members, setMembers] = useState(INITIAL_MEMBERS);
+    console.log(form.members, 'form.members')
+
+    const projectLeadOptions = users.map((user) => ({
+        value: user.id,
+        label: `${user.firstName} ${user.lastName}`,
+    }));
+
+    const memberOptions = users.filter(
+        (user) => user.id !== form?.projectLead
+    );
+
+
+    // const [members, setMembers] = useState(INITIAL_MEMBERS);
     const [selectedColor, setSelectedColor] = useState('steel');
     const [sendInvites, setSendInvites] = useState(true);
     const [advanced, setAdvanced] = useState({
@@ -79,17 +101,26 @@ export default function ProjectForm({
 
     if (!open) return null;
 
-    const removeMember = (initials: string) => {
-        setMembers((prev) => prev.filter((m) => m.initials !== initials));
+    const removeMember = (id: string) => {
+        setForm((prev) => ({
+            ...prev,
+            members: prev.members.filter((m) => m.id !== id)
+        }))
+        // setMembers((prev) => prev.filter((m) => m.id !== id));
     };
 
     const toggleAdvanced = (key: keyof typeof advanced) => {
         setAdvanced((prev) => ({ ...prev, [key]: !prev[key] }));
     };
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        onSubmit(form);
+    };
+
     return (
 
-
+<form id="project-form" onSubmit={handleSubmit}>
         <div className="modal-body">
             {/* ---- Project Details + Project Settings ---- */}
             <div className="form-grid-2">
@@ -295,29 +326,60 @@ export default function ProjectForm({
                 <div className="team-row-2col">
                     <div className="form-field" style={{ marginBottom: 0 }}>
                         <label className="form-label">
-                            Project Lead<span className="required">*</span>
+                            {/* Project Lead<span className="required">*</span> */}
                         </label>
-                        <button className="form-select-btn" type="button">
-                            <span className="form-select-btn-left">
-                                <UserPlus size={14} />
-                                Wile Smith
-                            </span>
-                            <ChevronDown size={14} className="chevron" />
-                        </button>
+                        <Dropdown
+                            label="Project Lead"
+                            required
+                            icon={<Users size={14} />}
+                            placeholder=""
+                            value={form?.projectLead}
+                            onChange={(value) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    projectLead: value,
+                                }))
+                            }
+                            options={projectLeadOptions}
+                            disabled={isReadOnly}
+                        />
+                        {/* <ForgeFlowAutocomplete
+                            options={users}
+                            value={form.members}
+                            onChange={(selectedUsers) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    members: selectedUsers,
+                                }))
+                            }
+                            getOptionLabel={(u) => `${u.firstName} ${u.lastName}`}
+                            getOptionKey={(u) => u.id}
+                            renderValue={() => null}
+                        /> */}
                     </div>
 
                     <div className="form-field" style={{ marginBottom: 0 }}>
                         <label className="form-label">Add Team Members</label>
-                        <div className="search-input">
-                            <UserPlus size={14} />
-                            <input type="text" placeholder="Search members to add..." />
-                        </div>
+                        <ForgeFlowAutocomplete
+                            options={memberOptions}
+                            value={form.members}
+                            onChange={(selectedUsers) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    members: selectedUsers,
+                                }))
+                            }
+                            getOptionLabel={(u) => `${u.firstName} ${u.lastName}`}
+                            getOptionKey={(u) => u.id}
+                            renderValue={() => null}
+                            disabled={!form.projectLead}
+                        />
                     </div>
                 </div>
 
                 <div className="selected-members-label">Selected Team Members</div>
                 <div className="selected-members-row">
-                    {members.map((m) => (
+                    {form.members.map((m) => (
                         <div className="selected-member-chip" key={m.initials}>
                             <span
                                 className="owner-avatar"
@@ -326,14 +388,14 @@ export default function ProjectForm({
                                 {m.initials}
                             </span>
                             <span className="selected-member-chip-info">
-                                <span className="selected-member-chip-name">{m.name}</span>
+                                <span className="selected-member-chip-name">{m.firstName} {m.lastName}</span>
                                 <span className="selected-member-chip-role">{m.role}</span>
                             </span>
                             <button
                                 className="selected-member-chip-remove"
                                 type="button"
                                 aria-label={`Remove ${m.name}`}
-                                onClick={() => removeMember(m.initials)}
+                                onClick={() => removeMember(m.id)}
                             >
                                 <X size={14} />
                             </button>
@@ -435,5 +497,6 @@ export default function ProjectForm({
                 </div>
             </div>
         </div>
+</form>
     );
 }

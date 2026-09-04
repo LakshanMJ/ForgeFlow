@@ -438,9 +438,9 @@ export default function ProjectsPage() {
 		},
 	];
 
-	const handleSubmit = () => {
-		alert('inside main page onsubmit')
-	};
+	const handleSubmit = (data: CreateProjectData) => {
+    alert(JSON.stringify(data));
+	}
 
 	return (
 		<>

@@ -23,6 +23,9 @@ import type {
     RoleUser,
 } from '../types/role.types';
 import { useUsers } from '@/features/users/hooks/useUsers';
+import MemberAutocomplete from '@/shared/components/ForgeFlowAutocomplete';
+import UserAssigneePicker from '@/shared/components/UserAssigneePicker';
+import ForgeFlowAutocomplete from '@/shared/components/ForgeFlowAutocomplete';
 
 type RoleFormMode = 'create' | 'view' | 'edit';
 
@@ -631,8 +634,46 @@ export default function AddRoleForm({
                         {/* =================================================
                             USER AUTOCOMPLETE
                         ================================================= */}
+                        {/* <div className="assigned-users-row">
+                            <ForgeFlowAutocomplete
+                                options={userOptions}
+                                value={assignedUsers}
+                                disabled={isReadOnly}
+                                onChange={handleUsersChange}
+                                getOptionLabel={(user) =>
+                                    `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
+                                }
+                                getOptionKey={(user) => user.id}
+                                renderOption={(user) => (
+                                    <>
+                                        <span
+                                            className="owner-avatar"
+                                            style={{
+                                                width: 28,
+                                                height: 28,
+                                                background: user.accent,
+                                                color: '#fff',
+                                            }}
+                                        >
+                                            {`${user.firstName?.[0] ?? ''}${user.lastName?.[0] ?? ''}`}
+                                        </span>
 
-                        <div className="assigned-users-row">
+                                        <span>
+                                            {user.firstName} {user.lastName}
+                                        </span>
+                                    </>
+                                )}
+                                renderValue={(user) => (
+                                    <span>
+                                        {user.firstName} {user.lastName}
+                                    </span>
+                                )}
+                                placeholder="Assign users..."
+                                placeholderSelected="Add another..."
+                                onRemove={removeUser}
+                            />
+                        </div> */}
+                        {/* <div className="assigned-users-row">
                             <Autocomplete
                                 multiple
                                 fullWidth
@@ -752,9 +793,9 @@ export default function AddRoleForm({
                                                         {`${user.firstName} ${user.lastName}`}
                                                     </span>
 
-                                                    {/* <span className="selected-member-chip-role">
+                                                    <span className="selected-member-chip-role">
                                                         {user.role}
-                                                    </span> */}
+                                                    </span>
                                                 </span>
 
                                                 {!isReadOnly && (
@@ -824,7 +865,13 @@ export default function AddRoleForm({
                                     },
                                 }}
                             />
-                        </div>
+                        </div> */}
+                        <UserAssigneePicker
+                            options={userOptions}
+                            value={assignedUsers}
+                            onChange={setAssignedUsers}
+                            disabled={isReadOnly}
+                        />
                     </div>
                 </div>
 
