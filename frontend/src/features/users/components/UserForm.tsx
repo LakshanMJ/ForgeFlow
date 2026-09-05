@@ -11,7 +11,7 @@ import {
 import type { InviteUserData, UserFormProps } from '../types/user.types';
 import { useRoles } from '@/features/roles/hooks/useRoles';
 import Dropdown from '@/shared/components/Dropdown';
-import { useDepartments } from '@/features/departments/hooks/useDepartments';
+import { useDepartments } from '@/features/admin/departments/hooks/useDepartments';
 import PhotoUpload from '@/shared/components/PhotoUpload';
 
 type PermissionKey =

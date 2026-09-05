@@ -21,15 +21,16 @@ const NAV_ITEMS = [
   { label: 'Tasks', href: '/tasks', icon: CheckSquare },
   { label: 'Notifications', href: '/notifications', icon: BellRing },
   { label: 'Analytics', href: '/analytics', icon: ChartNoAxesCombined },
-  // { label: 'Users', href: '/users', icon: Users },
+  { label: 'User Management', href: '/users', icon: Users },
+  { label: 'Roles & Permissions', href: '/roles', icon: ChartNoAxesCombined },
 ];
 
 const ADMIN_SUBMENU = [
   { label: 'General Settings', href: '/admin/general' },
-  { label: 'User Management', href: '/admin/users' },
-  { label: 'Roles & Permissions', href: '/admin/roles' },
+  // { label: 'User Management', href: '/admin/users' },
+  // { label: 'Roles & Permissions', href: '/admin/roles' },
   { label: 'Departments', href: '/admin/departments' },
-  { label: 'Integrations', href: '/admin/integrations' },
+  { label: 'Project Categories', href: '/admin/project-categories' },
   { label: 'Audit Logs', href: '/admin/audit-logs' },
 ];
 

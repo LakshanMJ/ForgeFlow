@@ -25,32 +25,60 @@ import Link from 'next/link';
 import { useState } from 'react';
 import AddProjetForm from './ProjectForm';
 import ProjectForm from './ProjectForm';
+import { CreateProjectData, ProjectColor, ProjectFormData, ProjectStatus, type Project, type ProjectColumn } from '../types/project.types';
+import { createProject } from '../api/projects.api';
+import { useProjects } from '../hooks/useProjects';
 
 type StatusKey = 'in-progress' | 'completed' | 'pending' | 'planning' | 'on-hold';
 
-const STATUS_LABEL: Record<StatusKey, string> = {
-	'in-progress': 'In Progress',
-	completed: 'Completed',
-	pending: 'Pending',
-	planning: 'Planning',
-	'on-hold': 'On Hold',
+// const STATUS_LABEL: Record<StatusKey, string> = {
+// 	'in-progress': 'In Progress',
+// 	completed: 'Completed',
+// 	pending: 'Pending',
+// 	planning: 'Planning',
+// 	'on-hold': 'On Hold',
+// };
+
+// const STATUS_CHIP: Record<StatusKey, string> = {
+// 	'in-progress': 'chip-steel',
+// 	completed: 'chip-patina',
+// 	pending: 'chip-gold',
+// 	planning: 'chip-neutral',
+// 	'on-hold': 'chip-neutral',
+// };
+
+// const STATUS_BAR_COLOR: Record<StatusKey, string> = {
+// 	'in-progress': 'var(--steel)',
+// 	completed: 'var(--patina)',
+// 	pending: 'var(--gold)',
+// 	planning: 'var(--text-tertiary)',
+// 	'on-hold': 'var(--text-tertiary)',
+// };
+
+const STATUS_CHIP: Record<ProjectStatus, string> = {
+	[ProjectStatus.PLANNING]: 'chip-neutral',
+	[ProjectStatus.ACTIVE]: 'chip-steel',
+	[ProjectStatus.ON_HOLD]: 'chip-neutral',
+	[ProjectStatus.COMPLETED]: 'chip-patina',
+	[ProjectStatus.CANCELLED]: 'chip-neutral',
 };
 
-const STATUS_CHIP: Record<StatusKey, string> = {
-	'in-progress': 'chip-steel',
-	completed: 'chip-patina',
-	pending: 'chip-gold',
-	planning: 'chip-neutral',
-	'on-hold': 'chip-neutral',
+const STATUS_LABEL: Record<ProjectStatus, string> = {
+	[ProjectStatus.PLANNING]: 'Planning',
+	[ProjectStatus.ACTIVE]: 'In Progress',
+	[ProjectStatus.ON_HOLD]: 'On Hold',
+	[ProjectStatus.COMPLETED]: 'Completed',
+	[ProjectStatus.CANCELLED]: 'Cancelled',
 };
 
-const STATUS_BAR_COLOR: Record<StatusKey, string> = {
-	'in-progress': 'var(--steel)',
-	completed: 'var(--patina)',
-	pending: 'var(--gold)',
-	planning: 'var(--text-tertiary)',
-	'on-hold': 'var(--text-tertiary)',
+const STATUS_BAR_COLOR: Record<ProjectStatus, string> = {
+	[ProjectStatus.PLANNING]: 'var(--gold)',
+	[ProjectStatus.ACTIVE]: 'var(--steel)',
+	[ProjectStatus.ON_HOLD]: 'var(--ember)',
+	[ProjectStatus.COMPLETED]: 'var(--patina)',
+	[ProjectStatus.CANCELLED]: 'var(--ember)',
 };
+
 
 const ACCENT: Record<string, string> = {
 	steel: 'var(--steel)',
@@ -60,22 +88,15 @@ const ACCENT: Record<string, string> = {
 	neutral: 'var(--text-tertiary)',
 };
 
-type Project = {
-	id: string;
-	code: string;
-	name: string;
-	description: string;
-	pinned?: boolean;
-	accent: keyof typeof ACCENT;
-	owner: { name: string; initials: string };
-	status: StatusKey;
-	progress: number;
-	members: string[];
-	extraMembers: number;
-	updated: string;
+const PROJECT_COLOR_MAP: Record<ProjectColor, string> = {
+	[ProjectColor.STEEL]: 'var(--steel)',
+	[ProjectColor.EMBER]: 'var(--ember)',
+	[ProjectColor.PATINA]: 'var(--patina)',
+	[ProjectColor.GOLD]: 'var(--gold)',
+	[ProjectColor.VIOLET]: 'var(--violet)',
 };
 
-const PROJECTS: Project[] = [
+const projects2: Project[] = [
 	{
 		id: '1',
 		code: 'AP',
@@ -263,55 +284,61 @@ const PROJECTS: Project[] = [
 
 export default function ProjectsPage() {
 
+	const {
+		data: projects = [],
+		isLoading: isUsersLoading,
+		isError: isUsersError,
+	} = useProjects();
+
+	console.log(projects, 'projects')
 	const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 	const [projectModalMode, setProjectModalMode] = useState<'create' | 'view' | 'edit'>('create');
 	const [selectedProject, setSelectedProject] = useState<Project | undefined>(undefined);
 
-	const projectColumns: Column<Project>[] = [
+	const projectColumns: ProjectColumn<Project>[] = [
 		{
 			key: 'project',
 			label: 'Project',
-			render: (project) => (
-				<div className="project-cell">
-					<span
-						className="accent-bar"
-						style={{
-							background: ACCENT[project.accent],
-						}}
-					/>
+			render: (project) => {
+				const color = project.color
+					? PROJECT_COLOR_MAP[project.color]
+					: 'var(--steel)';
 
-					<span
-						className="project-icon"
-						style={{
-							background: ACCENT[project.accent],
-						}}
-					>
-						{project.code}
-					</span>
+				return (
+					<div className="project-cell">
+						<span
+							className="accent-bar"
+							style={{
+								background: color,
+							}}
+						/>
 
-					<div>
-						<div className="project-info-name">
-							<Link
-								href={`/projects/${project.id}`}
-								className="project-name-link"
-							>
-								{project.name}
-							</Link>
+						<span
+							className="project-icon"
+							style={{
+								background: color,
+							}}
+						>
+							{project.name.slice(0, 2).toUpperCase()}
+						</span>
 
-							{project.pinned && (
-								<Pin
-									size={12}
-									color="var(--gold)"
-								/>
-							)}
-						</div>
+						<div>
+							<div className="project-info-name">
+								<Link
+									href={`/projects/${project.id}`}
+									className="project-name-link"
+								>
+									{project.name}
+								</Link>
+							</div>
 
-						<div className="project-info-desc">
-							{project.description}
+							<div className="project-info-desc">
+								{project.description}
+							</div>
 						</div>
 					</div>
-				</div>
-			),
+				);
+			},
 		},
 
 		{
@@ -320,10 +347,12 @@ export default function ProjectsPage() {
 			render: (project) => (
 				<div className="owner-cell">
 					<span className="owner-avatar">
-						{project.owner.initials}
+						{`${project.owner.firstName?.[0] ?? ''}${project.owner.lastName?.[0] ?? ''}`.toUpperCase()}
 					</span>
 
-					{project.owner.name}
+					{project?.owner
+						? `${project.owner.firstName} ${project.owner.lastName}`
+						: 'Unassigned'}
 				</div>
 			),
 		},
@@ -346,7 +375,7 @@ export default function ProjectsPage() {
 			render: (project) => (
 				<div className="progress-cell">
 					<span className="progress-pct">
-						{project.progress}%
+						{'project.progress'}%
 					</span>
 
 					<span className="progress-track">
@@ -354,8 +383,7 @@ export default function ProjectsPage() {
 							className="progress-fill"
 							style={{
 								width: `${project.progress}%`,
-								background:
-									STATUS_BAR_COLOR[project.status],
+								background: STATUS_BAR_COLOR[project.status],
 							}}
 						/>
 					</span>
@@ -366,24 +394,30 @@ export default function ProjectsPage() {
 		{
 			key: 'members',
 			label: 'Members',
-			render: (project) => (
-				<div className="avatar-stack">
-					{project.members.map((initial) => (
-						<span
-							className="stack-avatar"
-							key={initial}
-						>
-							{initial}
-						</span>
-					))}
+			render: (project) => {
+				const visibleMembers = project.members.slice(0, 4);
+				const extraMembers =
+					project.members.length - visibleMembers.length;
 
-					{project.extraMembers > 0 && (
-						<span className="stack-more">
-							+{project.extraMembers}
-						</span>
-					)}
-				</div>
-			),
+				return (
+					<div className="avatar-stack">
+						{visibleMembers.map((member) => (
+							<span
+								className="stack-avatar"
+								key={member.id}
+							>
+								{`${member.user.firstName?.[0] ?? ''}${member.user.lastName?.[0] ?? ''}`.toUpperCase()}
+							</span>
+						))}
+
+						{extraMembers > 0 && (
+							<span className="stack-more">
+								+{extraMembers}
+							</span>
+						)}
+					</div>
+				);
+			},
 		},
 
 		{
@@ -392,7 +426,13 @@ export default function ProjectsPage() {
 			sortable: true,
 			render: (project) => (
 				<div className="updated-cell">
-					<span>{project.updated}</span>
+					<span>
+						{new Date(project.updatedAt).toLocaleDateString('en-US', {
+							month: 'short',
+							day: 'numeric',
+							year: 'numeric',
+						})}
+					</span>
 				</div>
 			),
 		},
@@ -438,9 +478,24 @@ export default function ProjectsPage() {
 		},
 	];
 
-	const handleSubmit = (data: CreateProjectData) => {
-    alert(JSON.stringify(data));
-	}
+	const handleSubmit = (data: ProjectFormData) => {
+		const payload: CreateProjectData = {
+			name: data.name,
+			description: data.description,
+			status: data.status,
+			priority: data.priority,
+			ownerId: data.owner,
+			categoryId: data.category,
+
+			color: data.color || undefined,
+			startDate: data.startDate || undefined,
+			endDate: data.endDate || undefined,
+
+			members: data.members.map((member) => member.id),
+		};
+
+		createProject(payload);
+	};
 
 	return (
 		<>
@@ -535,7 +590,7 @@ export default function ProjectsPage() {
 
 			<DataTable
 				columns={projectColumns}
-				data={PROJECTS}
+				data={projects}
 				totalItems={18}
 				currentPage={1}
 				totalPages={3}
