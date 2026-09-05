@@ -8,6 +8,7 @@ import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.modules';
 import { DepartmentsModule } from './departments/departments.modules';
 import { MailModule } from './mail/mail.module';
+import { ProjectCategoriesModule } from './meta/project-categories/project-categories.modules';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MailModule } from './mail/mail.module';
     PermissionsModule,
     DepartmentsModule,
     MailModule,
+    ProjectCategoriesModule
   ],
   controllers: [
     AppController,

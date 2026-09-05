@@ -7,19 +7,14 @@ export class CreateProjectCategoryDto {
 
     @IsOptional()
     @IsString()
-    @MaxLength(255)
+    @MaxLength(500)
     description?: string;
 
     @IsOptional()
     @IsString()
-    @MaxLength(50)
     color?: string;
 
     @IsOptional()
     @IsBoolean()
     isActive?: boolean;
-
-    @IsOptional()
-    @IsBoolean()
-    isSystem?: boolean;
 }
