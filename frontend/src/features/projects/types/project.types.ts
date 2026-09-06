@@ -115,3 +115,10 @@ export interface ProjectFormProps {
     existingProjectDetail?: Project;
     onSubmit: (data: CreateProjectData) => void;
 }
+
+export enum ProjectMemberRole {
+    OWNER = 'OWNER',
+    ADMIN = 'ADMIN',
+    MEMBER = 'MEMBER',
+    VIEWER = 'VIEWER',
+}

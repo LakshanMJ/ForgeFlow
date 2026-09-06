@@ -22,6 +22,8 @@ import FilesPanel from './FilesPanel';
 import TasksBoard from './TasksBoard';
 import ProjectOverview from './ProjectOverview';
 import Tabs from '@/shared/components/Tabs';
+import { useParams } from 'next/navigation';
+import { useProject } from '../hooks/useProject';
 
 function EmptyPanel({ label }: { label: string }) {
 	return (
@@ -39,17 +41,29 @@ function EmptyPanel({ label }: { label: string }) {
 	);
 }
 
-export default function ProjectDetailPage() {
+interface ProjectDetailProps {
+    id: string;
+}
 
+export default function ProjectDetailPage({ id }: ProjectDetailProps) {
+
+    const {
+        data: project,
+        isLoading,
+        isError,
+    } = useProject(id);
+	
 	const [tab, setTab] = useState('overview');
-
+	console.log(project,'PROJECT')
 	return (
 		<>
 			<div className="breadcrumb-row">
+				<div>{project?.name}</div>
 				<Link href="/dashboard/projects" className="breadcrumb-link">
 					<ArrowLeft size={14} />
 					Back to Projects
 				</Link>
+				
 				<div className="header-actions">
 					<button className="btn-secondary" type="button">
 						Edit Project
@@ -153,7 +167,7 @@ export default function ProjectDetailPage() {
 					value="members"
 					sx={{ p: 0, pt: '20px' }}
 				>
-					<MembersPanel />
+					<MembersPanel members={project?.members} />
 				</TabPanel>
 
 				<TabPanel

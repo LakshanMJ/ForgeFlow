@@ -1,20 +1,13 @@
 'use client';
-import CreateProjectModal from '@/features/projects/components/CreateProjectModal';
 import DataTable from '@/shared/components/DataTable';
 import Modal from '@/shared/components/Modal';
-import ProjectTable from '@/shared/components/ProjectTable';
 import SearchInput from '@/shared/components/SearchInput';
 import {
-	Search,
 	ChevronDown,
 	SlidersHorizontal,
 	LayoutGrid,
 	List,
 	Plus,
-	Pin,
-	MoreVertical,
-	ChevronLeft,
-	ChevronRight,
 	Shield,
 	Save,
 	Eye,
@@ -23,37 +16,11 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import AddProjetForm from './ProjectForm';
 import ProjectForm from './ProjectForm';
 import { CreateProjectData, ProjectColor, ProjectFormData, ProjectStatus, type Project, type ProjectColumn } from '../types/project.types';
 import { createProject } from '../api/projects.api';
 import { useProjects } from '../hooks/useProjects';
 
-type StatusKey = 'in-progress' | 'completed' | 'pending' | 'planning' | 'on-hold';
-
-// const STATUS_LABEL: Record<StatusKey, string> = {
-// 	'in-progress': 'In Progress',
-// 	completed: 'Completed',
-// 	pending: 'Pending',
-// 	planning: 'Planning',
-// 	'on-hold': 'On Hold',
-// };
-
-// const STATUS_CHIP: Record<StatusKey, string> = {
-// 	'in-progress': 'chip-steel',
-// 	completed: 'chip-patina',
-// 	pending: 'chip-gold',
-// 	planning: 'chip-neutral',
-// 	'on-hold': 'chip-neutral',
-// };
-
-// const STATUS_BAR_COLOR: Record<StatusKey, string> = {
-// 	'in-progress': 'var(--steel)',
-// 	completed: 'var(--patina)',
-// 	pending: 'var(--gold)',
-// 	planning: 'var(--text-tertiary)',
-// 	'on-hold': 'var(--text-tertiary)',
-// };
 
 const STATUS_CHIP: Record<ProjectStatus, string> = {
 	[ProjectStatus.PLANNING]: 'chip-neutral',
@@ -96,198 +63,12 @@ const PROJECT_COLOR_MAP: Record<ProjectColor, string> = {
 	[ProjectColor.VIOLET]: 'var(--violet)',
 };
 
-const projects2: Project[] = [
-	{
-		id: '1',
-		code: 'AP',
-		name: 'Acme Platform Redesign',
-		description: 'Complete redesign of the core platform',
-		pinned: true,
-		accent: 'steel',
-		owner: { name: 'Wile Smith', initials: 'WS' },
-		status: 'in-progress',
-		progress: 72,
-		members: ['A', 'B', 'C'],
-		extraMembers: 5,
-		updated: '2h ago',
-	},
-	{
-		id: '2',
-		code: 'MB',
-		name: 'Mobile App Development',
-		description: 'Cross-platform mobile application',
-		accent: 'ember',
-		owner: { name: 'Sarah Johnson', initials: 'SJ' },
-		status: 'in-progress',
-		progress: 45,
-		members: ['D', 'E', 'F'],
-		extraMembers: 3,
-		updated: '5h ago',
-	},
-	{
-		id: '3',
-		code: 'DS',
-		name: 'Design System',
-		description: 'Company-wide design system',
-		accent: 'gold',
-		owner: { name: 'Alex Turner', initials: 'AT' },
-		status: 'completed',
-		progress: 100,
-		members: ['G', 'H', 'I'],
-		extraMembers: 2,
-		updated: '1d ago',
-	},
-	{
-		id: '4',
-		code: 'DM',
-		name: 'Data Migration',
-		description: 'Migrate legacy data to new system',
-		accent: 'steel',
-		owner: { name: 'Priya Shah', initials: 'PS' },
-		status: 'pending',
-		progress: 25,
-		members: ['J', 'K', 'L'],
-		extraMembers: 1,
-		updated: '2d ago',
-	},
-	{
-		id: '5',
-		code: 'AI',
-		name: 'AI Analytics Engine',
-		description: 'Intelligent analytics and reporting',
-		accent: 'ember',
-		owner: { name: 'Mike Brown', initials: 'MB' },
-		status: 'planning',
-		progress: 10,
-		members: ['M', 'N', 'O'],
-		extraMembers: 4,
-		updated: '3d ago',
-	},
-	{
-		id: '6',
-		code: 'QA',
-		name: 'QA Automation',
-		description: 'Automated testing framework',
-		accent: 'neutral',
-		owner: { name: 'Lisa Wong', initials: 'LW' },
-		status: 'on-hold',
-		progress: 0,
-		members: ['P', 'Q', 'R'],
-		extraMembers: 2,
-		updated: '5d ago',
-	},
-	{
-		id: '7',
-		code: 'DSA',
-		name: 'Design System',
-		description: 'Company-wide design system',
-		accent: 'gold',
-		owner: { name: 'Alex Turner', initials: 'AT' },
-		status: 'completed',
-		progress: 100,
-		members: ['G', 'H', 'I'],
-		extraMembers: 2,
-		updated: '1d ago',
-	},
-	{
-		id: '8',
-		code: 'DMT',
-		name: 'Data Migration',
-		description: 'Migrate legacy data to new system',
-		accent: 'steel',
-		owner: { name: 'Priya Shah', initials: 'PS' },
-		status: 'pending',
-		progress: 25,
-		members: ['J', 'K', 'L'],
-		extraMembers: 1,
-		updated: '2d ago',
-	},
-	{
-		id: '9',
-		code: 'AIW',
-		name: 'AI Analytics Engine',
-		description: 'Intelligent analytics and reporting',
-		accent: 'ember',
-		owner: { name: 'Mike Brown', initials: 'MB' },
-		status: 'planning',
-		progress: 10,
-		members: ['M', 'N', 'O'],
-		extraMembers: 4,
-		updated: '3d ago',
-	},
-	{
-		id: '10',
-		code: 'QAS',
-		name: 'QA Automation',
-		description: 'Automated testing framework',
-		accent: 'neutral',
-		owner: { name: 'Lisa Wong', initials: 'LW' },
-		status: 'on-hold',
-		progress: 0,
-		members: ['P', 'Q', 'R'],
-		extraMembers: 2,
-		updated: '5d ago',
-	},
-	{
-		id: '11',
-		code: 'DSR',
-		name: 'Design System',
-		description: 'Company-wide design system',
-		accent: 'gold',
-		owner: { name: 'Alex Turner', initials: 'AT' },
-		status: 'completed',
-		progress: 100,
-		members: ['G', 'H', 'I'],
-		extraMembers: 2,
-		updated: '1d ago',
-	},
-	{
-		id: '12',
-		code: 'DMZ',
-		name: 'Data Migration',
-		description: 'Migrate legacy data to new system',
-		accent: 'steel',
-		owner: { name: 'Priya Shah', initials: 'PS' },
-		status: 'pending',
-		progress: 25,
-		members: ['J', 'K', 'L'],
-		extraMembers: 1,
-		updated: '2d ago',
-	},
-	{
-		id: '13',
-		code: 'AIV',
-		name: 'AI Analytics Engine',
-		description: 'Intelligent analytics and reporting',
-		accent: 'ember',
-		owner: { name: 'Mike Brown', initials: 'MB' },
-		status: 'planning',
-		progress: 10,
-		members: ['M', 'N', 'O'],
-		extraMembers: 4,
-		updated: '3d ago',
-	},
-	{
-		id: '14',
-		code: 'QAT',
-		name: 'QA Automation',
-		description: 'Automated testing framework',
-		accent: 'neutral',
-		owner: { name: 'Lisa Wong', initials: 'LW' },
-		status: 'on-hold',
-		progress: 0,
-		members: ['P', 'Q', 'R'],
-		extraMembers: 2,
-		updated: '5d ago',
-	},
-];
-
 export default function ProjectsPage() {
 
 	const {
 		data: projects = [],
-		isLoading: isUsersLoading,
-		isError: isUsersError,
+		isLoading: isProjectsLoading,
+		isError: isProjectsError,
 	} = useProjects();
 
 	console.log(projects, 'projects')
@@ -496,6 +277,26 @@ export default function ProjectsPage() {
 
 		createProject(payload);
 	};
+
+	if (
+		isProjectsLoading
+	) {
+		return (
+			<div className="role-modal-card">
+				Loading...
+			</div>
+		);
+	}
+
+	if (
+		isProjectsError
+	) {
+		return (
+			<div className="role-modal-card">
+				Failed to load Projects data.
+			</div>
+		);
+	}
 
 	return (
 		<>
