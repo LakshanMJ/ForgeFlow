@@ -71,11 +71,11 @@ export default function HomePage() {
             <BrandMark />
           </a>
           <div className="nav-actions">
-            <a href="/login" className="nav-link">
+            <a href="/login" className="login-button">
               Log in
             </a>
             <a href="/signup" className="btn btn-solid btn-small">
-              Sign up free
+              Sign Up
             </a>
           </div>
         </div>
