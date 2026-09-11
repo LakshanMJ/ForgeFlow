@@ -1,0 +1,57 @@
+.logo {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.flowerLayer,
+.starLayer {
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.flowerLayer {
+  z-index: 1;
+  transform-origin: 50% 50%;
+}
+
+.starLayer {
+  z-index: 2;
+  transform-origin: 50% 50%;
+  transform: scale(0.55);
+}
+
+/* Hover still triggers the spin — and the same classes can now be toggled
+   from JS (scroll / viewport-enter) via .spinOnce / .pulseOnce directly. */
+.logo:hover .flowerLayer,
+.flowerLayer.spinOnce {
+  animation: spinOnce 1.1s cubic-bezier(0.45, 0, 0.15, 1) 1;
+}
+
+.logo:hover .starLayer,
+.starLayer.pulseOnce {
+  animation: pulseOnce 1.1s ease-in-out 1;
+}
+
+@keyframes spinOnce {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulseOnce {
+  0% {
+    transform: scale(0.55);
+  }
+  50% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(0.55);
+  }
+}

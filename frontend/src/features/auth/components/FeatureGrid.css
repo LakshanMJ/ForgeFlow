@@ -1,0 +1,193 @@
+.feature-grid-section {
+  --fg-violet: #6c5ce7;
+  --fg-yellow: #f5c94a;
+  background: #ffffff;
+  padding: 40px 32px 120px;
+}
+
+* {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  color: #646464;
+}
+
+.feature-grid-wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* No border/vertical divider on the row itself — the fade line lives on
+   .feature-row-text only, so the photo side stays completely untouched. */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+.feature-row-text {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+}
+
+/* Bottom fade line under every row's text column — this single line also
+   doubles as the top boundary of the row below it, so there's never two
+   lines stacked at one boundary. */
+.feature-row-text::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(to left, rgba(23, 23, 26, 0.12) 0%, transparent 100%);
+}
+
+/* Top fade line, only above the very first row, using the identical style
+   so it isn't longer/heavier than the rest. */
+.feature-row:first-child .feature-row-text::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(to left, rgba(23, 23, 26, 0.12) 0%, transparent 100%);
+}
+
+.feature-title {
+  /* font-family: "Space Grotesk", sans-serif; */
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 650;
+  font-size: 40px;
+  line-height: 48px;
+  color: #17171a;
+  margin: 0 0 14px;
+}
+
+.feature-desc {
+  /* font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(23, 23, 26, 0.65); */
+  margin: 0 0 24px;
+  max-width: 420px;
+}
+
+.get-started-button {
+  width: 120px;
+  box-sizing: border-box;
+  display: inline-flex;
+  background: #f0f0f0;
+  color: #000000;
+  gap: 4px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  block-size: 32px !important;
+  padding: 18px 12px;
+  border: unset !important;
+  border-radius: 8px !important;
+  box-shadow: unset !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  font-family: Inter, sans-serif !important;
+  line-height: 16px !important;
+  letter-spacing: -.15px !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  transition: background-color .2s ease !important;
+}
+
+.get-started-button:hover {
+  background: #dedede;
+}
+
+.feature-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #17171a;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: #f2f1ee;
+  transition: background 0.15s ease;
+}
+
+.feature-cta span {
+  transition: transform 0.15s ease;
+}
+
+.feature-cta:hover {
+  background: #e7e5e0;
+}
+
+.feature-cta:hover span {
+  transform: translateX(3px);
+}
+
+/* Media side: untouched — no borders, no lines */
+.feature-row-media {
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.feature-media-frame {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-media-window {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 11;
+  border-radius: 1px;
+  background: #ffffff;
+  border: 1px solid rgba(23, 23, 26, 0.06);
+  box-shadow:
+    0 30px 60px -20px rgba(23, 23, 26, 0.28),
+    0 10px 20px -8px rgba(108, 92, 231, 0.15);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-media-window img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.feature-image-placeholder {
+  font-size: 0.8rem;
+  color: rgba(23, 23, 26, 0.35);
+}
+
+@media (max-width: 860px) {
+  .feature-row {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-row-text {
+    padding: 32px;
+  }
+
+  .feature-row-media {
+    padding: 32px;
+  }
+}
