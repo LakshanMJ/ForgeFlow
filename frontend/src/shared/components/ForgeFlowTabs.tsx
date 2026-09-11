@@ -3,11 +3,13 @@
 import { ReactNode } from 'react';
 import { Box, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import type { LucideIcon } from 'lucide-react';
 
-type TabItem = {
-  label: string;
-  value: string;
-};
+interface TabItem {
+    label: string;
+    value: string;
+    icon?: LucideIcon;
+}
 
 type ReusableTabsProps = {
   value: string;
@@ -37,7 +39,7 @@ const tabListSx = {
   },
 };
 
-export default function ReusableTabs({
+export default function ForgeFlowTabs({
   value,
   onChange,
   tabs,
@@ -71,6 +73,8 @@ export default function ReusableTabs({
               key={tab.value}
               label={tab.label}
               value={tab.value}
+              icon={tab.icon ? <tab.icon size={15} /> : undefined}
+              iconPosition="start"
               disableRipple
             />
           ))}

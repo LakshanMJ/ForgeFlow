@@ -21,9 +21,10 @@ import MembersPanel from './MembersPanel';
 import FilesPanel from './FilesPanel';
 import TasksBoard from './TasksBoard';
 import ProjectOverview from './ProjectOverview';
-import Tabs from '@/shared/components/Tabs';
+import Tabs from '@/shared/components/ForgeFlowTabs';
 import { useParams } from 'next/navigation';
 import { useProject } from '../hooks/useProject';
+import ForgeFlowTabs from '@/shared/components/ForgeFlowTabs';
 
 function EmptyPanel({ label }: { label: string }) {
 	return (
@@ -123,7 +124,7 @@ export default function ProjectDetailPage({ id }: ProjectDetailProps) {
 				</div>
 			</div>
 
-			<Tabs
+			<ForgeFlowTabs
 				value={tab}
 				onChange={setTab}
 				tabs={[
@@ -183,7 +184,7 @@ export default function ProjectDetailPage({ id }: ProjectDetailProps) {
 				>
 					<EmptyPanel label="Settings" />
 				</TabPanel>
-			</Tabs>
+			</ForgeFlowTabs>
 		</>
 	);
 }

@@ -8,7 +8,7 @@ export default function AppLayout({
 }) {
   return (
     <div className="app-shell">
-      <script
+      {/* <script
         dangerouslySetInnerHTML={{
           __html: `
       (function () {
@@ -17,7 +17,7 @@ export default function AppLayout({
       })();
     `,
         }}
-      />
+      /> */}
       <TopBar
         orgName="Anvil Labs"
         userName="Lakshan"

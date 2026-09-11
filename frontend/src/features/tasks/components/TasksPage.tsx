@@ -8,7 +8,6 @@ import {
 	Plus,
 	ListChecks,
 	LayoutGrid,
-	Inbox,
 	Calendar,
 	Folder,
 	Smartphone,
@@ -17,9 +16,20 @@ import {
 	Clock3,
 	AlertTriangle,
 	CheckCircle2,
-	CalendarDays,
 	Check,
 } from 'lucide-react';
+import {
+    ListTodo,
+    LayoutDashboard,
+    Inbox,
+    CalendarDays,
+} from 'lucide-react';
+import ForgeFlowTabs from '@/shared/components/ForgeFlowTabs';
+import { TabPanel } from '@mui/lab';
+import MyTasks from './MyTasks';
+import MyTasksBoard from './MyTasksBoard';
+import Backlog from './Backlog';
+import MyCalendar from './MyCalendar';
 
 type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM';
 
@@ -145,15 +155,9 @@ function DueCell({ state, dueLabel }: { state: DueState; dueLabel: string }) {
 export default function TasksPage() {
 	const [activeSubtab, setActiveSubtab] = useState('my-tasks');
 	const [checkedTasks, setCheckedTasks] = useState<Set<string>>(new Set());
+	const [tab, setTab] = useState('my_tasks');
 
-	const toggleTask = (id: string) => {
-		setCheckedTasks((prev) => {
-			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			return next;
-		});
-	};
+
 
 	return (
 		<>
@@ -251,7 +255,7 @@ export default function TasksPage() {
 				</div>
 			</div>
 
-			<nav className="tasks-subtabs">
+			{/* <nav className="tasks-subtabs">
 				{SUBTABS.map((tab) => (
 					<button
 						key={tab.key}
@@ -266,122 +270,63 @@ export default function TasksPage() {
 						)}
 					</button>
 				))}
-			</nav>
+			</nav> */}
 
-			{activeSubtab === 'my-tasks' ? (
-				<>
-					<div className="filter-bar">
-						<div className="search-input">
-							<Search size={14} />
-							<input type="text" placeholder="Search tasks..." />
-						</div>
-						<button className="filter-select" type="button">
-							All Projects
-							<ChevronDown size={14} />
-						</button>
-						<button className="filter-select" type="button">
-							All Status
-							<ChevronDown size={14} />
-						</button>
-						<button className="filter-select" type="button">
-							All Priority
-							<ChevronDown size={14} />
-						</button>
-					</div>
-
-					{GROUPS.map((group) => (
-						<div className="task-group" key={group.key}>
-							<div className="task-group-header">
-								<span className="task-group-icon">
-									<group.icon size={16} fill="var(--gold)" />
-								</span>
-								<span className="task-group-name">{group.name}</span>
-								<span className="task-group-count">{group.taskCount} tasks</span>
-								<div className="task-group-progress">
-									<span className="task-group-progress-pct">
-										{group.completePct}% complete
-									</span>
-									<span className="task-group-progress-track">
-										<span
-											className="task-group-progress-fill"
-											style={{ width: `${group.completePct}%` }}
-										/>
-									</span>
-								</div>
-								<button className="btn-secondary" type="button">
-									View Board
-									<ArrowRight size={13} />
-								</button>
-							</div>
-
-							{group.tasks.map((task) => {
-								const isChecked = checkedTasks.has(task.id) || task.dueState === 'done';
-								return (
-									<div className="task-list-row" key={task.id}>
-										<button
-											className={`task-checkbox${isChecked ? ' checked' : ''}`}
-											type="button"
-											aria-label={`Mark ${task.title} complete`}
-											onClick={() => toggleTask(task.id)}
-										>
-											{isChecked && <Check size={12} />}
-										</button>
-
-										<span className="task-id">{task.id}</span>
-										<span className="task-title">{task.title}</span>
-
-										<span
-											className="task-priority-chip"
-											style={{
-												background: PRIORITY_CHIP[task.priority].bg,
-												color: PRIORITY_CHIP[task.priority].color,
-											}}
-										>
-											{task.priority}
-										</span>
-
-										<DueCell state={task.dueState} dueLabel={task.dueLabel} />
-
-										<span className="task-labels-group">
-											{task.labels.map((l) => (
-												<span
-													key={l.text}
-													className="task-label-chip"
-													style={{ background: l.bg, color: l.color }}
-												>
-													{l.text}
-												</span>
-											))}
-										</span>
-
-										<span className="task-assignee">
-											<span className="task-assignee-avatars">
-												{task.assignees.map((a) => (
-													<span
-														key={a.initials}
-														className="owner-avatar"
-														style={{ width: 26, height: 26, background: a.accent, color: '#fff' }}
-													>
-														{a.initials}
-													</span>
-												))}
-											</span>
-											<span className="task-assignee-name">{task.assigneeName}</span>
-										</span>
-									</div>
-								);
-							})}
-						</div>
-					))}
-				</>
-			) : (
-				<div
-					className="card"
-					style={{ textAlign: 'center', padding: '48px 16px', color: 'var(--text-secondary)', fontSize: 13.5 }}
+			<ForgeFlowTabs
+				value={tab}
+				onChange={setTab}
+				tabs={[
+					{
+						label: 'My Tasks',
+						value: 'my_tasks',
+						icon: ListTodo,
+					},
+					{
+						label: 'My Tasks Board',
+						value: 'my_tasks_board',
+						icon: LayoutDashboard,
+					},
+					{
+						label: 'Backlog',
+						value: 'backlog',
+						icon: Inbox,
+					},
+					{
+						label: 'My Calendar',
+						value: 'my_calendar',
+						icon: CalendarDays,
+					},
+				]}
+			>
+				<TabPanel
+					value="my_tasks"
+					sx={{ p: 0, pt: '20px' }}
 				>
-					{SUBTABS.find((t) => t.key === activeSubtab)?.label} view coming soon.
-				</div>
-			)}
+					<MyTasks />
+				</TabPanel>
+
+				<TabPanel
+					value="my_tasks_board"
+					sx={{ p: 0, pt: '20px' }}
+				>
+					<MyTasksBoard />
+				</TabPanel>
+
+				<TabPanel
+					value="backlog"
+					sx={{ p: 0, pt: '20px' }}
+				>
+					<Backlog />
+				</TabPanel>
+
+				<TabPanel
+					value="my_calendar"
+					sx={{ p: 0, pt: '20px' }}
+				>
+					<MyCalendar />
+				</TabPanel>
+			</ForgeFlowTabs>
+
 		</>
 	);
 }

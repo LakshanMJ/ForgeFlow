@@ -9,13 +9,14 @@ import {
 	Download,
 	Plus,
 } from 'lucide-react';
-import Tabs from '@/shared/components/Tabs';
+import Tabs from '@/shared/components/ForgeFlowTabs';
 import { TabPanel } from '@mui/lab';
 import RolesList from './RolesList';
 import RoleAssignments from './RoleAssignments';
 import PermissionMatrix from './PermissionMatrix';
 import { useRoles } from '../hooks/useRoles';
 import Card from '@/shared/components/Card';
+import ForgeFlowTabs from '@/shared/components/ForgeFlowTabs';
 
 export default function RolesPage() {
 	const [tab, setTab] = useState('assignments');
@@ -72,7 +73,7 @@ export default function RolesPage() {
 				/>
 			</div>
 
-			<Tabs
+			<ForgeFlowTabs
 				value={tab}
 				onChange={setTab}
 				tabs={[
@@ -108,7 +109,7 @@ export default function RolesPage() {
 				>
 					<RoleAssignments />
 				</TabPanel>
-			</Tabs>
+			</ForgeFlowTabs>
 		</>
 	);
 }
