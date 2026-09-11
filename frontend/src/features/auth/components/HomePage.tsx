@@ -94,14 +94,14 @@ export default function HomePage() {
 			<footer className="footer">
 				<div className="footer-inner">
 					<span className="footer-copy">Copyright © 2026 Flowdeck</span>
-					<nav className="footer-links">
+					{/* <nav className="footer-links">
 						<a href="/privacy">Privacy policy</a>
 						<a href="/terms">Terms</a>
 						<a href="/impressum">Impressum</a>
 						<button type="button" className="footer-lang">
 							English <ChevronDown />
 						</button>
-					</nav>
+					</nav> */}
 				</div>
 			</footer>
 		</div>

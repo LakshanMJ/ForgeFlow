@@ -19,6 +19,7 @@ import { HiUsers } from "react-icons/hi";
 import { FaUnlock } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import React from 'react';
+import { FaBuilding } from "react-icons/fa";
 
 const NAV_ITEMS = [
 	{ label: 'Dashboard', href: '/dashboard', icon: '/dashboard.png', },
@@ -131,13 +132,13 @@ export default function Sidebar() {
 			</nav>
 
 			<div className="sidebar-footer">
-				<div className="nav-divider" />
+				{/* <div className="nav-divider" /> */}
 				<Link
 					href="/dashboard/settings"
 					className={`nav-item${pathname === '/dashboard/settings' ? ' active' : ''}`}
 				>
-					<Settings size={15} />
-					Settings
+					<FaBuilding size={15} />
+					ACME
 				</Link>
 			</div>
 		</aside>

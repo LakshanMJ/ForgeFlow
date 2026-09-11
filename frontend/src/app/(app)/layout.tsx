@@ -7,7 +7,17 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="app-shell" data-theme="dark">
+    <div className="app-shell">
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+      (function () {
+        const theme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    `,
+        }}
+      />
       <TopBar
         orgName="Anvil Labs"
         userName="Lakshan"

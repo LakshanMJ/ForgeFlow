@@ -124,6 +124,12 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - 64px);
+}
+
+
 button {
   font-family: inherit;
 }
@@ -155,13 +161,12 @@ button {
 .app-body {
   display: flex;
   flex: 1;
-  min-height: 0;
+  min-height: calc(100vh - 64px);
 }
 
 .main-content {
   flex: 1;
-  padding: 28px 32px;
-  overflow-y: auto;
+  min-width: 0;
 }
 
 /* ---- Top bar ---- */
@@ -172,7 +177,7 @@ button {
   background: var(--surface);
   /* background: #141311; */
   border-bottom: 1px solid var(--border);
-  padding: 12px 20px;
+  padding: 2px 20px;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -332,7 +337,7 @@ button {
 }
 
 /* ---- Sidebar nav ---- */
-.sidebar {
+/* .sidebar {
   width: 212px;
   flex-shrink: 0;
   background: var(--surface);
@@ -340,9 +345,56 @@ button {
   padding: 16px 10px;
   display: flex;
   flex-direction: column;
-  /* font-family: "Plus Jakarta Sans - 700", sans-serif; */
-  /* font-family: "Segoe UI", sans-serif; */
+  font-family: "Plus Jakarta Sans - 700", sans-serif;
+  font-family: "Segoe UI", sans-serif;
+} */
+
+/* .sidebar {
+  width: 212px;
+  flex-shrink: 0;
+
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+
+  padding: 16px 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  height: calc(100vh - 64px);
+  position: sticky;
+  top: 64px;
+} */
+
+/* .sidebar {
+  width: 212px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+
+  padding: 16px 10px;
+
+  display: flex;
+  flex-direction: column;
+} */
+
+.sidebar {
+  width: 212px;
+  flex-shrink: 0;
+
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+
+  padding: 16px 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
 }
+
 
 .nav-item {
   display: flex;
@@ -386,9 +438,21 @@ button {
   margin: 10px 8px;
 }
 
+/* .sidebar-footer {
+  margin-top: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+} */
+
 .sidebar-footer {
   margin-top: auto;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
 }
+
 
 /* ---- Page header ---- */
 .page-title {
