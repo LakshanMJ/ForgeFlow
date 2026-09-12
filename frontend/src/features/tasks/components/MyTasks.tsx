@@ -1,4 +1,5 @@
 import OwnerCell from '@/shared/components/OwnerCell';
+import StatusChip from '@/shared/components/StatusChip';
 import {
     Search,
     ChevronDown,
@@ -42,7 +43,7 @@ const LABEL_COLORS: Record<string, { bg: string; color: string }> = {
     deploy: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
 };
 
-const owner = {"id":"297ff519-c4e1-4c5b-bec3-c4ab5665c7a6","firstName":"Paulie","lastName":"Gualtieri","email":"pg@gmail.com"}
+const owner = { "id": "297ff519-c4e1-4c5b-bec3-c4ab5665c7a6", "firstName": "Paulie", "lastName": "Gualtieri", "email": "pg@gmail.com" }
 
 type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM';
 
@@ -69,6 +70,29 @@ type TaskGroup = {
     tasks: Task[];
 };
 
+const TASK_STATUS = {
+    CRITICAL: {
+        label: "Critical",
+        background: "#FEE2E2",
+        color: "#991B1B",
+    },
+    HIGH: {
+        label: "High",
+        background: "#FEF3C7",
+        color: "#92400E",
+    },
+    MEDIUM: {
+        label: "Medium",
+        background: "#E8E8E8",
+        color: "#555555",
+    },
+    LOW: {
+        label: "Low",
+        background: "#E0F2FE",
+        color: "#0369A1",
+    },
+};
+
 const GROUPS: TaskGroup[] = [
     {
         key: 'acme',
@@ -78,7 +102,7 @@ const GROUPS: TaskGroup[] = [
         completePct: 72,
         tasks: [
             { id: 'TASK-023', title: 'Payment API Integration Payment API Integration Payment API Integration Payment API Integration ', priority: 'CRITICAL', dueLabel: 'Dec 12', dueState: 'overdue', labels: [label('backend'), label('api')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }, { initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Me' },
-            { id: 'TASK-024', title: 'Dashboard Redesign', priority: 'HIGH', dueLabel: 'Dec 18', dueState: 'soon', labels: [label('design'), label('frontend')], assignees: [{ initials: 'AT', accent: 'var(--steel)' }],assigneeName: 'Me' },
+            { id: 'TASK-024', title: 'Dashboard Redesign', priority: 'HIGH', dueLabel: 'Dec 18', dueState: 'soon', labels: [label('design'), label('frontend')], assignees: [{ initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Me' },
             { id: 'TASK-025', title: 'Database Migration', priority: 'MEDIUM', dueLabel: 'Dec 10', dueState: 'done', labels: [label('backend'), label('db')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }], assigneeName: 'Me' },
             { id: 'TASK-026', title: 'User Authentication', priority: 'CRITICAL', dueLabel: 'Dec 15', dueState: 'ontrack', labels: [label('auth'), label('security')], assignees: [{ initials: 'LW', accent: 'var(--ember)' }], assigneeName: 'Me' },
             { id: 'TASK-027', title: 'API Documentation', priority: 'MEDIUM', dueLabel: 'Dec 20', dueState: 'ontrack', labels: [label('docs'), label('api')], assignees: [{ initials: 'PS', accent: 'var(--violet)' }], assigneeName: 'Me' },
@@ -201,6 +225,7 @@ const MyTasks = () => {
 
                     {group.tasks.map((task) => {
                         const isChecked = checkedTasks.has(task.id) || task.dueState === 'done';
+                        const style = TASK_STATUS[task.priority]
                         return (
                             <div className="task-list-row" key={task.id}>
                                 <button
@@ -215,16 +240,11 @@ const MyTasks = () => {
                                 <span className="task-id">{task.id}</span>
                                 <span className="task-title">{task.title}</span>
 
-                                <span
-                                    className="task-priority-chip"
-                                    style={{
-                                        background: PRIORITY_CHIP[task.priority].bg,
-                                        color: PRIORITY_CHIP[task.priority].color,
-                                    }}
-                                >
-                                    {task.priority}
-                                </span>
-
+                                <StatusChip
+                                    label={style.label}
+                                    background={style.background}
+                                    color={style.color}
+                                />
                                 <DueCell state={task.dueState} dueLabel={task.dueLabel} />
 
                                 <span className="task-labels-group">
