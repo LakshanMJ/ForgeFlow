@@ -161,10 +161,19 @@ export default function TasksPage() {
 
 	return (
 		<>
-			<div className="page-header-row" style={{ marginBottom: 20 }}>
+			{/* <div className="page-header-row" style={{ marginBottom: 20 }}>
 				<h1 className="page-title" style={{ marginBottom: 0 }}>
 					Tasks
 				</h1>
+			</div> */}
+
+			<div className="page-header-row">
+				<div>
+					<h1 className="page-title">Tasks</h1>
+					<p className="page-subtitle">
+						Tasks description.
+					</p>
+				</div>
 			</div>
 
 			<div className="users-stat-row" style={{ marginBottom: 20 }}>

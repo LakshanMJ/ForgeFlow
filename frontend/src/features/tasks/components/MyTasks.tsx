@@ -1,3 +1,4 @@
+import OwnerCell from '@/shared/components/OwnerCell';
 import {
     Search,
     ChevronDown,
@@ -40,6 +41,9 @@ const LABEL_COLORS: Record<string, { bg: string; color: string }> = {
     release: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
     deploy: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
 };
+
+const owner = {"id":"297ff519-c4e1-4c5b-bec3-c4ab5665c7a6","firstName":"Paulie","lastName":"Gualtieri","email":"pg@gmail.com"}
+
 type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM';
 
 type DueState = 'overdue' | 'soon' | 'ontrack' | 'done';
@@ -237,17 +241,8 @@ const MyTasks = () => {
 
                                 <span className="task-assignee">
                                     <span className="task-assignee-avatars">
-                                        {task.assignees.map((a) => (
-                                            <span
-                                                key={a.initials}
-                                                className="owner-avatar"
-                                                style={{ width: 26, height: 26, background: a.accent, color: '#fff' }}
-                                            >
-                                                {a.initials}
-                                            </span>
-                                        ))}
+                                        <OwnerCell owner={owner} />
                                     </span>
-                                    <span className="task-assignee-name">{task.assigneeName}</span>
                                 </span>
                             </div>
                         );

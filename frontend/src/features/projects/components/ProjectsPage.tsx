@@ -20,22 +20,63 @@ import ProjectForm from './ProjectForm';
 import { CreateProjectData, ProjectColor, ProjectFormData, ProjectStatus, type Project, type ProjectColumn } from '../types/project.types';
 import { createProject } from '../api/projects.api';
 import { useProjects } from '../hooks/useProjects';
+import OwnerCell from '@/shared/components/OwnerCell';
+import StatusChip from '@/shared/components/StatusChip';
 
+// const STATUS_CHIP: Record<ProjectStatus, string> = {
+// 	[ProjectStatus.PLANNING]: 'chip-neutral',
+// 	[ProjectStatus.ACTIVE]: 'chip-steel',
+// 	[ProjectStatus.ON_HOLD]: 'chip-neutral',
+// 	[ProjectStatus.COMPLETED]: 'chip-patina',
+// 	[ProjectStatus.CANCELLED]: 'chip-neutral',
+// };
 
-const STATUS_CHIP: Record<ProjectStatus, string> = {
-	[ProjectStatus.PLANNING]: 'chip-neutral',
-	[ProjectStatus.ACTIVE]: 'chip-steel',
-	[ProjectStatus.ON_HOLD]: 'chip-neutral',
-	[ProjectStatus.COMPLETED]: 'chip-patina',
-	[ProjectStatus.CANCELLED]: 'chip-neutral',
-};
+// const STATUS_LABEL: Record<ProjectStatus, string> = {
+// 	[ProjectStatus.PLANNING]: 'Planning',
+// 	[ProjectStatus.ACTIVE]: 'In Progress',
+// 	[ProjectStatus.ON_HOLD]: 'On Hold',
+// 	[ProjectStatus.COMPLETED]: 'Completed',
+// 	[ProjectStatus.CANCELLED]: 'Cancelled',
+// };
 
-const STATUS_LABEL: Record<ProjectStatus, string> = {
-	[ProjectStatus.PLANNING]: 'Planning',
-	[ProjectStatus.ACTIVE]: 'In Progress',
-	[ProjectStatus.ON_HOLD]: 'On Hold',
-	[ProjectStatus.COMPLETED]: 'Completed',
-	[ProjectStatus.CANCELLED]: 'Cancelled',
+// const ACCENT: Record<string, string> = {
+// 	steel: 'var(--steel)',
+// 	ember: 'var(--ember)',
+// 	gold: 'var(--gold)',
+// 	patina: 'var(--patina)',
+// 	neutral: 'var(--text-tertiary)',
+// };
+
+const PROJECT_STATUS = {
+	PLANNING: {
+		label: "Planning",
+		background: "#E8E8E8",
+		color: "#555555",
+	},
+
+	ACTIVE: {
+		label: "Active",
+		background: "#DFF5E7",
+		color: "#218B4B",
+	},
+
+	COMPLETED: {
+		label: "Completed",
+		background: "#DDEBFF",
+		color: "#246BCE",
+	},
+
+	ON_HOLD: {
+		label: "On Hold",
+		background: "#FFF0D9",
+		color: "#B86B00",
+	},
+
+	//   CANCELLED: {
+	//     label: "Cancelled",
+	//     background: "#FFF0D9",
+	//     color: "#B86B00",
+	//   },
 };
 
 const STATUS_BAR_COLOR: Record<ProjectStatus, string> = {
@@ -44,15 +85,6 @@ const STATUS_BAR_COLOR: Record<ProjectStatus, string> = {
 	[ProjectStatus.ON_HOLD]: 'var(--ember)',
 	[ProjectStatus.COMPLETED]: 'var(--patina)',
 	[ProjectStatus.CANCELLED]: 'var(--ember)',
-};
-
-
-const ACCENT: Record<string, string> = {
-	steel: 'var(--steel)',
-	ember: 'var(--ember)',
-	gold: 'var(--gold)',
-	patina: 'var(--patina)',
-	neutral: 'var(--text-tertiary)',
 };
 
 const PROJECT_COLOR_MAP: Record<ProjectColor, string> = {
@@ -126,28 +158,33 @@ export default function ProjectsPage() {
 			key: 'owner',
 			label: 'Owner',
 			render: (project) => (
-				<div className="owner-cell">
-					<span className="owner-avatar">
-						{`${project.owner.firstName?.[0] ?? ''}${project.owner.lastName?.[0] ?? ''}`.toUpperCase()}
-					</span>
+				<OwnerCell owner={project.owner} />
+				// <div className="owner-cell">
+				// 	<span className="owner-avatar">
+				// 		{`${project.owner.firstName?.[0] ?? ''}${project.owner.lastName?.[0] ?? ''}`.toUpperCase()}
+				// 	</span>
 
-					{project?.owner
-						? `${project.owner.firstName} ${project.owner.lastName}`
-						: 'Unassigned'}
-				</div>
+				// 	{project?.owner
+				// 		? `${project.owner.firstName} ${project.owner.lastName}`
+				// 		: 'Unassigned'}
+				// </div>
 			),
 		},
 
 		{
 			key: 'status',
 			label: 'Status',
-			render: (project) => (
-				<span
-					className={`chip ${STATUS_CHIP[project.status]}`}
-				>
-					{STATUS_LABEL[project.status]}
-				</span>
-			),
+			render: (project) => {
+				const style = PROJECT_STATUS[project.status];
+
+				return (
+					<StatusChip
+						label={style.label}
+						background={style.background}
+						color={style.color}
+					/>
+				);
+			},
 		},
 
 		{
@@ -156,7 +193,7 @@ export default function ProjectsPage() {
 			render: (project) => (
 				<div className="progress-cell">
 					<span className="progress-pct">
-						{'project.progress'}%
+						{'50'}%
 					</span>
 
 					<span className="progress-track">
