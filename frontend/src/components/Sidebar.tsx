@@ -25,6 +25,7 @@ const NAV_ITEMS = [
 	{ label: 'Dashboard', href: '/dashboard', icon: '/dashboard.png', },
 	{ label: 'Projects', href: '/projects', icon: '/projects.svg' },
 	{ label: 'Tasks', href: '/tasks', icon: '/tasknew2.svg', },
+	{ label: 'Flint', href: '/flint', icon: '/logo/flint-logo.png', brand: true },
 	{ label: 'Notifications', href: '/notifications', icon: '/bell2.svg', },
 	{
 		label: 'Analytics',
@@ -58,33 +59,41 @@ export default function Sidebar() {
 	return (
 		<aside className="sidebar">
 			<nav style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-				{NAV_ITEMS.map(({ label, href, icon: Icon, iconColor }) => {
+				{NAV_ITEMS.map(({ label, href, icon: Icon, iconColor, brand }) => {
 					const isActive =
 						href === '/dashboard' ? pathname === href : pathname.startsWith(href);
 					return (
-						// <Link
-						// 	key={href}
-						// 	href={href}
-						// 	className={`nav-item${isActive ? ' active' : ''}`}
-						// >
-						// 	<Icon
-						// 		size={30}
-						// 		color={iconColor ?? 'currentColor'}
-						// 	/>
-						// 	{label}
-						// </Link>
 						<Link
 							key={href}
 							href={href}
-							className={`nav-item${isActive ? ' active' : ''}`}
+							className={`nav-item${isActive ? ' active' : ''}${brand ? ' nav-item-brand' : ''
+								}`}
 						>
 							{typeof Icon === 'string' ? (
-								<img
-									src={Icon}
-									alt=""
-									width={20}
-									height={20}
-								/>
+								<span
+									style={{
+										display: 'inline-flex',
+										alignItems: 'center',
+										justifyContent: 'center',
+										width: 24,
+										height: 24,
+										borderRadius: 7,
+										// 👇 only Flint gets the tile
+										// ...(brand && {
+										// 	background: 'linear-gradient(135deg, #1E1B4B 0%, #4C1D95 100%)',
+										// }),
+									}}
+								>
+									<img
+										src={Icon}
+										alt=""
+										width={25}
+										height={25}
+										// style={{...(brand && {
+										// 	background: 'linear-gradient(135deg, #ffffff 0%, #ffffff 100%)',
+										// }),}}
+									/>
+								</span>
 							) : React.isValidElement(Icon) ? (
 								Icon
 							) : (
@@ -104,7 +113,7 @@ export default function Sidebar() {
 					aria-controls="admin-submenu"
 				>
 					{/* <Cog size={15} /> */}
-					<MdAdminPanelSettings size={26} />	
+					<MdAdminPanelSettings size={26} />
 					<span style={{ flex: 1 }}>Admin</span>
 					<ChevronDown
 						size={14}

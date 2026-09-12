@@ -1,97 +1,97 @@
 import {
-	Search,
-	ChevronDown,
-	Download,
-	Plus,
-	ListChecks,
-	LayoutGrid,
-	Inbox,
-	Calendar,
-	Folder,
-	Smartphone,
-	ArrowRight,
-	CheckSquare,
-	Clock3,
-	AlertTriangle,
-	CheckCircle2,
-	CalendarDays,
-	Check,
+    Search,
+    ChevronDown,
+    Download,
+    Plus,
+    ListChecks,
+    LayoutGrid,
+    Inbox,
+    Calendar,
+    Folder,
+    Smartphone,
+    ArrowRight,
+    CheckSquare,
+    Clock3,
+    AlertTriangle,
+    CheckCircle2,
+    CalendarDays,
+    Check,
 } from 'lucide-react';
 import { useState } from 'react';
 
 const PRIORITY_CHIP: Record<Priority, { bg: string; color: string }> = {
-	CRITICAL: { bg: 'var(--ember-tint)', color: 'var(--ember-tint-text)' },
-	HIGH: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
-	MEDIUM: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
+    CRITICAL: { bg: 'var(--ember-tint)', color: 'var(--ember-tint-text)' },
+    HIGH: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
+    MEDIUM: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
 };
 
 const LABEL_COLORS: Record<string, { bg: string; color: string }> = {
-	backend: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
-	api: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
-	design: { bg: 'var(--violet-tint)', color: 'var(--violet-tint-text)' },
-	frontend: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
-	db: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
-	auth: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
-	security: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
-	docs: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
-	mobile: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
-	notifications: { bg: 'var(--violet-tint)', color: 'var(--violet-tint-text)' },
-	sync: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
-	release: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
-	deploy: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
+    backend: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
+    api: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
+    design: { bg: 'var(--violet-tint)', color: 'var(--violet-tint-text)' },
+    frontend: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
+    db: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
+    auth: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
+    security: { bg: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
+    docs: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
+    mobile: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
+    notifications: { bg: 'var(--violet-tint)', color: 'var(--violet-tint-text)' },
+    sync: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
+    release: { bg: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
+    deploy: { bg: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
 };
 type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM';
 
 type DueState = 'overdue' | 'soon' | 'ontrack' | 'done';
 
 type Task = {
-	id: string;
-	title: string;
-	priority: Priority;
-	dueLabel: string;
-	dueState: DueState;
-	labels: { text: string; className: string }[];
-	assignees: { initials: string; accent: string }[];
-	assigneeName: string;
-	checked?: boolean;
+    id: string;
+    title: string;
+    priority: Priority;
+    dueLabel: string;
+    dueState: DueState;
+    labels: { text: string; className: string }[];
+    assignees: { initials: string; accent: string }[];
+    assigneeName: string;
+    checked?: boolean;
 };
 
 type TaskGroup = {
-	key: string;
-	name: string;
-	icon: typeof Folder;
-	taskCount: number;
-	completePct: number;
-	tasks: Task[];
+    key: string;
+    name: string;
+    icon: typeof Folder;
+    taskCount: number;
+    completePct: number;
+    tasks: Task[];
 };
 
 const GROUPS: TaskGroup[] = [
-	{
-		key: 'acme',
-		name: 'Acme Platform Redesign',
-		icon: Folder,
-		taskCount: 5,
-		completePct: 72,
-		tasks: [
-			{ id: 'TASK-023', title: 'Payment API Integration', priority: 'CRITICAL', dueLabel: 'Dec 12', dueState: 'overdue', labels: [label('backend'), label('api')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }, { initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Mike' },
-			{ id: 'TASK-024', title: 'Dashboard Redesign', priority: 'HIGH', dueLabel: 'Dec 18', dueState: 'soon', labels: [label('design'), label('frontend')], assignees: [{ initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Alex' },
-			{ id: 'TASK-025', title: 'Database Migration', priority: 'MEDIUM', dueLabel: 'Dec 10', dueState: 'done', labels: [label('backend'), label('db')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }], assigneeName: 'Mike' },
-			{ id: 'TASK-026', title: 'User Authentication', priority: 'CRITICAL', dueLabel: 'Dec 15', dueState: 'ontrack', labels: [label('auth'), label('security')], assignees: [{ initials: 'LW', accent: 'var(--ember)' }], assigneeName: 'Lisa' },
-			{ id: 'TASK-027', title: 'API Documentation', priority: 'MEDIUM', dueLabel: 'Dec 20', dueState: 'ontrack', labels: [label('docs'), label('api')], assignees: [{ initials: 'PS', accent: 'var(--violet)' }], assigneeName: 'Priya' },
-		],
-	},
-	{
-		key: 'mobile',
-		name: 'Mobile App Development',
-		icon: Smartphone,
-		taskCount: 3,
-		completePct: 45,
-		tasks: [
-			{ id: 'TASK-101', title: 'Push Notifications', priority: 'HIGH', dueLabel: 'Dec 14', dueState: 'soon', labels: [label('mobile'), label('notifications')], assignees: [{ initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Alex' },
-			{ id: 'TASK-102', title: 'Offline Sync', priority: 'CRITICAL', dueLabel: 'Dec 10', dueState: 'overdue', labels: [label('backend'), label('sync')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }], assigneeName: 'Mike' },
-			{ id: 'TASK-103', title: 'App Store Submission', priority: 'MEDIUM', dueLabel: 'Dec 22', dueState: 'ontrack', labels: [label('release'), label('deploy')], assignees: [{ initials: 'PS', accent: 'var(--violet)' }], assigneeName: 'Priya' },
-		],
-	},
+    {
+        key: 'acme',
+        name: 'Acme Platform Redesign',
+        icon: Folder,
+        taskCount: 5,
+        completePct: 72,
+        tasks: [
+            { id: 'TASK-023', title: 'Payment API Integration Payment API Integration Payment API Integration Payment API Integration ', priority: 'CRITICAL', dueLabel: 'Dec 12', dueState: 'overdue', labels: [label('backend'), label('api')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }, { initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Me' },
+            { id: 'TASK-024', title: 'Dashboard Redesign', priority: 'HIGH', dueLabel: 'Dec 18', dueState: 'soon', labels: [label('design'), label('frontend')], assignees: [{ initials: 'AT', accent: 'var(--steel)' }],assigneeName: 'Me' },
+            { id: 'TASK-025', title: 'Database Migration', priority: 'MEDIUM', dueLabel: 'Dec 10', dueState: 'done', labels: [label('backend'), label('db')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }], assigneeName: 'Me' },
+            { id: 'TASK-026', title: 'User Authentication', priority: 'CRITICAL', dueLabel: 'Dec 15', dueState: 'ontrack', labels: [label('auth'), label('security')], assignees: [{ initials: 'LW', accent: 'var(--ember)' }], assigneeName: 'Me' },
+            { id: 'TASK-027', title: 'API Documentation', priority: 'MEDIUM', dueLabel: 'Dec 20', dueState: 'ontrack', labels: [label('docs'), label('api')], assignees: [{ initials: 'PS', accent: 'var(--violet)' }], assigneeName: 'Me' },
+        ],
+    },
+    {
+        key: 'mobile',
+        name: 'Mobile App Development',
+        icon: Smartphone,
+        taskCount: 3,
+        completePct: 45,
+        tasks: [
+            { id: 'TASK-101', title: 'Push Notifications', priority: 'HIGH', dueLabel: 'Dec 14', dueState: 'soon', labels: [label('mobile'), label('notifications')], assignees: [{ initials: 'AT', accent: 'var(--steel)' }], assigneeName: 'Me' },
+            { id: 'TASK-102', title: 'Offline Sync', priority: 'CRITICAL', dueLabel: 'Dec 10', dueState: 'overdue', labels: [label('backend'), label('sync')], assignees: [{ initials: 'MB', accent: 'var(--patina)' }], assigneeName: 'Me' },
+            { id: 'TASK-103', title: 'App Store Submission', priority: 'MEDIUM', dueLabel: 'Dec 22', dueState: 'ontrack', labels: [label('release'), label('deploy')], assignees: [{ initials: 'PS', accent: 'var(--violet)' }], assigneeName: 'Me' },
+        ],
+    },
 ];
 
 function DueCell({ state, dueLabel }: { state: DueState; dueLabel: string }) {
@@ -129,21 +129,21 @@ function DueCell({ state, dueLabel }: { state: DueState; dueLabel: string }) {
 
 
 function label(text: string) {
-	const c = LABEL_COLORS[text] ?? { bg: 'var(--surface-3)', color: 'var(--text-secondary)' };
-	return { text, className: '', bg: c.bg, color: c.color };
+    const c = LABEL_COLORS[text] ?? { bg: 'var(--surface-3)', color: 'var(--text-secondary)' };
+    return { text, className: '', bg: c.bg, color: c.color };
 }
 
 const MyTasks = () => {
     const [checkedTasks, setCheckedTasks] = useState<Set<string>>(new Set());
-    
+
     const toggleTask = (id: string) => {
-		setCheckedTasks((prev) => {
-			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			return next;
-		});
-	};
+        setCheckedTasks((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
 
     return (
         <>
@@ -163,6 +163,10 @@ const MyTasks = () => {
                 <button className="filter-select" type="button">
                     All Priority
                     <ChevronDown size={14} />
+                </button>
+                <button className="btn-primary" type="button">
+                    <Plus size={14} />
+                    New Task
                 </button>
             </div>
 

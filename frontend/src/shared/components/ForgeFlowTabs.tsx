@@ -24,11 +24,11 @@ const tabListSx = {
   '& .MuiTab-root': {
     minHeight: 0,
     padding: '12px 16px',
-    fontFamily: '"Barlow Condensed", sans-serif',
+    fontFamily: '"Segoe UI", sans-serif',
     fontWeight: 600,
     fontSize: '13px',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+    // letterSpacing: '0.5px',
     color: 'var(--text-secondary)',
   },
   '& .MuiTab-root:hover': {

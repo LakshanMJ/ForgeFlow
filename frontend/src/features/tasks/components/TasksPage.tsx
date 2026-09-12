@@ -165,28 +165,6 @@ export default function TasksPage() {
 				<h1 className="page-title" style={{ marginBottom: 0 }}>
 					Tasks
 				</h1>
-				<div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-					<div className="search-input" style={{ minWidth: 220 }}>
-						<Search size={14} />
-						<input type="text" placeholder="Search tasks..." />
-					</div>
-					<button className="filter-select" type="button">
-						All Projects
-						<ChevronDown size={14} />
-					</button>
-					<button className="filter-select" type="button">
-						All Status
-						<ChevronDown size={14} />
-					</button>
-					<button className="btn-secondary" type="button">
-						<Download size={14} />
-						Export
-					</button>
-					<button className="btn-primary" type="button">
-						<Plus size={14} />
-						New Task
-					</button>
-				</div>
 			</div>
 
 			<div className="users-stat-row" style={{ marginBottom: 20 }}>
@@ -194,9 +172,6 @@ export default function TasksPage() {
 					<div>
 						<div className="users-stat-value">12</div>
 						<div className="users-stat-label">Total Tasks Assigned</div>
-						<div className="users-stat-sub" style={{ color: 'var(--patina)' }}>
-							↑ 3 this week
-						</div>
 					</div>
 					<span
 						className="users-stat-icon-circle"
@@ -210,9 +185,6 @@ export default function TasksPage() {
 					<div>
 						<div className="users-stat-value">5</div>
 						<div className="users-stat-label">In Progress</div>
-						<div className="users-stat-sub" style={{ color: 'var(--gold)' }}>
-							⏱ 2 due this week
-						</div>
 					</div>
 					<span
 						className="users-stat-icon-circle"
@@ -226,9 +198,6 @@ export default function TasksPage() {
 					<div>
 						<div className="users-stat-value">3</div>
 						<div className="users-stat-label">Overdue</div>
-						<div className="users-stat-sub" style={{ color: 'var(--ember)' }}>
-							⚠ Needs attention
-						</div>
 					</div>
 					<span
 						className="users-stat-icon-circle"
@@ -242,9 +211,6 @@ export default function TasksPage() {
 					<div>
 						<div className="users-stat-value">4</div>
 						<div className="users-stat-label">Done This Week</div>
-						<div className="users-stat-sub" style={{ color: 'var(--patina)' }}>
-							✓ Great progress
-						</div>
 					</div>
 					<span
 						className="users-stat-icon-circle"
@@ -254,23 +220,6 @@ export default function TasksPage() {
 					</span>
 				</div>
 			</div>
-
-			{/* <nav className="tasks-subtabs">
-				{SUBTABS.map((tab) => (
-					<button
-						key={tab.key}
-						type="button"
-						className={`tasks-subtab${activeSubtab === tab.key ? ' active' : ''}`}
-						onClick={() => setActiveSubtab(tab.key)}
-					>
-						<tab.icon size={15} />
-						{tab.label}
-						{tab.count !== null && (
-							<span className="tasks-subtab-count">{tab.count}</span>
-						)}
-					</button>
-				))}
-			</nav> */}
 
 			<ForgeFlowTabs
 				value={tab}

@@ -3,6 +3,7 @@ import "./HomePage.css";
 import HeroVideo from "./HeroVideo";
 import FeatureGrid from "./FeatureGrid";
 import AnimatedLogo from "@/shared/components/AnimatedLogo";
+import BrandMark from "@/shared/components/BrankMark";
 // import YourIcon from "./YourIcon"; // <- swap in your own icon component
 
 function ChevronDown() {
@@ -13,17 +14,18 @@ function ChevronDown() {
 	);
 }
 
-function BrandMark() {
-	return (
-		<span className="brand">
-			<span className="brand-mark" aria-hidden="true">
-				<span className="brand-mark-a" />
-				<span className="brand-mark-b" />
-			</span>
-			Flowdeck
-		</span>
-	);
-}
+// function BrandMark() {
+// 	return (
+// 		<span className="brand">
+// 			<span className="brand-mark" aria-hidden="true">
+// 				<span className="brand-mark-a" />
+// 				<span className="brand-mark-b" />
+// 			</span>
+// 			Flowdeck
+// 		</span>
+// 	);
+// }
+
 
 export default function HomePage() {
 	return (

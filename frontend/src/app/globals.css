@@ -105,6 +105,7 @@
 
 * {
   box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
 }
 
 html,
@@ -136,7 +137,7 @@ button {
 
 /* ---- Type utilities ---- */
 .t-h3 {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   /* font-family: "inter", sans-serif; */
   font-weight: 600;
   font-size: 18px;
@@ -145,7 +146,7 @@ button {
 }
 
 .t-mono {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 12px;
   color: var(--text-secondary);
 }
@@ -191,7 +192,7 @@ button {
 }
 
 .topbar-logo {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 17px;
   text-transform: uppercase;
@@ -273,7 +274,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 12px;
 }
@@ -457,7 +458,7 @@ button {
 
 /* ---- Page header ---- */
 .page-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 28px;
   text-transform: uppercase;
@@ -468,6 +469,7 @@ button {
 .page-subtitle {
   color: var(--text-secondary);
   font-size: 13.5px;
+  font-weight: 600;
   margin: 0 0 28px;
 }
 
@@ -487,7 +489,7 @@ button {
 }
 
 .stat-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -496,13 +498,13 @@ button {
 }
 
 .stat-value {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 30px;
 }
 
 .chip {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -579,7 +581,7 @@ button {
 }
 
 .search-kbd {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   color: var(--text-tertiary);
   border: 1px solid var(--border);
@@ -616,7 +618,7 @@ button {
 /* ---- Sidebar brand / org card ---- */
 .sidebar-brand {
   padding: 4px 10px 18px;
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
 }
 
 .sidebar-subtitle {
@@ -707,6 +709,10 @@ button {
   max-width: 280px;
 }
 
+.filter-bar .btn-primary {
+  margin-left: auto;
+}
+
 .filter-select {
   display: flex;
   align-items: center;
@@ -743,10 +749,11 @@ button {
 
 /* ---- Data table ---- */
 .table-card {
-  background: var(--surface);
+  background: var(--surface-2);
   /* border: 4px solid var(--border); */
   border: 1px solid var(--border);
   border-radius: 2px;
+  font-weight: 600;
   overflow: hidden;
 }
 
@@ -781,7 +788,7 @@ button {
 }
 
 .table-head>div {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 12.5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -806,7 +813,7 @@ button {
 }
 
 .table-row:hover>div {
-  background: var(--surface-2);
+  background: var(--surface);
 }
 
 .table-row:last-child>div {
@@ -841,7 +848,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 12px;
   color: var(--parchment);
@@ -1004,7 +1011,7 @@ button {
   padding: 14px 16px;
   font-size: 12.5px;
   color: var(--text-secondary);
-  background: var(--surface-2);
+  background: #FCFCFC;
 }
 
 .pagination {
@@ -1094,7 +1101,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 20px;
   color: #ffffff;
@@ -1108,7 +1115,7 @@ button {
 }
 
 .project-header-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 24px;
   margin: 0;
@@ -1142,7 +1149,7 @@ button {
 }
 
 .project-meta-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1169,7 +1176,8 @@ button {
 
 .tab-item {
   padding: 12px 16px;
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 600;
   font-size: 13px;
   text-transform: uppercase;
@@ -1215,7 +1223,8 @@ button {
 }
 
 .panel-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 600;
   font-size: 13px;
   text-transform: uppercase;
@@ -1246,7 +1255,8 @@ button {
 
 /* ---- Progress panel ---- */
 .progress-big-value {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 40px;
   line-height: 1;
@@ -1314,7 +1324,7 @@ button {
 }
 
 .stat-tile-v2-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -1326,7 +1336,8 @@ button {
 }
 
 .stat-tile-v2-value {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 22px;
   margin-bottom: 8px;
@@ -1721,7 +1732,8 @@ button {
 }
 
 .members-summary-value {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 20px;
 }
@@ -1896,7 +1908,8 @@ button {
 }
 
 .files-stat-value {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 24px;
   line-height: 1.1;
@@ -2299,7 +2312,8 @@ button {
 }
 
 .column-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
+  font-family: "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 13px;
   text-transform: uppercase;
@@ -2405,7 +2419,7 @@ button {
 }
 
 .task-card-priority {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -2571,7 +2585,7 @@ button {
 }
 
 .modal-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 19px;
 }
@@ -2614,7 +2628,7 @@ button {
 }
 
 .form-section-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 600;
   font-size: 13px;
   text-transform: uppercase;
@@ -2917,7 +2931,7 @@ button {
 }
 
 .users-stat-value {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 24px;
   line-height: 1.1;
@@ -2980,7 +2994,7 @@ button {
 }
 
 .you-tag {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -3109,7 +3123,7 @@ button {
 }
 
 .avatar-upload-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   font-weight: 700;
   text-transform: uppercase;
@@ -3374,7 +3388,7 @@ button {
 }
 
 .role-section-label {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 600;
   font-size: 13px;
   text-transform: uppercase;
@@ -3404,7 +3418,7 @@ button {
 }
 
 .permission-group-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 600;
   font-size: 12.5px;
   text-transform: uppercase;
@@ -3657,7 +3671,7 @@ button {
 }
 
 .matrix-head-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -3672,7 +3686,7 @@ button {
 }
 
 .matrix-role-header-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.4px;
@@ -3687,7 +3701,7 @@ button {
   background: var(--surface-3);
   border-bottom: 1px solid var(--border);
   cursor: pointer;
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 600;
   font-size: 12.5px;
   text-transform: uppercase;
@@ -3800,7 +3814,7 @@ button {
 }
 
 .roles-sidebar-title {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4145,7 +4159,7 @@ button {
 }
 
 .auth-visual-wordmark {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 20px;
   text-transform: uppercase;
@@ -4154,7 +4168,7 @@ button {
 }
 
 .auth-visual-tagline {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4180,7 +4194,7 @@ button {
 }
 
 .auth-glimpse-bar-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4227,7 +4241,7 @@ button {
 }
 
 .auth-compact-wordmark {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 16px;
   text-transform: uppercase;
@@ -4236,7 +4250,7 @@ button {
 }
 
 .auth-compact-tagline {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4259,7 +4273,7 @@ button {
 }
 
 .auth-heading {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 32px;
   text-transform: uppercase;
@@ -4395,7 +4409,7 @@ button {
 .auth-footer {
   margin-top: 48px;
   text-align: center;
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   letter-spacing: 0.4px;
   color: var(--text-tertiary);
@@ -4570,6 +4584,7 @@ button {
 
 .task-group-count {
   font-size: 12.5px;
+  font-weight: 600;
   color: var(--text-tertiary);
   flex-shrink: 0;
 }
@@ -4603,13 +4618,34 @@ button {
 }
 
 /* ---- Task rows ---- */
-.task-list-row {
+/* .task-list-row {
   display: flex;
   align-items: center;
   gap: 14px;
   padding: 13px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
+} */
+
+.task-list-row {
+    width: 100%;
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-columns:
+        24px
+        80px
+        minmax(200px, 1fr)
+        90px
+        110px
+        180px
+        200px;
+
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
 }
 
 .task-list-row:last-child {
@@ -4641,44 +4677,66 @@ button {
 }
 
 .task-id {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11.5px;
+  /* font-family: "JetBrains Mono", monospace; */
+  font-size: 12.5px;
+  font-weight: 600;
   color: var(--text-tertiary);
   flex-shrink: 0;
   width: 70px;
 }
 
 .task-title {
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 600;
   flex: 1;
   min-width: 160px;
 }
 
-.task-priority-chip {
-  font-family: "JetBrains Mono", monospace;
+/* .task-priority-chip {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+  width: 100%;
+  align-content: center;
+  align-items: center;
   padding: 4px 9px;
   border-radius: 4px;
   flex-shrink: 0;
   white-space: nowrap;
+} */
+
+.task-priority-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+
+    width: 100%;
+    padding: 4px 9px;
+    border-radius: 4px;
+
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 
 .task-due {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12.5px;
+  font-size: 12px;
+  font-weight: 600;
   flex-shrink: 0;
   white-space: nowrap;
   width: 84px;
 }
 
 .task-label-chip {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   padding: 3px 9px;
   border-radius: 100px;
@@ -4697,6 +4755,7 @@ button {
   display: flex;
   align-items: center;
   gap: 7px;
+  font-weight: 600;
   flex-shrink: 0;
   min-width: 90px;
 }
@@ -4782,7 +4841,7 @@ button {
 }
 
 .auth-logo-wordmark {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 22px;
   text-transform: uppercase;
@@ -4791,7 +4850,7 @@ button {
 }
 
 .auth-brand-tagline {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4818,7 +4877,7 @@ button {
 }
 
 .auth-preview-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4931,7 +4990,7 @@ button {
 }
 
 .auth-compact-wordmark {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 16px;
   text-transform: uppercase;
@@ -4940,7 +4999,7 @@ button {
 }
 
 .auth-compact-tagline {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -4968,7 +5027,7 @@ button {
 }
 
 .auth-heading {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 30px;
   text-transform: uppercase;
@@ -5127,7 +5186,7 @@ button {
 }
 
 .auth-footer-text {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10.5px;
   letter-spacing: 0.3px;
   color: var(--text-tertiary);
@@ -5362,7 +5421,7 @@ button {
 }
 
 .auth-logo-wordmark {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 22px;
   text-transform: uppercase;
@@ -5371,7 +5430,7 @@ button {
 }
 
 .auth-brand-tagline {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -5387,7 +5446,7 @@ button {
 }
 
 .auth-hero-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 42px;
   line-height: 1.1;
@@ -5474,7 +5533,7 @@ button {
 }
 
 .auth-proof-number {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 20px;
   color: var(--text);
@@ -5551,7 +5610,7 @@ button {
 }
 
 .auth-compact-wordmark {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 16px;
   text-transform: uppercase;
@@ -5601,7 +5660,7 @@ button {
 }
 
 .auth-login-title {
-  font-family: "Barlow Condensed", sans-serif;
+  /* font-family: "Barlow Condensed", sans-serif; */
   font-weight: 700;
   font-size: 28px;
   text-transform: uppercase;
@@ -6051,3 +6110,26 @@ button {
     font-size: 11px;
   }
 }
+
+.nav-item.nav-item-brand {
+	/* background: linear-gradient(135deg, #1E1B4B 0%, #4C1D95 60%, #7C3AED 100%); */
+	/* color: #ffffff; */
+	/* border-radius: 10px; */
+	/* padding: 8px 12px; */
+	/* margin: 6px 0; */
+	/* box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35); */
+	/* transition: box-shadow 0.2s ease, transform 0.2s ease; */
+}
+
+/* .nav-item.nav-item-brand:hover {
+	background: linear-gradient(135deg, #312E81 0%, #6D28D9 60%, #8B5CF6 100%);
+	box-shadow: 0 6px 18px rgba(124, 58, 237, 0.55);
+	transform: translateY(-1px);
+	color: #ffffff;
+} */
+
+/* Make sure active state on Flint still reads as active */
+/* .nav-item.nav-item-brand.active {
+	background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 60%, #A855F7 100%);
+	box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+} */
