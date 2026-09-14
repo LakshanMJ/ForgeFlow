@@ -5,9 +5,11 @@
 
 :root {
   /* Sampled directly from the reference screenshot (pixel-averaged, AA-filtered). */
-  --bg: #12110F;
+  /* --bg: #12110F; */
+  --bg: #090909;
   --surface: #0F0F0D;
-  --surface-2: #1F1E1C;
+  --surface-2: #1F2226;
+  /* --surface-2: #292929; */
   --surface-3: #2b2a28;
   --border: #332F2B;
 
@@ -27,19 +29,16 @@
   --gold: #d9a441;
   --gold-tint: #362e1f;
   --gold-tint-text: #d9a441;
-  /* Restored as its own green — the reference screenshot's COMPLETED chip is
-     clearly green, not steel-blue, so mapping patina -> steel was incorrect. */
   --patina: #5ca36e;
   --patina-tint: #2a3a2c;
   --patina-tint-text: #7fbd8a;
-  /* Added for the Members tab QA Engineer badge — not one of the original four. */
   --violet: #8f7fd1;
   --violet-tint: #262238;
   --violet-tint-text: #b3a3ea;
 
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 
-   /* Dashboard spacing scale */
+  /* Dashboard spacing scale */
   --dash-gap-xs: 4px;
   --dash-gap-sm: 8px;
   --dash-gap-md: 16px;
@@ -62,7 +61,14 @@
   --dash-row-hover: #F7F8FA;
   --dash-section-label: #8A8F98;
 
+  --table-head: #191919;
+  --table-row: #111111;
+  --table-row-hover: #1A1A1A;
+  --table-footer: #191919;
+  --table-header-text: #7B7B7B;
+  --table-row-text: #EEEEEE;
 
+  --card-background: #111111;
 }
 
 [data-theme="light"] {
@@ -99,6 +105,15 @@
   /* Matches your Planning status */
 
   --shadow: 0 8px 24px rgba(70, 60, 40, 0.1);
+
+  --table-head: #FCFCFC;
+  --table-row: #f9f9f9;
+  --table-row-hover: #f9f9f9;
+  --table-footer: #FCFCFC;
+  --table-header-text: #6b6b6b;
+  --table-row-text: #1a1a1a;
+
+  --card-background: #ffffff;
 }
 
 * {
@@ -832,28 +847,33 @@ button {
   font-size: 12.5px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--text-secondary);
+  /* color: var(--text-secondary); */
+  color: var(--table-header-text);
   padding: 12px 16px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 4px;
   /* background: var(--surface-2); */
-  background: #FCFCFC;
+  background: var(--table-head);
 }
 
 .table-row>div {
   padding: 14px 16px;
   border-bottom: 1px solid var(--border);
   font-size: 13px;
-  color: var(--text);
+  /* color: var(--text); */
+  color: var(--table-row-text);
   display: flex;
   align-items: center;
   cursor: pointer;
+  /* background: var(--surface); */
+  background: var(--table-row);
 }
 
 .table-row:hover>div {
-  background: var(--surface);
+  /* background: var(--surface); */
+  background: var(--table-row-hover);
 }
 
 .table-row:last-child>div {
@@ -1044,8 +1064,6 @@ button {
 }
 
 
-
-
 /* ---- Table footer / pagination ---- */
 .table-footer {
   display: flex;
@@ -1054,7 +1072,7 @@ button {
   padding: 14px 16px;
   font-size: 12.5px;
   color: var(--text-secondary);
-  background: #FCFCFC;
+  background: var(--table-footer);
 }
 
 .pagination {
@@ -2954,7 +2972,8 @@ button {
 }
 
 .users-stat-card {
-  background: var(--surface-2);
+  background: var(--card-background);
+  /* background: var(--surface-2); */
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 16px;
@@ -4610,7 +4629,8 @@ button {
   gap: 12px;
   padding: 14px 18px;
   /* background: var(--surface-2); */
-  background: #FCFCFC;
+  /* background: #FCFCFC; */
+  background: var(--table-head);
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
 }
@@ -4684,7 +4704,8 @@ button {
   gap: 14px;
   padding: 13px 18px;
   border-bottom: 1px solid var(--border);
-  background: var(--surface-2);
+  /* background: var(--surface-2); */
+  background: var(--table-row);
 }
 
 .task-list-row:last-child {
@@ -4692,7 +4713,8 @@ button {
 }
 
 .task-list-row:hover {
-  background: var(--surface);
+  /* background: var(--surface); */
+  background: var(--table-row-hover);
 }
 
 .task-checkbox {
@@ -6173,3 +6195,671 @@ button {
 	background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 60%, #A855F7 100%);
 	box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
 } */
+
+
+
+
+
+/*
+  New classes for the Dashboard home page ("My Work" layout).
+  Every color, font, radius and spacing value below is a var() pulled
+  from app/globals.css — nothing here introduces a new hex color or a
+  design-system value outside what's already defined there.
+*/
+/* @import url("https://fonts.googleapis.com/css2?family=Segoe+UI"); */
+
+@keyframes dash-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ---- Row 1 layout: Flint + KPI grid ---- */
+.dash-row-top {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--dash-gap-lg);
+  align-items: stretch;
+}
+
+@media (max-width: 1200px) {
+  .dash-row-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-home {
+  font-family: "Segoe UI", sans-serif;
+  color: #F2F2F2
+}
+
+/* ---- Flint briefing card ---- */
+.flint-card-border {
+  position: relative;
+  border: 1px solid var(--border)
+  border-radius: var(--dash-radius-card);
+  padding: 1px;
+  background: linear-gradient(135deg,
+      var(--ember-tint) 0%,
+      var(--surface-2) 60%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.flint-card-inner {
+  /* background: var(--surface-2); */
+  background: var(--card-background);
+  border-radius: calc(var(--dash-radius-card) - 1px);
+  padding: 28px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.flint-header-row {
+  display: flex;
+  background: var(--surface-2);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--dash-gap-lg);
+}
+
+.flint-brand-row {
+  display: flex;
+  align-items: center;
+  gap: var(--dash-gap-sm);
+  font-family: "JetBrains Mono", monospace;
+  font-size: var(--dash-label-size);
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.flint-mark {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background: var(--ember-tint);
+  color: var(--ember);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.flint-date-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: var(--dash-label-size);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.flint-greeting {
+  font-size: 16px;
+  font-weight: 500;
+  /* color: var(--text); */
+  color: #F2F2F2;
+  margin-bottom: var(--dash-gap-lg);
+}
+
+.flint-greeting .flint-name {
+  color: var(--ember);
+  font-weight: 700;
+}
+
+.flint-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: var(--dash-gap-lg);
+  flex: 1;
+}
+
+.flint-item-row {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.flint-item-row:hover {
+  transform: translateX(2px);
+}
+
+.flint-item-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.flint-item-dot.critical {
+  background: var(--ember);
+  box-shadow: 0 0 0 4px var(--ember-tint);
+}
+
+.flint-item-dot.high {
+  background: var(--gold);
+  box-shadow: 0 0 0 4px var(--gold-tint);
+}
+
+.flint-item-dot.medium {
+  background: var(--steel);
+  box-shadow: 0 0 0 4px var(--steel-tint);
+}
+
+.flint-item-text {
+  font-size: var(--dash-body-size);
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.flint-item-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Inline @mentions inside Flint copy */
+.mention-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px 2px;
+  margin: 0 2px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mention-chip.mention-task {
+  background: var(--surface-3);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.mention-chip.mention-task:hover {
+  border-color: var(--border-strong);
+}
+
+.mention-chip.mention-user {
+  background: var(--steel-tint);
+  color: var(--steel-tint-text);
+}
+
+.mention-chip.mention-project {
+  background: var(--patina-tint);
+  color: var(--patina-tint-text);
+}
+
+.flint-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--dash-gap-lg);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.flint-live-indicator {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flint-live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--patina);
+  box-shadow: 0 0 0 3px var(--patina-tint);
+  animation: dash-pulse 2s ease-in-out infinite;
+}
+
+.flint-view-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ember);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap 0.15s ease;
+}
+
+.flint-view-link:hover {
+  gap: 8px;
+}
+
+/* ---- KPI grid ---- */
+.dash-kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: var(--dash-gap-lg);
+}
+
+.kpi-card {
+  /* background: var(--surface-2); */
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  /* border-radius: var(--dash-radius-card); */
+  border-radius: 3px 3px 12px 12px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dash-gap-sm);
+  position: relative;
+  min-height: 170px;
+}
+
+.kpi-card:hover {
+  background: var(--surface-3);
+}
+
+.kpi-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: var(--dash-radius-card) var(--dash-radius-card) 0 0;
+}
+
+.kpi-card-label {
+  font-size: var(--dash-label-size);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kpi-card-label-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.kpi-card-value {
+  font-family: "JetBrains Mono", monospace;
+  font-size: var(--dash-number-lg);
+  font-weight: 600;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.kpi-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-top: auto;
+}
+
+.kpi-card-delta {
+  font-weight: 600;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.kpi-card-visual {
+  position: absolute;
+  right: 26px;
+  top: 68px;
+  display: flex;
+  align-items: center;
+}
+
+.kpi-card-visual--area {
+  top: auto;
+  bottom: 58px;
+}
+
+/* ---- Focus Today (hero task list) ---- */
+.dash-hero-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--dash-radius-card);
+  overflow: hidden;
+}
+
+.dash-hero-header {
+  background: var(--table-head);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px var(--dash-gap-lg);
+  border-bottom: 1px solid var(--border);
+}
+
+.dash-hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.dash-hero-title-mark {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ember);
+  box-shadow: 0 0 0 4px var(--ember-tint);
+}
+
+.dash-hero-count-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--dash-radius-row);
+  background: var(--surface-3);
+}
+
+.dash-view-all-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dash-view-all-link:hover {
+  color: var(--ember);
+}
+
+.dash-task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dash-task-row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto 90px 100px;
+  align-items: center;
+  gap: var(--dash-gap-md);
+  background: var(--table-row);
+  padding: 16px var(--dash-gap-lg);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.dash-task-row:last-child {
+  border-bottom: none;
+}
+
+.dash-task-row:hover {
+  background: var(--table-row-hover);
+}
+
+.dash-task-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 5px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dash-task-checkbox:hover {
+  border-color: var(--ember);
+  background: var(--ember-tint);
+}
+
+.dash-task-title {
+  font-size: var(--dash-body-size);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.dash-task-project-tag {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+}
+
+.dash-task-due {
+  font-size: 11px;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dash-task-due.overdue {
+  color: var(--ember);
+  font-weight: 600;
+}
+
+/* Priority pill dot (used alongside the existing .chip classes) */
+.chip-dot::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* ---- Row 3: Activity + Overdue ---- */
+.dash-bottom-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--dash-gap-lg);
+}
+
+@media (max-width: 960px) {
+  .dash-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-panel {
+  /* background: var(--surface-2); */
+  background: var(--table-head);
+  border: 1px solid var(--border);
+  border-radius: var(--dash-radius-card);
+  overflow: hidden;
+}
+
+.dash-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dash-panel-title {
+  font-size: var(--dash-label-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--dash-gap-sm);
+}
+
+.dash-panel-count {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  background: var(--surface-3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.dash-activity-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--dash-gap-sm) 0;
+}
+
+.dash-activity-row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  background: var(--table-row);
+  align-items: flex-start;
+  gap: var(--dash-gap-sm);
+  padding: 12px 20px;
+}
+
+.dash-activity-row:hover {
+  /* background: var(--surface-3); */
+  background: var(--table-row-hover);
+}
+
+.dash-activity-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.dash-activity-text {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-top: 4px;
+}
+
+.dash-activity-text strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.dash-activity-text em {
+  color: var(--text);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.dash-activity-time {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-top: 6px;
+  white-space: nowrap;
+}
+
+/* Overdue panel */
+.dash-overdue-panel {
+  border-color: var(--ember-tint);
+  background: linear-gradient(180deg, var(--ember-tint) 0%, var(--surface-2) 40%);
+}
+
+.dash-overdue-panel .dash-panel-header {
+  border-bottom-color: var(--ember-tint);
+}
+
+.dash-overdue-panel .dash-panel-title {
+  color: var(--ember);
+}
+
+.dash-overdue-list {
+  list-style: none;
+  margin: 0;
+  padding: var(--dash-gap-sm) 0;
+}
+
+.dash-overdue-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--dash-gap-sm);
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+.dash-overdue-row:hover {
+  background: var(--ember-tint);
+}
+
+.dash-overdue-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dash-overdue-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dash-overdue-meta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: "JetBrains Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dash-overdue-badge {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ember);
+  background: var(--ember-tint);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
