@@ -23,6 +23,24 @@
   --ember: #e35a30;
   --ember-tint: #3a2419;
   --ember-tint-text: #e66432;
+
+  /* --red: #C94A4A;
+  --red-tint: #dee2f6;
+  --red-tint-text: #8F2929; */
+
+  /* --red: #C94A4A;
+  --red-tint: #EFC1C1;
+  --red-tint-text: #8F2929; */
+
+  /* --red: #E5484D;
+--red-tint: #3A1A1D;
+--red-tint-text: #FF7A7F; */
+
+  /* Dark theme */
+  --red: #E5484D;
+  --red-tint: #3A1A1D;
+  --red-tint-text: #FF7A7F;
+
   --steel: #4e86ac;
   --steel-tint: #35454f;
   --steel-tint-text: #6496b4;
@@ -51,7 +69,7 @@
 
   /* Dashboard typography */
   --dash-label-size: 11px;
-  --dash-body-size: 13px;
+  --dash-body-size: 14px;
   --dash-number-lg: 32px;
   --dash-number-md: 20px;
 
@@ -60,6 +78,7 @@
   --dash-card-border: #EAEAEA;
   --dash-row-hover: #F7F8FA;
   --dash-section-label: #8A8F98;
+  --dash-panel-title-color: #f2f2f2;
 
   --table-head: #191919;
   --table-row: #111111;
@@ -99,6 +118,10 @@
   --violet-tint: #ece8fa;
   --violet-tint-text: #4a3a8f;
 
+  --red: #D93A40;
+  --red-tint: #FBE0E1;
+  --red-tint-text: #8A1F23;
+
   --neutral-tint: #E8E8E8;
   /* Matches your Planning status */
   --neutral-tint-text: #555555;
@@ -114,6 +137,8 @@
   --table-row-text: #1a1a1a;
 
   --card-background: #ffffff;
+
+  --dash-panel-title-color: #f2f2f2;
 }
 
 * {
@@ -6242,12 +6267,13 @@ button {
 /* ---- Flint briefing card ---- */
 .flint-card-border {
   position: relative;
-  border: 1px solid var(--border)
+  border: 1px solid var(--border);
   border-radius: var(--dash-radius-card);
   padding: 1px;
-  background: linear-gradient(135deg,
+  /* background: linear-gradient(135deg,
       var(--ember-tint) 0%,
-      var(--surface-2) 60%);
+      var(--surface-2) 60%); */
+  background: var(--red);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -6265,7 +6291,7 @@ button {
 
 .flint-header-row {
   display: flex;
-  background: var(--surface-2);
+  /* background: var(--surface-2); */
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--dash-gap-lg);
@@ -6273,9 +6299,10 @@ button {
 
 .flint-brand-row {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: var(--dash-gap-sm);
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: var(--dash-label-size);
   font-weight: 700;
   letter-spacing: 2px;
@@ -6284,20 +6311,20 @@ button {
 }
 
 .flint-mark {
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 5px;
-  background: var(--ember-tint);
+  /* background: var(--ember-tint); */
   color: var(--ember);
   font-size: 12px;
   font-weight: 700;
 }
 
 .flint-date-label {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: var(--dash-label-size);
   font-weight: 600;
   letter-spacing: 1px;
@@ -6306,10 +6333,10 @@ button {
 }
 
 .flint-greeting {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 500;
   /* color: var(--text); */
-  color: #F2F2F2;
+  color: #EEEEEE;
   margin-bottom: var(--dash-gap-lg);
 }
 
@@ -6325,7 +6352,7 @@ button {
   margin-bottom: var(--dash-gap-lg);
   flex: 1;
 }
-
+/* 
 .flint-item-row {
   display: grid;
   grid-template-columns: 10px 1fr;
@@ -6334,10 +6361,22 @@ button {
   padding: 4px 0;
   cursor: pointer;
   transition: transform 0.12s ease;
+} */
+
+.flint-item-row {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 14px;
+  align-items: flex-start;
+  /* padding: 4px 0; */
+  cursor: pointer;
+  transition: transform 0.12s ease;
+  color: var(--table-row-text); /* #EEEEEE */
+  font-weight: 600;
 }
 
 .flint-item-row:hover {
-  transform: translateX(2px);
+  /* transform: translateX(2px); */
 }
 
 .flint-item-dot {
@@ -6366,7 +6405,8 @@ button {
 .flint-item-text {
   font-size: var(--dash-body-size);
   line-height: 1.7;
-  color: var(--text-secondary);
+  /* color: var(--text-secondary); */
+  color: var(--table-row-text);
 }
 
 .flint-item-text strong {
@@ -6381,7 +6421,7 @@ button {
   padding: 1px 7px 2px;
   margin: 0 2px;
   border-radius: 4px;
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 12.5px;
   font-weight: 600;
   white-space: nowrap;
@@ -6418,7 +6458,7 @@ button {
 }
 
 .flint-live-indicator {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 1px;
@@ -6506,7 +6546,7 @@ button {
 }
 
 .kpi-card-value {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: var(--dash-number-lg);
   font-weight: 600;
   line-height: 1;
@@ -6525,7 +6565,7 @@ button {
 
 .kpi-card-delta {
   font-weight: 600;
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
 }
 
 .kpi-card-visual {
@@ -6577,7 +6617,7 @@ button {
 }
 
 .dash-hero-count-badge {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   color: var(--text-tertiary);
   font-weight: 600;
@@ -6597,7 +6637,8 @@ button {
 }
 
 .dash-view-all-link:hover {
-  color: var(--ember);
+  /* color: var(--ember); */
+  color: var(--red);
 }
 
 .dash-task-list {
@@ -6642,17 +6683,17 @@ button {
 
 .dash-task-title {
   font-size: var(--dash-body-size);
+  color: var(--text);
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--text);
 }
 
 .dash-task-project-tag {
   font-size: 11px;
   color: var(--text-tertiary);
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 3px 8px;
@@ -6663,7 +6704,7 @@ button {
 
 .dash-task-due {
   font-size: 11px;
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   color: var(--text-secondary);
   font-weight: 500;
   text-align: right;
@@ -6671,7 +6712,7 @@ button {
 }
 
 .dash-task-due.overdue {
-  color: var(--ember);
+  color: var(--red);
   font-weight: 600;
 }
 
@@ -6701,7 +6742,8 @@ button {
 
 .dash-panel {
   /* background: var(--surface-2); */
-  background: var(--table-head);
+  /* background: var(--table-head); */
+
   border: 1px solid var(--border);
   border-radius: var(--dash-radius-card);
   overflow: hidden;
@@ -6713,21 +6755,23 @@ button {
   justify-content: space-between;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
+  background: var(--table-head);
 }
 
 .dash-panel-title {
   font-size: var(--dash-label-size);
   font-weight: 700;
+  font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: var(--text-secondary);
+  color: var(--dash-panel-title-color);
   display: flex;
   align-items: center;
   gap: var(--dash-gap-sm);
 }
 
 .dash-panel-count {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 10px;
   color: var(--text-tertiary);
   background: var(--surface-3);
@@ -6737,6 +6781,7 @@ button {
 }
 
 .dash-activity-list {
+  background: var(--table-row);
   list-style: none;
   margin: 0;
   padding: var(--dash-gap-sm) 0;
@@ -6745,7 +6790,6 @@ button {
 .dash-activity-row {
   display: grid;
   grid-template-columns: 32px 1fr auto;
-  background: var(--table-row);
   align-items: flex-start;
   gap: var(--dash-gap-sm);
   padding: 12px 20px;
@@ -6769,7 +6813,10 @@ button {
 }
 
 .dash-activity-text {
-  font-size: 12.5px;
+  font-size: var(--dash-body-size);
+  color: var(--text);
+  font-weight: 500;
+  /* font-size: 12.5px; */
   color: var(--text-secondary);
   line-height: 1.5;
   padding-top: 4px;
@@ -6789,7 +6836,8 @@ button {
 .dash-activity-time {
   font-size: 10px;
   color: var(--text-tertiary);
-  font-family: "JetBrains Mono", monospace;
+  font-weight: 600;
+  /* font-family: "JetBrains Mono", monospace; */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding-top: 6px;
@@ -6797,13 +6845,44 @@ button {
 }
 
 /* Overdue panel */
+/* .dash-overdue-panel {
+  border-color: var(--red-tint);
+  border-width: 2px;
+  background: var(--table-row);
+} */
+
 .dash-overdue-panel {
-  border-color: var(--ember-tint);
-  background: linear-gradient(180deg, var(--ember-tint) 0%, var(--surface-2) 40%);
+  border: 1px solid var(--red);
+  box-shadow:
+    0 0 0 1px rgba(229, 72, 77, 0.15),
+    0 0 16px -4px rgba(229, 72, 77, 0.35);
+  background: var(--table-row);
+}
+
+.dash-overdue-panel-header {
+  display: flex;
+  color: var(--red-tint-text);
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--table-head);
+}
+
+.dash-overdue-panel-title {
+  font-size: var(--dash-label-size);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  /* color: red; */
+  display: flex;
+  align-items: center;
+  gap: var(--dash-gap-sm);
 }
 
 .dash-overdue-panel .dash-panel-header {
-  border-bottom-color: var(--ember-tint);
+  border-bottom-color: var(--red-tint);
 }
 
 .dash-overdue-panel .dash-panel-title {
@@ -6812,6 +6891,7 @@ button {
 
 .dash-overdue-list {
   list-style: none;
+  /* background: var(--table-row); */
   margin: 0;
   padding: var(--dash-gap-sm) 0;
 }
@@ -6819,6 +6899,7 @@ button {
 .dash-overdue-row {
   display: grid;
   grid-template-columns: 1fr auto;
+
   align-items: center;
   gap: var(--dash-gap-sm);
   padding: 12px 20px;
@@ -6826,7 +6907,8 @@ button {
 }
 
 .dash-overdue-row:hover {
-  background: var(--ember-tint);
+  /* background: var(--ember-tint); */
+  background: var(--red-tint);
 }
 
 .dash-overdue-info {
@@ -6840,6 +6922,7 @@ button {
   font-size: 13px;
   font-weight: 500;
   color: var(--text);
+  font-size: var(--dash-body-size);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -6848,17 +6931,20 @@ button {
 .dash-overdue-meta {
   font-size: 10px;
   color: var(--text-tertiary);
-  font-family: "JetBrains Mono", monospace;
+  font-weight: 600; 
+  /* font-family: "JetBrains Mono", monospace; */
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .dash-overdue-badge {
-  font-family: "JetBrains Mono", monospace;
+  /* font-family: "JetBrains Mono", monospace; */
   font-size: 11px;
   font-weight: 700;
-  color: var(--ember);
-  background: var(--ember-tint);
+  /* color: var(--ember); */
+  color: var(--red);
+  /* background: var(--ember-tint); */
+  background: var(--red-tint);
   padding: 4px 8px;
   border-radius: 4px;
   white-space: nowrap;
