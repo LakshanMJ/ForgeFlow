@@ -49,27 +49,27 @@ import StatusChip from '@/shared/components/StatusChip';
 
 const PROJECT_STATUS = {
 	PLANNING: {
-		label: "Planning",
-		background: "#E8E8E8",
-		color: "#555555",
+		label: "PLANNING",
+		background: "#555555",
+		color: "#E8E8E8",
 	},
 
 	ACTIVE: {
-		label: "Active",
-		background: "#DFF5E7",
-		color: "#218B4B",
+		label: "ONGOING",
+		background: "#218B4B",
+		color: "#DFF5E7",
 	},
 
 	COMPLETED: {
-		label: "Completed",
-		background: "#DDEBFF",
-		color: "#246BCE",
+		label: "COMPLETE",
+		background: "#246BCE",
+		color: "#DDEBFF",
 	},
 
 	ON_HOLD: {
-		label: "On Hold",
-		background: "#FFF0D9",
-		color: "#B86B00",
+		label: "ON HOLD",
+		background: "#B86B00",
+		color: "#FFF0D9",
 	},
 
 	//   CANCELLED: {
@@ -341,7 +341,7 @@ export default function ProjectsPage() {
 				<div>
 					<h1 className="page-title">Projects</h1>
 					<p className="page-subtitle">
-						Plan, track and deliver work across all your projects.
+						Plan, track and deliver work across all your projects
 					</p>
 				</div>
 				<button className="btn-primary" type="button" onClick={() => setIsProjectModalOpen(true)}>

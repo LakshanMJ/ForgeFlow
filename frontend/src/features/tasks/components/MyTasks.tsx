@@ -1,5 +1,6 @@
 import OwnerCell from '@/shared/components/OwnerCell';
 import StatusChip from '@/shared/components/StatusChip';
+import TagChip from '@/shared/components/TagChip';
 import {
     Search,
     ChevronDown,
@@ -70,26 +71,95 @@ type TaskGroup = {
     tasks: Task[];
 };
 
+// const TASK_STATUS = {
+//     CRITICAL: {
+//         label: "Critical",
+//         background: "#FEE2E2",
+//         color: "#991B1B",
+//     },
+//     HIGH: {
+//         label: "High",
+//         background: "#FEF3C7",
+//         color: "#92400E",
+//     },
+//     MEDIUM: {
+//         label: "Medium",
+//         background: "#E8E8E8",
+//         color: "#555555",
+//     },
+//     LOW: {
+//         label: "Low",
+//         background: "#E0F2FE",
+//         color: "#0369A1",
+//     },
+// };
+
+// const TASK_STATUS = {
+//     CRITICAL: {
+//         label: "Critical",
+//         background: "#B91C1C",
+//         color: "#FEE2E2",
+//     },
+//     HIGH: {
+//         label: "High",
+//         background: "#B86B00",
+//         color: "#FFF0D9",
+//     },
+//     MEDIUM: {
+//         label: "Medium",
+//         background: "#555555",
+//         color: "#E8E8E8",
+//     },
+//     LOW: {
+//         label: "Low",
+//         background: "#246BCE",
+//         color: "#DDEBFF",
+//     },
+// };
+
+// const TASK_STATUS = {
+//     CRITICAL: {
+//         label: "Critical",
+//         background: "#7A2E2E",
+//         color: "#F0D6D6",
+//     },
+//     HIGH: {
+//         label: "High",
+//         background: "#7A5A2E",
+//         color: "#F0E4D0",
+//     },
+//     MEDIUM: {
+//         label: "Medium",
+//         background: "#4A4A4A",
+//         color: "#DDDDDD",
+//     },
+//     LOW: {
+//         label: "Low",
+//         background: "#2E4A6A",
+//         color: "#D6E4F0",
+//     },
+// };
+
 const TASK_STATUS = {
     CRITICAL: {
         label: "Critical",
-        background: "#FEE2E2",
-        color: "#991B1B",
+        background: 'var(--red-tint)', 
+        color: 'var(--red-tint-text)'
     },
     HIGH: {
         label: "High",
-        background: "#FEF3C7",
-        color: "#92400E",
+        background: 'var(--gold-tint)',
+        color: 'var(--gold-tint-text)'
     },
     MEDIUM: {
         label: "Medium",
-        background: "#E8E8E8",
-        color: "#555555",
+        background: 'var(--steel-tint)',
+        color: 'var(--steel-tint-text)'
     },
     LOW: {
         label: "Low",
-        background: "#E0F2FE",
-        color: "#0369A1",
+        background: 'var(--patina-tint)',
+        color: 'var(--patina-tint-text)'
     },
 };
 
@@ -249,13 +319,16 @@ const MyTasks = () => {
 
                                 <span className="task-labels-group">
                                     {task.labels.map((l) => (
-                                        <span
-                                            key={l.text}
-                                            className="task-label-chip"
-                                            style={{ background: l.bg, color: l.color }}
-                                        >
-                                            {l.text}
-                                        </span>
+                                        // <span
+                                        //     key={l.text}
+                                        //     className="task-label-chip"
+                                        //     style={{ background: l.bg, color: l.color }}
+                                        // >
+                                        //     {l.text}
+                                        // </span>
+                                        <div className="tag-group">
+                                            <TagChip label={l.text} />
+                                        </div>
                                     ))}
                                 </span>
 

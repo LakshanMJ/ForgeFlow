@@ -1,7 +1,22 @@
-'use client';
+import StatusChip from '@/shared/components/StatusChip';
+import { ArrowRight } from 'lucide-react';
 
-// import '@/app/dashboard/dashboard-home.css';
-// import '@/app/dashboard/team-operations.css';
+/* ---------------------------------------------------------------------- */
+/*  Data                                                                    */
+/*  Mirrors the shape/spirit of the reference "Section B — Team            */
+/*  Operations" mock, but reuses the same semantic color tokens already    */
+/*  established in UserDashboard (red = critical, gold = high,             */
+/*  steel = medium/info, patina = low/success).                            */
+/* ---------------------------------------------------------------------- */
+
+type Priority = 'critical' | 'high' | 'medium' | 'low';
+
+const PRIORITY_STYLE: Record<Priority, { label: string; background: string; color: string }> = {
+    critical: { label: 'Critical', background: 'var(--red-tint)', color: 'var(--red-tint-text)' },
+    high: { label: 'High', background: 'var(--gold-tint)', color: 'var(--gold-tint-text)' },
+    medium: { label: 'Medium', background: 'var(--steel-tint)', color: 'var(--steel-tint-text)' },
+    low: { label: 'Low', background: 'var(--patina-tint)', color: 'var(--patina-tint-text)' },
+};
 
 const OPS_KPI_CARDS = [
     {
@@ -9,8 +24,7 @@ const OPS_KPI_CARDS = [
         value: 12,
         accent: 'var(--text-tertiary)',
         delta: '▲ 2',
-        deltaColor: 'var(--text-tertiary)',
-        footerLabel: 'vs last week',
+        deltaLabel: 'vs last week',
         valueColor: undefined,
         visual: (
             <svg width="72" height="24" viewBox="0 0 72 24">
@@ -30,8 +44,7 @@ const OPS_KPI_CARDS = [
         value: 8,
         accent: 'var(--steel)',
         delta: '▲ 1',
-        deltaColor: 'var(--steel)',
-        footerLabel: 'vs last month',
+        deltaLabel: 'vs last month',
         valueColor: undefined,
         visual: (
             <svg width="72" height="24" viewBox="0 0 72 24">
@@ -49,20 +62,19 @@ const OPS_KPI_CARDS = [
     {
         label: 'Overdue',
         value: 7,
-        accent: 'var(--ember)',
+        accent: 'var(--red)',
         delta: '▼ 2',
-        deltaColor: 'var(--patina)',
-        footerLabel: 'vs last week',
-        valueColor: 'var(--ember)',
+        deltaLabel: 'vs last week',
+        valueColor: 'var(--red)',
         visual: (
             <svg width="80" height="34" viewBox="0 0 80 34">
-                <rect x="0" y="14" width="7" height="20" rx="2" fill="var(--ember)" opacity="0.5" />
-                <rect x="11" y="8" width="7" height="26" rx="2" fill="var(--ember)" opacity="0.75" />
-                <rect x="22" y="2" width="7" height="32" rx="2" fill="var(--ember)" opacity="0.95" />
-                <rect x="33" y="5" width="7" height="29" rx="2" fill="var(--ember)" opacity="0.85" />
-                <rect x="44" y="12" width="7" height="22" rx="2" fill="var(--ember)" opacity="0.6" />
-                <rect x="55" y="18" width="7" height="16" rx="2" fill="var(--ember)" opacity="0.4" />
-                <rect x="66" y="22" width="7" height="12" rx="2" fill="var(--ember)" opacity="0.3" />
+                <rect x="0" y="14" width="7" height="20" rx="2" fill="var(--red)" opacity="0.5" />
+                <rect x="11" y="8" width="7" height="26" rx="2" fill="var(--red)" opacity="0.75" />
+                <rect x="22" y="2" width="7" height="32" rx="2" fill="var(--red)" opacity="0.95" />
+                <rect x="33" y="5" width="7" height="29" rx="2" fill="var(--red)" opacity="0.85" />
+                <rect x="44" y="12" width="7" height="22" rx="2" fill="var(--red)" opacity="0.6" />
+                <rect x="55" y="18" width="7" height="16" rx="2" fill="var(--red)" opacity="0.4" />
+                <rect x="66" y="22" width="7" height="12" rx="2" fill="var(--red)" opacity="0.3" />
             </svg>
         ),
     },
@@ -71,8 +83,7 @@ const OPS_KPI_CARDS = [
         value: '87%',
         accent: 'var(--patina)',
         delta: '▲ 5%',
-        deltaColor: 'var(--patina)',
-        footerLabel: 'of active projects',
+        deltaLabel: 'of active projects',
         valueColor: 'var(--patina)',
         visualArea: true,
         visual: (
@@ -100,63 +111,74 @@ const OPS_KPI_CARDS = [
     },
 ];
 
-const WORKLOAD = [
-    { initials: 'P', name: 'Paulie', pct: 87, count: 7, gradient: 'linear-gradient(90deg, var(--ember), var(--gold))', avatarGradient: 'linear-gradient(135deg, var(--ember), var(--ember-tint-text))' },
-    { initials: 'S', name: 'Sarah', pct: 62, count: 5, gradient: 'linear-gradient(90deg, var(--gold), var(--gold-tint-text))', avatarGradient: 'linear-gradient(135deg, var(--gold), var(--gold-tint-text))' },
-    { initials: 'E', name: 'Emma', pct: 62, count: 5, gradient: 'linear-gradient(90deg, var(--steel), var(--steel-tint-text))', avatarGradient: 'linear-gradient(135deg, var(--steel), var(--steel-tint-text))' },
-    { initials: 'M', name: 'Mike', pct: 37, count: 3, gradient: 'linear-gradient(90deg, var(--patina), var(--patina-tint-text))', avatarGradient: 'linear-gradient(135deg, var(--patina), var(--patina-tint-text))' },
+const WORKLOAD_ITEMS = [
+    { name: 'Paulie', initials: 'P', color: 'var(--red)', tintText: 'var(--red-tint-text)', pct: 87, count: 7 },
+    { name: 'Sarah', initials: 'S', color: 'var(--gold)', tintText: 'var(--gold-tint-text)', pct: 62, count: 5 },
+    { name: 'Emma', initials: 'E', color: 'var(--steel)', tintText: 'var(--steel-tint-text)', pct: 62, count: 5 },
+    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    
 ];
 
-const DONUT_SEGMENTS = [
-    { label: 'Critical', count: 8, pct: 29, color: 'var(--ember)', dasharray: '107.71 269.28', dashoffset: '0' },
-    { label: 'High', count: 10, pct: 36, color: 'var(--gold)', dasharray: '134.64 242.35', dashoffset: '-107.71' },
-    { label: 'Medium', count: 7, pct: 25, color: 'var(--steel)', dasharray: '94.25 282.74', dashoffset: '-242.35' },
-    { label: 'Low', count: 3, pct: 11, color: 'var(--patina)', dasharray: '40.39 336.6', dashoffset: '-336.6' },
+const TASK_DISTRIBUTION = [
+    { label: 'Critical', color: 'var(--red)', count: 8 },
+    { label: 'High', color: 'var(--gold)', count: 10 },
+    { label: 'Medium', color: 'var(--steel)', count: 7 },
+    { label: 'Low', color: 'var(--patina)', count: 3 },
 ];
+
+const TASK_TOTAL = TASK_DISTRIBUTION.reduce((sum, item) => sum + item.count, 0);
+
+// Precompute donut segment geometry (r = 60 → circumference ≈ 376.99)
+const DONUT_RADIUS = 60;
+const DONUT_CIRCUMFERENCE = 2 * Math.PI * DONUT_RADIUS;
+let donutOffsetAcc = 0;
+const DONUT_SEGMENTS = TASK_DISTRIBUTION.map((item) => {
+    const length = (item.count / TASK_TOTAL) * DONUT_CIRCUMFERENCE;
+    const segment = {
+        ...item,
+        dasharray: `${length.toFixed(2)} ${(DONUT_CIRCUMFERENCE - length).toFixed(2)}`,
+        dashoffset: -donutOffsetAcc,
+        pct: Math.round((item.count / TASK_TOTAL) * 100),
+    };
+    donutOffsetAcc += length;
+    return segment;
+});
 
 const PROJECT_HEALTH = [
-    { name: 'Acme Platform', pct: 72, color: 'var(--patina)', gradient: 'linear-gradient(90deg, var(--patina), var(--patina-tint-text))' },
-    { name: 'Beta Rewrite', pct: 45, color: 'var(--gold)', gradient: 'linear-gradient(90deg, var(--gold), var(--gold-tint-text))' },
-    { name: 'Gamma Mobile', pct: 90, color: 'var(--patina)', gradient: 'linear-gradient(90deg, var(--patina), var(--patina-tint-text))' },
-    { name: 'Delta Infra', pct: 12, color: 'var(--ember)', gradient: 'linear-gradient(90deg, var(--ember), var(--gold))' },
+    { name: 'Acme Platform', pct: 72, color: 'var(--patina)' },
+    { name: 'Beta Rewrite', pct: 45, color: 'var(--gold)' },
+    { name: 'Gamma Mobile', pct: 90, color: 'var(--patina)' },
+    { name: 'Delta Infra', pct: 12, color: 'var(--red)' },
+    { name: 'Delta Infra', pct: 12, color: 'var(--red)' },
+    { name: 'Delta Infra', pct: 12, color: 'var(--red)' },
 ];
 
-type Priority = 'critical' | 'high' | 'medium' | 'low';
-const PRIORITY_CHIP: Record<Priority, string> = {
-    critical: 'chip-ember',
-    high: 'chip-gold',
-    medium: 'chip-steel',
-    low: 'chip-patina',
-};
-
-const DEADLINES: {
-    date: string;
-    dateColor?: string;
+const UPCOMING_DEADLINES: {
     title: string;
+    priority: Priority;
     project: string;
     owner: string;
-    ownerInitial: string;
-    ownerGradient: string;
-    priority: Priority;
+    initials: string;
+    color: string;
+    date: string;
+    dateColor?: string;
 }[] = [
-        { date: 'Dec 12', dateColor: 'var(--ember)', title: 'Payment API Integration', project: 'acme', owner: 'Paulie', ownerInitial: 'P', ownerGradient: 'linear-gradient(135deg, var(--ember), var(--ember-tint-text))', priority: 'critical' },
-        { date: 'Dec 15', dateColor: 'var(--gold)', title: 'User Authentication', project: 'acme', owner: 'Mike', ownerInitial: 'M', ownerGradient: 'linear-gradient(135deg, var(--patina), var(--patina-tint-text))', priority: 'high' },
-        { date: 'Dec 18', title: 'Dashboard Redesign', project: 'acme', owner: 'Sarah', ownerInitial: 'S', ownerGradient: 'linear-gradient(135deg, var(--gold), var(--gold-tint-text))', priority: 'high' },
-        { date: 'Dec 20', title: 'Database Migration', project: 'beta', owner: 'Paulie', ownerInitial: 'P', ownerGradient: 'linear-gradient(135deg, var(--ember), var(--ember-tint-text))', priority: 'medium' },
-        { date: 'Dec 22', title: 'API Documentation', project: 'beta', owner: 'Emma', ownerInitial: 'E', ownerGradient: 'linear-gradient(135deg, var(--steel), var(--steel-tint-text))', priority: 'medium' },
+        { title: 'Payment API Integration', priority: 'critical', project: 'acme', owner: 'Lex Luthor', initials: 'P', color: 'var(--red)', date: 'Dec 12', dateColor: 'var(--red)' },
+        { title: 'User Authentication', priority: 'high', project: 'acme', owner: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', date: 'Dec 15', dateColor: 'var(--gold)' },
+        { title: 'Dashboard Redesign', priority: 'high', project: 'acme', owner: 'Sarah Connor', initials: 'S', color: 'var(--gold)', date: 'Dec 18' },
+        { title: 'Database Migration', priority: 'medium', project: 'beta', owner: 'Paulie Walnuts', initials: 'P', color: 'var(--red)', date: 'Dec 20' },
+        { title: 'API Documentation', priority: 'medium', project: 'beta', owner: 'Howard Stark', initials: 'E', color: 'var(--steel)', date: 'Dec 22' },
     ];
 
 const ProjectManagerDashboard = () => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--dash-gap-lg)' }}>
-            <div className="ops-section-marker">
-                <span className="ops-marker-label">Section B</span>
-                <span className="ops-marker-line" />
-                <span className="ops-marker-badge">Team Operations</span>
-            </div>
+        <div className="dashboard-home" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--dash-gap-lg)' }}>
 
-            {/* ---- Ops KPI strip ---- */}
-            <div className="ops-kpi-strip">
+            {/* ---- Row 1: Ops KPI strip ---- */}
+            <div className="pm-kpi-strip">
                 {OPS_KPI_CARDS.map((kpi) => (
                     <div className="kpi-card" key={kpi.label}>
                         <span className="kpi-card-accent" style={{ background: kpi.accent }} />
@@ -171,8 +193,8 @@ const ProjectManagerDashboard = () => {
                             {kpi.visual}
                         </div>
                         <div className="kpi-card-footer">
-                            <span>{kpi.footerLabel}</span>
-                            <span className="kpi-card-delta" style={{ color: kpi.deltaColor }}>
+                            <span>{kpi.deltaLabel}</span>
+                            <span className="kpi-card-delta" style={{ color: kpi.accent }}>
                                 {kpi.delta}
                             </span>
                         </div>
@@ -180,62 +202,61 @@ const ProjectManagerDashboard = () => {
                 ))}
             </div>
 
-            {/* ---- Ops grid: Workload / Donut / Health ---- */}
-            <div className="ops-grid">
-                {/* Team Workload */}
-                <div className="ops-panel">
-                    <div className="ops-panel-header">
-                        <div className="ops-panel-title">Team Workload</div>
-                        <span className="ops-panel-count">20</span>
+            {/* ---- Row 2: Team Workload / Task Distribution / Project Health ---- */}
+            <div className="pm-ops-grid">
+
+                {/* TEAM WORKLOAD */}
+                <div className="dash-panel">
+                    <div className="dash-panel-header">
+                        <div className="dash-panel-title">Team Workload</div>
+                        <span className="dash-panel-count">{WORKLOAD_ITEMS.reduce((s, w) => s + w.count, 0)}</span>
                     </div>
-                    <ul className="ops-workload-list">
-                        {WORKLOAD.map((m) => (
-                            <li className="ops-workload-row" key={m.name}>
-                                <div className="ops-workload-member">
-                                    <span className="ops-workload-avatar" style={{ background: m.avatarGradient }}>
-                                        {m.initials}
+                    <ul className="pm-workload-list">   
+                        {WORKLOAD_ITEMS.map((member) => (
+                            <li className="pm-workload-row" key={member.name}>
+                                <div className="pm-workload-member">
+                                    <span
+                                        className="pm-workload-avatar"
+                                        style={{ background: `linear-gradient(135deg, ${member.color}, ${member.tintText})` }}
+                                    >
+                                        {member.initials}
                                     </span>
-                                    <span className="ops-workload-name">{m.name}</span>
+                                    <span className="pm-workload-name">{member.name}</span>
                                 </div>
-                                <div className="ops-workload-bar">
+                                <div className="pm-workload-bar">
                                     <div
-                                        className="ops-workload-fill"
-                                        style={{ width: `${m.pct}%`, background: m.gradient }}
+                                        className="pm-workload-fill"
+                                        style={{ width: `${member.pct}%`, background: member.color }}
                                     />
                                 </div>
-                                <span className="ops-workload-count">{m.count}</span>
+                                <span className="pm-workload-count">{member.count}</span>
                             </li>
                         ))}
                     </ul>
-                    <div className="ops-workload-footer">
-                        <span>4 members</span>
-                        <span>avg 5.0 tasks</span>
+                    <div className="pm-panel-footer">
+                        <span>{WORKLOAD_ITEMS.length} members</span>
+                        <span>
+                            avg {(WORKLOAD_ITEMS.reduce((s, w) => s + w.count, 0) / WORKLOAD_ITEMS.length).toFixed(1)} tasks
+                        </span>
                     </div>
                 </div>
 
-                {/* Task Distribution donut */}
-                <div className="ops-panel">
-                    <div className="ops-panel-header">
-                        <div className="ops-panel-title">Task Distribution</div>
-                        <span className="ops-panel-count">28</span>
+                {/* TASK DISTRIBUTION — DONUT */}
+                <div className="dash-panel">
+                    <div className="dash-panel-header">
+                        <div className="dash-panel-title">Task Distribution</div>
+                        <span className="dash-panel-count">{TASK_TOTAL}</span>
                     </div>
-                    <div className="ops-donut-wrap">
-                        <div className="ops-donut-svg">
+                    <div className="pm-donut-wrap">
+                        <div className="pm-donut-svg">
                             <svg viewBox="0 0 160 160">
-                                <circle
-                                    cx="80"
-                                    cy="80"
-                                    r="60"
-                                    fill="none"
-                                    stroke="var(--surface-3)"
-                                    strokeWidth="16"
-                                />
+                                <circle cx="80" cy="80" r={DONUT_RADIUS} fill="none" stroke="var(--surface-3)" strokeWidth="16" />
                                 {DONUT_SEGMENTS.map((seg) => (
                                     <circle
                                         key={seg.label}
                                         cx="80"
                                         cy="80"
-                                        r="60"
+                                        r={DONUT_RADIUS}
                                         fill="none"
                                         stroke={seg.color}
                                         strokeWidth="16"
@@ -244,92 +265,96 @@ const ProjectManagerDashboard = () => {
                                     />
                                 ))}
                             </svg>
-                            <div className="ops-donut-center">
-                                <div className="ops-donut-center-value">28</div>
-                                <div className="ops-donut-center-label">Tasks</div>
+                            <div className="pm-donut-center">
+                                <div className="pm-donut-center-value">{TASK_TOTAL}</div>
+                                <div className="pm-donut-center-label">Tasks</div>
                             </div>
                         </div>
-
-                        <div className="ops-donut-legend">
+                        <div className="pm-donut-legend">
                             {DONUT_SEGMENTS.map((seg) => (
-                                <div className="ops-donut-legend-row" key={seg.label}>
-                                    <span className="ops-donut-legend-dot" style={{ background: seg.color }} />
-                                    <span className="ops-donut-legend-label">{seg.label}</span>
-                                    <span className="ops-donut-legend-count">{seg.count}</span>
-                                    <span className="ops-donut-legend-pct">{seg.pct}%</span>
+                                <div className="pm-donut-legend-row" key={seg.label}>
+                                    <span className="pm-donut-legend-dot" style={{ background: seg.color }} />
+                                    <span className="pm-donut-legend-label">{seg.label}</span>
+                                    <span className="pm-donut-legend-count">{seg.count}</span>
+                                    <span className="pm-donut-legend-pct">{seg.pct}%</span>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                {/* Project Health */}
-                <div className="ops-panel">
-                    <div className="ops-panel-header">
-                        <div className="ops-panel-title">Project Health</div>
-                        <a href="#" className="ops-panel-link">
+                {/* PROJECT HEALTH */}
+                <div className="dash-panel">
+                    <div className="dash-panel-header">
+                        <div className="dash-panel-title">Project Health</div>
+                        <a href="#" className="dash-view-all-link">
                             View all &rarr;
                         </a>
                     </div>
-                    <ul className="ops-health-list">
-                        {PROJECT_HEALTH.map((p) => (
-                            <li className="ops-health-row" key={p.name}>
-                                <div className="ops-health-info">
-                                    <span className="ops-health-name">{p.name}</span>
-                                    <div className="ops-health-bar">
+                    <ul className="pm-health-list">
+                        {PROJECT_HEALTH.map((project) => (
+                            <li className="pm-health-row" key={project.name}>
+                                <div className="pm-health-info">
+                                    <span className="pm-health-name">{project.name}</span>
+                                    <div className="pm-health-bar">
                                         <div
-                                            className="ops-health-fill"
-                                            style={{ width: `${p.pct}%`, background: p.gradient }}
+                                            className="pm-health-fill"
+                                            style={{ width: `${project.pct}%`, background: project.color }}
                                         />
                                     </div>
                                 </div>
-                                <span className="ops-health-pct" style={{ color: p.color }}>
-                                    {p.pct}%
+                                <span className="pm-health-pct" style={{ color: project.color }}>
+                                    {project.pct}%
                                 </span>
                             </li>
                         ))}
                     </ul>
-                    <div className="ops-health-footer">
-                        <span>4 active</span>
-                        <span>avg 55%</span>
+                    <div className="pm-panel-footer">
+                        <span>{PROJECT_HEALTH.length} active</span>
+                        <span>
+                            avg {Math.round(PROJECT_HEALTH.reduce((s, p) => s + p.pct, 0) / PROJECT_HEALTH.length)}%
+                        </span>
                     </div>
                 </div>
+
             </div>
 
-            {/* ---- Upcoming Deadlines ---- */}
-            <div className="ops-panel">
-                <div className="ops-panel-header">
-                    <div className="ops-panel-title">
+            {/* ---- Row 3: Upcoming Deadlines ---- */}
+            <div className="dash-panel">
+                <div className="dash-panel-header">
+                    <div className="dash-panel-title">
                         Upcoming Deadlines
-                        <span className="ops-panel-count">5</span>
+                        <span className="dash-panel-count">{UPCOMING_DEADLINES.length}</span>
                     </div>
-                    <a href="#" className="ops-panel-link">
+                    <a href="#" className="dash-view-all-link">
                         View all &rarr;
                     </a>
                 </div>
-                <ul className="ops-deadline-list">
-                    {DEADLINES.map((d) => (
-                        <li className="ops-deadline-row" key={d.title}>
-                            <span className="ops-deadline-date" style={{ color: d.dateColor }}>
-                                {d.date}
-                            </span>
-                            <span className="ops-deadline-title">{d.title}</span>
-                            <span className="ops-deadline-project">{d.project}</span>
-                            <span className="ops-deadline-owner">
-                                <span className="ops-deadline-avatar" style={{ background: d.ownerGradient }}>
-                                    {d.ownerInitial}
+                <ul className="pm-deadline-list">
+                    {UPCOMING_DEADLINES.map((item) => {
+                        const style = PRIORITY_STYLE[item.priority];
+                        return (
+                            <li className="pm-deadline-row" key={item.title}>
+                                <span className="pm-deadline-date" style={{ color: item.dateColor }}>
+                                    {item.date}
                                 </span>
-                                {d.owner}
-                            </span>
-                            <span className={`chip chip-dot ${PRIORITY_CHIP[d.priority]}`}>
-                                {d.priority.charAt(0).toUpperCase() + d.priority.slice(1)}
-                            </span>
-                        </li>
-                    ))}
+                                <span className="pm-deadline-title">{item.title}</span>
+                                <span className="pm-deadline-project">{item.project}</span>
+                                <div className="pm-deadline-owner">
+                                    <span className="pm-deadline-avatar" style={{ background: item.color }}>
+                                        {item.initials}
+                                    </span>
+                                    {item.owner}
+                                </div>
+                                <StatusChip label={style.label} background={style.background} color={style.color} />
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
+
         </div>
-    )
-}
+    );
+};
 
 export default ProjectManagerDashboard;

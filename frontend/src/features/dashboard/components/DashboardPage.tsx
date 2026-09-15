@@ -6,10 +6,10 @@ import UserDashboard from "./UserDashboard";
 
 export default function DashboardPage() {
 	return (
-		<div>
-			<UserDashboard/>
-			<ProjectManagerDashboard/>
-			<StakeholderDashboard/>
+		<div className="dashboard-sections">
+			<UserDashboard />
+			<ProjectManagerDashboard />
+			<StakeholderDashboard />
 		</div>
 	);
 }

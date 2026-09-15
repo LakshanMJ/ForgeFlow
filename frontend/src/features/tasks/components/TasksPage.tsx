@@ -52,7 +52,7 @@ export default function TasksPage() {
 							<TagChip label="4 Done" />
 						</div>
 					</div>
-					<p className="page-subtitle">Tasks description.</p>
+					<p className="page-subtitle">Plan, prioritize and keep your work moving</p>
 				</div>
 			</div>
 

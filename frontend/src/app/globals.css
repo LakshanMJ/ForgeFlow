@@ -7,6 +7,7 @@
   /* Sampled directly from the reference screenshot (pixel-averaged, AA-filtered). */
   /* --bg: #12110F; */
   --bg: #090909;
+  --bg-text: #F2F2F2;
   --surface: #0F0F0D;
   --surface-2: #1F2226;
   /* --surface-2: #292929; */
@@ -17,7 +18,7 @@
   --text: #D8D1C6;
   --parchment: #F3EDE3;
   --text-secondary: #AFA79B;
-  --text-tertiary: #7C756B;
+  --text-tertiary: #6b707c;
   --overlay: rgba(15, 13, 11, 0.65);
 
   --ember: #e35a30;
@@ -80,6 +81,9 @@
   --dash-section-label: #8A8F98;
   --dash-panel-title-color: #f2f2f2;
 
+  --neutral-tint: #26282D;
+  --neutral-tint-text: #B4B8BF;
+
   --table-head: #191919;
   --table-row: #111111;
   --table-row-hover: #1A1A1A;
@@ -88,11 +92,24 @@
   --table-row-text: #EEEEEE;
 
   --card-background: #111111;
+  --kpi-card-text-color: #EEEEEE;
+
+  --task-group-progress-track-color: #1E2A33;
+
+
+  --flint-cyan: #4DD8F0;
+  --flint-blue: #3B82F6;
+  --flint-purple: #8B5CF6;
+  --flint-pink: #EC4899;
+  --flint-orange: #FB923C;
+  --flint-red: #F87171;
 }
 
 [data-theme="light"] {
-  --bg: #ffffff;
-  --surface: #f9f9f9;
+  --bg: #F9F9F9;
+  --bg-text: #1a1a1a;
+  /* --surface: #f9f9f9; */
+  --surface: #FFFFFF;
   --surface-2: #ffffff;
   --surface-3: #f4f4f4;
   --border: #e8e8e8;
@@ -123,22 +140,28 @@
   --red-tint-text: #8A1F23;
 
   --neutral-tint: #E8E8E8;
-  /* Matches your Planning status */
   --neutral-tint-text: #555555;
-  /* Matches your Planning status */
 
   --shadow: 0 8px 24px rgba(70, 60, 40, 0.1);
 
-  --table-head: #FCFCFC;
-  --table-row: #f9f9f9;
-  --table-row-hover: #f9f9f9;
-  --table-footer: #FCFCFC;
+  /* --table-head: #FCFCFC; */
+  /* --table-head: #F7F7F8; */
+  --table-head: #F4F4F5;
+
+  --table-row: #FFFFFF;
+  --table-row-hover: #F3F3F3;
+  --table-footer: #F4F4F5;
   --table-header-text: #6b6b6b;
   --table-row-text: #1a1a1a;
 
   --card-background: #ffffff;
+  --kpi-card-text-color: #1A1A1A;
 
-  --dash-panel-title-color: #f2f2f2;
+  --dash-panel-title-color: #1a1a1a;
+  ;
+
+
+  --task-group-progress-track-color: #DCE4EC;
 }
 
 * {
@@ -534,7 +557,7 @@ button {
   border-radius: 999px;
 
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -543,14 +566,20 @@ button {
   align-items: center;
   justify-content: center;
   height: 22px;
-  padding: 0 8px;
+  padding: 10 8px;
   border-radius: 4px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   letter-spacing: 0.2px;
   background: var(--neutral-tint);
   color: var(--neutral-tint-text);
+}
+
+.tag-group {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
 /* .chip {
@@ -902,7 +931,7 @@ button {
 }
 
 .table-row:last-child>div {
-  border-bottom: none;
+  /* border-bottom: none; */
 }
 
 .project-cell {
@@ -4693,18 +4722,23 @@ button {
 }
 
 .task-group-progress-track {
-  width: 110px;
+  display: inline-block;
+  width: 100px;
   height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  background: var(--task-group-progress-track-color);
   border-radius: 3px;
-  background: var(--surface-3);
   overflow: hidden;
-  flex-shrink: 0;
+  vertical-align: middle;
 }
 
 .task-group-progress-fill {
+  display: block;
   height: 100%;
+  background: var(--steel, #7DD3FC);
+  /* fallback so it always shows */
   border-radius: 3px;
-  background: var(--steel);
+  transition: width 0.3s ease;
 }
 
 /* ---- Task rows ---- */
@@ -4766,7 +4800,7 @@ button {
   /* font-family: "JetBrains Mono", monospace; */
   font-size: 12.5px;
   font-weight: 600;
-  color: var(--text-tertiary);
+  /* color: var(--text-tertiary); */
   flex-shrink: 0;
   width: 70px;
 }
@@ -6261,32 +6295,126 @@ button {
 
 .dashboard-home {
   font-family: "Segoe UI", sans-serif;
-  color: #F2F2F2
+  color: var(--bg-text);
+}
+
+.dashboard-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  /* adjust to taste */
 }
 
 /* ---- Flint briefing card ---- */
-.flint-card-border {
+/* .flint-card-border {
   position: relative;
   border: 1px solid var(--border);
   border-radius: var(--dash-radius-card);
   padding: 1px;
-  /* background: linear-gradient(135deg,
-      var(--ember-tint) 0%,
-      var(--surface-2) 60%); */
   background: var(--red);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+} */
+.flint-card-border {
+  position: relative;
+  border-radius: 18px;
+  padding: 2px;                       /* ← thicker border */
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.flint-card-inner {
-  /* background: var(--surface-2); */
+/* Rotating conic gradient — clockwise */
+.flint-card-border::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--flint-cyan)   0deg,
+    var(--flint-blue)   72deg,
+    var(--flint-purple) 144deg,
+    var(--flint-pink)   216deg,
+    var(--flint-orange) 288deg,
+    var(--flint-cyan)   360deg
+  );
+  animation: flint-spin 8s linear infinite;
+  z-index: -1;
+}
+
+/* Outer glow — soft bloom around the card */
+.flint-card-border::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--flint-cyan)   0deg,
+    var(--flint-blue)   72deg,
+    var(--flint-purple) 144deg,
+    var(--flint-pink)   216deg,
+    var(--flint-orange) 288deg,
+    var(--flint-cyan)   360deg
+  );
+  animation: flint-spin 8s linear infinite;
+  filter: blur(32px);
+  opacity: 0.5;
+  z-index: -2;
+}
+
+@keyframes flint-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* .flint-card-inner {
   background: var(--card-background);
   border-radius: calc(var(--dash-radius-card) - 1px);
   padding: 28px 32px;
   height: 100%;
   display: flex;
   flex-direction: column;
+} */
+
+/* Inner card with fade-in gradient from edges */
+.flint-card-inner {
+  position: relative;
+  border-radius: 16px;
+  padding: 24px 28px;
+  height: 100%;
+  overflow: hidden;
+  background: var(--card-background);
+  z-index: 1;
+}
+
+/* Fade: colored tint that fades from the edges toward the center */
+.flint-card-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top left,    rgba(77, 216, 240, 0.10), transparent 45%),
+    radial-gradient(ellipse at top right,   rgba(59, 130, 246, 0.10), transparent 45%),
+    radial-gradient(ellipse at bottom right,rgba(236, 72, 153, 0.10), transparent 45%),
+    radial-gradient(ellipse at bottom left, rgba(251, 146, 60, 0.10), transparent 45%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Make sure card content sits above the fade */
+.flint-card-inner > * {
+  position: relative;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .flint-card-border::before,
+  .flint-card-border::after {
+    animation: none;
+  }
 }
 
 .flint-header-row {
@@ -6352,6 +6480,7 @@ button {
   margin-bottom: var(--dash-gap-lg);
   flex: 1;
 }
+
 /* 
 .flint-item-row {
   display: grid;
@@ -6371,7 +6500,8 @@ button {
   /* padding: 4px 0; */
   cursor: pointer;
   transition: transform 0.12s ease;
-  color: var(--table-row-text); /* #EEEEEE */
+  color: var(--table-row-text);
+  /* #EEEEEE */
   font-weight: 600;
 }
 
@@ -6501,11 +6631,9 @@ button {
   gap: var(--dash-gap-lg);
 }
 
-.kpi-card {
-  /* background: var(--surface-2); */
+/* .kpi-card {
   background: var(--card-background);
   border: 1px solid var(--border);
-  /* border-radius: var(--dash-radius-card); */
   border-radius: 3px 3px 12px 12px;
   padding: 24px 26px;
   display: flex;
@@ -6517,6 +6645,26 @@ button {
 
 .kpi-card:hover {
   background: var(--surface-3);
+} */
+
+.kpi-card {
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  border-radius: 3px 3px 12px 12px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--dash-gap-sm);
+  position: relative;
+  min-height: 170px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 4px 12px -4px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02), 0 8px 20px -6px rgba(0, 0, 0, 0.10);
+  transform: translateY(-1px);
+  border-color: var(--border-strong);
 }
 
 .kpi-card-accent {
@@ -6740,13 +6888,18 @@ button {
   }
 }
 
-.dash-panel {
-  /* background: var(--surface-2); */
-  /* background: var(--table-head); */
-
+/* .dash-panel {
   border: 1px solid var(--border);
   border-radius: var(--dash-radius-card);
   overflow: hidden;
+} */
+
+.dash-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--dash-radius-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .dash-panel-header {
@@ -6931,7 +7084,7 @@ button {
 .dash-overdue-meta {
   font-size: 10px;
   color: var(--text-tertiary);
-  font-weight: 600; 
+  font-weight: 600;
   /* font-family: "JetBrains Mono", monospace; */
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -6948,4 +7101,728 @@ button {
   padding: 4px 8px;
   border-radius: 4px;
   white-space: nowrap;
+}
+
+
+
+
+
+
+
+
+
+
+/*
+  Styles for ProjectManagerDashboard ("Team Operations" view).
+
+  This file ONLY adds classes that don't already exist in globals.css.
+  Everything reuses the existing design tokens (colors, spacing, radii)
+  defined in :root there — no new hex colors or one-off values are
+  introduced here. Shared structural pieces (KPI cards, panel headers,
+  "view all" links, priority/status chips) intentionally reuse the
+  existing .kpi-card / .dash-panel / .dash-panel-header / .status-chip
+  classes from globals.css instead of being redefined.
+*/
+
+/* ---- KPI strip (4-across, unlike the 2x2 .dash-kpi-grid) ---- */
+.pm-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--dash-gap-lg);
+}
+
+@media (max-width: 1200px) {
+  .pm-kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---- Ops grid: Team Workload / Task Distribution / Project Health ---- */
+.pm-ops-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--dash-gap-lg);
+  align-items: stretch;
+}
+
+@media (max-width: 1200px) {
+  .pm-ops-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pm-ops-grid>*:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 720px) {
+  .pm-ops-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pm-ops-grid>*:nth-child(3) {
+    grid-column: auto;
+  }
+}
+
+/* Shared footer strip used at the bottom of the workload / health panels,
+   matching the visual weight of .table-footer / .flint-footer-row. */
+/* .pm-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--dash-gap-lg);
+  border-top: 1px solid var(--border);
+  background: var(--table-row);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+} */
+
+.pm-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px var(--dash-gap-lg);
+  border-top: 1px solid var(--border);
+  background: var(--table-row);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-top: auto;
+  /* ← pushes footer to bottom */
+}
+
+/* ---- Team Workload ---- */
+/* .pm-workload-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px var(--dash-gap-lg) 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--table-row);
+} */
+
+.pm-workload-list {
+  list-style: none;
+  margin: 0;
+  padding: 16px var(--dash-gap-lg) 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--table-row);
+  flex: 1;
+  /* ← list grows to fill space */
+}
+
+.pm-workload-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 30px;
+  align-items: center;
+  gap: 12px;
+}
+
+.pm-workload-member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--table-row-text);
+  min-width: 0;
+}
+
+.pm-workload-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.pm-workload-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pm-workload-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.pm-workload-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.pm-workload-count {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  color: var(--text-secondary);
+}
+
+/* ---- Task Distribution donut ---- */
+/* .pm-donut-wrap {
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: var(--table-row);
+} */
+
+.pm-donut-wrap {
+  flex: 1;
+  /* grows to fill */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* centers vertically */
+  align-items: center;
+  padding: 28px 24px;
+  gap: 20px;
+}
+
+.pm-donut-svg {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.pm-donut-svg svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.pm-donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.pm-donut-center-value {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--table-row-text);
+}
+
+.pm-donut-center-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.pm-donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.pm-donut-legend-row {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+}
+
+.pm-donut-legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+}
+
+.pm-donut-legend-label {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.pm-donut-legend-count {
+  font-weight: 700;
+  color: var(--table-row-text);
+}
+
+.pm-donut-legend-pct {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  min-width: 34px;
+  text-align: right;
+}
+
+/* ---- Project Health ---- */
+.pm-health-list {
+  list-style: none;
+  margin: 0;
+  padding: 18px 24px;
+  display: flex;
+  flex-direction: column;
+  background: var(--table-row);
+}
+
+.pm-health-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.pm-health-row:hover {
+  opacity: 0.75;
+}
+
+.pm-health-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pm-health-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--table-row-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pm-health-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.pm-health-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+.pm-health-pct {
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  min-width: 44px;
+}
+
+/* ---- Upcoming Deadlines ---- */
+.pm-deadline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--table-row);
+}
+
+.pm-deadline-row {
+  display: grid;
+  grid-template-columns: 70px 1fr 90px 130px 100px;
+  align-items: center;
+  gap: 16px;
+  padding: 16px var(--dash-gap-lg);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.pm-deadline-row:last-child {
+  border-bottom: none;
+}
+
+.pm-deadline-row:hover {
+  background: var(--table-row-hover);
+}
+
+.pm-deadline-date {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pm-deadline-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--table-row-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pm-deadline-project {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pm-deadline-owner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.pm-deadline-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .pm-deadline-row {
+    grid-template-columns: 70px 1fr auto;
+  }
+
+  .pm-deadline-row>.pm-deadline-project,
+  .pm-deadline-row>.pm-deadline-owner {
+    display: none;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  Styles for StakeholderDashboard ("Business Health" / exec view).
+
+  This file ONLY adds classes that don't already exist in globals.css.
+  Everything reuses the existing design tokens (colors, spacing, radii)
+  defined in :root there — no new hex colors or one-off values are
+  introduced here. Shared structural pieces (KPI cards, panel headers,
+  "view all" links, status chips, the two-column top row) intentionally
+  reuse the existing .kpi-card / .dash-panel / .dash-panel-header /
+  .dash-panel-title / .dash-panel-count / .dash-view-all-link /
+  .dash-row-top / .status-chip classes from globals.css instead of
+  being redefined here.
+*/
+
+/* ---- KPI strip (4-across, same pattern as .pm-kpi-strip) ---- */
+.sd-kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--dash-gap-lg);
+}
+
+@media (max-width: 1200px) {
+  .sd-kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* KPI value's trailing unit label (e.g. "1,247 tasks", "147 /wk") */
+.sd-kpi-value-unit {
+  font-size: 16px;
+  color: var(--text-tertiary);
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+/* ---- Risks + Gauges row (1fr / 1.4fr — opposite ratio of .dash-bottom-grid) ---- */
+.sd-risk-gauge-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--dash-gap-lg);
+  align-items: stretch;
+}
+
+@media (max-width: 1000px) {
+  .sd-risk-gauge-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Delivery Velocity line chart ---- */
+.sd-line-chart-wrap {
+  padding: 24px 28px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sd-line-chart-svg {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+.sd-line-chart-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 8px 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sd-chart-stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 28px 24px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.sd-chart-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sd-chart-stat-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.sd-chart-stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--table-row-text);
+}
+
+.sd-chart-stat-note {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-left: 4px;
+}
+
+/* ---- Team Utilization ---- */
+.sd-utilization-wrap {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.sd-utilization-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sd-utilization-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.sd-utilization-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sd-utilization-value {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.sd-utilization-bar {
+  height: 22px;
+  border-radius: 5px;
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.sd-utilization-fill {
+  height: 100%;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.75);
+  letter-spacing: 0.3px;
+}
+
+.sd-utilization-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.sd-utilization-legend-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* ---- Risks list ---- */
+.sd-risk-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--table-row);
+  flex: 1;
+}
+
+.sd-risk-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px var(--dash-gap-lg);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.sd-risk-row:last-child {
+  border-bottom: none;
+}
+
+.sd-risk-row:hover {
+  background: var(--table-row-hover);
+}
+
+.sd-risk-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sd-risk-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.sd-risk-text strong {
+  color: var(--table-row-text);
+  font-weight: 600;
+}
+
+/* ---- Gauges row (3-across) ---- */
+.sd-gauge-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--dash-gap-lg);
+}
+
+@media (max-width: 900px) {
+  .sd-gauge-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sd-gauge-panel {
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  border-radius: var(--dash-radius-card);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sd-gauge-label {
+  font-size: var(--dash-label-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+}
+
+.sd-gauge-value {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.sd-gauge-value-unit {
+  font-size: 15px;
+  color: var(--text-tertiary);
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+.sd-gauge-sub {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.sd-gauge-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.sd-gauge-fill {
+  height: 100%;
+  border-radius: 999px;
 }

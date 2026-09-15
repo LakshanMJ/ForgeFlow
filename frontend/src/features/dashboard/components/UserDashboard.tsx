@@ -43,7 +43,7 @@ const KPI_CARDS = [
         value: 12,
         accent: 'var(--text-tertiary)',
         delta: '▲ 2',
-        valueColor: undefined,
+        valueColor: 'var(--kpi-card-text-color)',
         visual: (
             <svg width="72" height="24" viewBox="0 0 72 24">
                 <polyline
@@ -62,7 +62,7 @@ const KPI_CARDS = [
         value: 5,
         accent: 'var(--steel)',
         delta: '▲ 1',
-        valueColor: undefined,
+        valueColor: 'var(--kpi-card-text-color)',
         visual: (
             <svg width="72" height="24" viewBox="0 0 72 24">
                 <polyline
