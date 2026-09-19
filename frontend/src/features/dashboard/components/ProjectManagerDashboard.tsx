@@ -112,14 +112,14 @@ const OPS_KPI_CARDS = [
 ];
 
 const WORKLOAD_ITEMS = [
-    { name: 'Paulie', initials: 'P', color: 'var(--red)', tintText: 'var(--red-tint-text)', pct: 87, count: 7 },
-    { name: 'Sarah', initials: 'S', color: 'var(--gold)', tintText: 'var(--gold-tint-text)', pct: 62, count: 5 },
-    { name: 'Emma', initials: 'E', color: 'var(--steel)', tintText: 'var(--steel-tint-text)', pct: 62, count: 5 },
-    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    { name: 'Mike', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    
+    { name: 'Paulie Walnuts', initials: 'P', color: 'var(--red)', tintText: 'var(--red-tint-text)', pct: 87, count: 7 },
+    { name: 'Sarah Connor', initials: 'S', color: 'var(--gold)', tintText: 'var(--gold-tint-text)', pct: 62, count: 5 },
+    { name: 'Howard Stark', initials: 'E', color: 'var(--steel)', tintText: 'var(--steel-tint-text)', pct: 62, count: 5 },
+    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+
 ];
 
 const TASK_DISTRIBUTION = [
@@ -211,17 +211,16 @@ const ProjectManagerDashboard = () => {
                         <div className="dash-panel-title">Team Workload</div>
                         <span className="dash-panel-count">{WORKLOAD_ITEMS.reduce((s, w) => s + w.count, 0)}</span>
                     </div>
-                    <ul className="pm-workload-list">   
+                    <ul className="pm-workload-list">
                         {WORKLOAD_ITEMS.map((member) => (
                             <li className="pm-workload-row" key={member.name}>
                                 <div className="pm-workload-member">
-                                    <span
-                                        className="pm-workload-avatar"
-                                        style={{ background: `linear-gradient(135deg, ${member.color}, ${member.tintText})` }}
-                                    >
-                                        {member.initials}
-                                    </span>
-                                    <span className="pm-workload-name">{member.name}</span>
+                                    <div className="pm-deadline-owner">
+                                        <span className="pm-deadline-avatar" style={{ background: member.color }}>
+                                            {member.initials}
+                                        </span>
+                                        {member.name}
+                                    </div>
                                 </div>
                                 <div className="pm-workload-bar">
                                     <div
@@ -303,7 +302,7 @@ const ProjectManagerDashboard = () => {
                                         />
                                     </div>
                                 </div>
-                                <span className="pm-health-pct" style={{ color: project.color }}>
+                                <span className="pm-health-pct">
                                     {project.pct}%
                                 </span>
                             </li>
@@ -335,7 +334,7 @@ const ProjectManagerDashboard = () => {
                         const style = PRIORITY_STYLE[item.priority];
                         return (
                             <li className="pm-deadline-row" key={item.title}>
-                                <span className="pm-deadline-date" style={{ color: item.dateColor }}>
+                                <span className="pm-deadline-date" >
                                     {item.date}
                                 </span>
                                 <span className="pm-deadline-title">{item.title}</span>

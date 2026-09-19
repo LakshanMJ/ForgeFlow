@@ -297,7 +297,7 @@ const StakeholderDashboard = () => {
                             <div className="sd-utilization-row" key={item.name}>
                                 <div className="sd-utilization-header">
                                     <span className="sd-utilization-name">{item.name}</span>
-                                    <span className="sd-utilization-value" style={{ color: item.color }}>
+                                    <span className="sd-utilization-value" >
                                         {item.pct}%
                                     </span>
                                 </div>

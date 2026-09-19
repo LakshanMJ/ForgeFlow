@@ -1,6 +1,9 @@
+import AnimatedGradientBorder from '@/shared/components/AnimatedGradientBorder';
 import AnimatedLogo from '@/shared/components/AnimatedLogo';
 import BrandMark from '@/shared/components/BrankMark';
+import FlintBrief from '@/shared/components/FlintBrief';
 import StatusChip from '@/shared/components/StatusChip';
+import TagChip from '@/shared/components/TagChip';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 const FLINT_ITEMS = [
@@ -141,10 +144,10 @@ const FOCUS_TASKS: {
     ];
 
 const ACTIVITY_ITEMS = [
-    { initials: 'P', gradient: 'linear-gradient(135deg, var(--patina), var(--patina-tint-text))', who: 'You', verb: 'completed', target: 'DB Migration', time: '2h ago' },
-    { initials: 'S', gradient: 'linear-gradient(135deg, var(--gold), var(--gold-tint-text))', who: 'Sarah', verb: 'mentioned you in', target: 'API Docs', time: '5h ago' },
-    { initials: 'M', gradient: 'linear-gradient(135deg, var(--steel), var(--steel-tint-text))', who: 'Mike', verb: 'assigned you', target: 'User Auth', time: '1d ago' },
-    { initials: 'P', gradient: 'linear-gradient(135deg, var(--patina), var(--patina-tint-text))', who: 'You', verb: 'commented on', target: 'Dashboard Redesign', time: '2d ago' },
+    { initials: 'P', color: 'var(--steel)', who: 'You', verb: 'completed', target: 'DB Migration', time: '2h ago' },
+    { initials: 'S', color: 'var(--gold)', who: 'Sarah', verb: 'mentioned you in', target: 'API Docs', time: '5h ago' },
+    { initials: 'M', color: 'var(--patina)', who: 'Mike', verb: 'assigned you', target: 'User Auth', time: '1d ago' },
+    { initials: 'P', color: 'var(--red)', who: 'You', verb: 'commented on', target: 'Dashboard Redesign', time: '2d ago' },
 ];
 
 const OVERDUE_ITEMS = [
@@ -173,49 +176,11 @@ const UserDashboard = () => {
         <div className="dashboard-home" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--dash-gap-lg)' }}>
             {/* ---- Row 1: Flint briefing + KPI grid ---- */}
 
+            {/* <AnimatedGradientBorder/> */}
+
             {/* //FLINT BRIEFING */}
             <div className="dash-row-top">
-                <div className="flint-card-border">
-                    <div className="flint-card-inner">
-                        <div className="flint-header-row">
-                            <div className="flint-brand-row">
-                                <span className="flint-mark">
-                                    <AnimatedLogo animateOnView />
-                                </span>
-                                <div>
-                                    Flint Briefing
-                                </div>
-                            </div>
-                            <span className="flint-date-label">Wed &middot; Dec 11</span>
-                        </div>
-
-                        <p className="flint-greeting">
-                            Good morning, <span className="flint-name">John</span>. Here&apos;s
-                            what needs your attention.
-                        </p>
-
-                        <div className="flint-items-list">
-                            {FLINT_ITEMS.map((item, i) => (
-                                <div className="flint-item-row" key={i}>
-                                    <span className={`flint-item-dot ${item.tone}`} />
-                                    <div className="flint-item-text">{item.content}</div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="flint-footer-row">
-                            <span className="flint-live-indicator">
-                                <span className="flint-live-dot" />
-                                Live &middot; updated 4m ago
-                            </span>
-                            <a href="#" className="flint-view-link">
-                                View full briefing
-                                <ArrowRight size={12} />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
+                <FlintBrief />
                 <div className="dash-kpi-grid">
                     {KPI_CARDS.map((kpi) => (
                         <div className="kpi-card" key={kpi.label}>
@@ -260,7 +225,6 @@ const UserDashboard = () => {
 
                         return (
                             <li className="dash-task-row" key={task.title}>
-                                <button className="dash-task-checkbox" type="button" aria-label={`Mark ${task.title} complete`} />
                                 <span className="dash-task-title">{task.title}</span>
 
                                 <StatusChip
@@ -269,7 +233,8 @@ const UserDashboard = () => {
                                     color={style?.color}
                                 />
 
-                                <span className="dash-task-project-tag">{task.project}</span>
+                                <TagChip label={task.project} />
+
                                 <span className={`dash-task-due${task.overdue ? ' overdue' : ''}`}>
                                     {task.due}
                                 </span>
@@ -291,9 +256,12 @@ const UserDashboard = () => {
                     <ul className="dash-activity-list">
                         {ACTIVITY_ITEMS.map((item, i) => (
                             <li className="dash-activity-row" key={i}>
-                                <span className="dash-activity-avatar" style={{ background: item.gradient }}>
+                                {/* <span className="dash-activity-avatar" style={{ background: item.gradient }}>
                                     {item.initials}
-                                </span>
+                                </span> */}
+                                <span className="pm-deadline-avatar" style={{ background: item.color }}>
+                                        {item.initials}
+                                    </span>
                                 <span className="dash-activity-text">
                                     <strong>{item.who}</strong> {item.verb} <em>&quot;{item.target}&quot;</em>
                                 </span>

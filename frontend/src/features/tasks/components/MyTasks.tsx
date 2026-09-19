@@ -71,75 +71,6 @@ type TaskGroup = {
     tasks: Task[];
 };
 
-// const TASK_STATUS = {
-//     CRITICAL: {
-//         label: "Critical",
-//         background: "#FEE2E2",
-//         color: "#991B1B",
-//     },
-//     HIGH: {
-//         label: "High",
-//         background: "#FEF3C7",
-//         color: "#92400E",
-//     },
-//     MEDIUM: {
-//         label: "Medium",
-//         background: "#E8E8E8",
-//         color: "#555555",
-//     },
-//     LOW: {
-//         label: "Low",
-//         background: "#E0F2FE",
-//         color: "#0369A1",
-//     },
-// };
-
-// const TASK_STATUS = {
-//     CRITICAL: {
-//         label: "Critical",
-//         background: "#B91C1C",
-//         color: "#FEE2E2",
-//     },
-//     HIGH: {
-//         label: "High",
-//         background: "#B86B00",
-//         color: "#FFF0D9",
-//     },
-//     MEDIUM: {
-//         label: "Medium",
-//         background: "#555555",
-//         color: "#E8E8E8",
-//     },
-//     LOW: {
-//         label: "Low",
-//         background: "#246BCE",
-//         color: "#DDEBFF",
-//     },
-// };
-
-// const TASK_STATUS = {
-//     CRITICAL: {
-//         label: "Critical",
-//         background: "#7A2E2E",
-//         color: "#F0D6D6",
-//     },
-//     HIGH: {
-//         label: "High",
-//         background: "#7A5A2E",
-//         color: "#F0E4D0",
-//     },
-//     MEDIUM: {
-//         label: "Medium",
-//         background: "#4A4A4A",
-//         color: "#DDDDDD",
-//     },
-//     LOW: {
-//         label: "Low",
-//         background: "#2E4A6A",
-//         color: "#D6E4F0",
-//     },
-// };
-
 const TASK_STATUS = {
     CRITICAL: {
         label: "Critical",
@@ -195,7 +126,7 @@ const GROUPS: TaskGroup[] = [
 function DueCell({ state, dueLabel }: { state: DueState; dueLabel: string }) {
     if (state === 'done') {
         return (
-            <span className="task-due" style={{ color: 'var(--patina)' }}>
+            <span className="task-due">
                 <CheckCircle2 size={13} />
                 {dueLabel}
             </span>
@@ -203,7 +134,7 @@ function DueCell({ state, dueLabel }: { state: DueState; dueLabel: string }) {
     }
     if (state === 'overdue') {
         return (
-            <span className="task-due" style={{ color: 'var(--ember)' }}>
+            <span className="task-due">
                 <AlertTriangle size={13} />
                 {dueLabel}
             </span>
@@ -211,14 +142,14 @@ function DueCell({ state, dueLabel }: { state: DueState; dueLabel: string }) {
     }
     if (state === 'soon') {
         return (
-            <span className="task-due" style={{ color: 'var(--gold)' }}>
+            <span className="task-due">
                 <CalendarDays size={13} />
                 {dueLabel}
             </span>
         );
     }
     return (
-        <span className="task-due" style={{ color: 'var(--text-secondary)' }}>
+        <span className="task-due">
             <CalendarDays size={13} />
             {dueLabel}
         </span>
@@ -315,17 +246,11 @@ const MyTasks = () => {
                                     background={style.background}
                                     color={style.color}
                                 />
+                                
                                 <DueCell state={task.dueState} dueLabel={task.dueLabel} />
 
                                 <span className="task-labels-group">
                                     {task.labels.map((l) => (
-                                        // <span
-                                        //     key={l.text}
-                                        //     className="task-label-chip"
-                                        //     style={{ background: l.bg, color: l.color }}
-                                        // >
-                                        //     {l.text}
-                                        // </span>
                                         <div className="tag-group">
                                             <TagChip label={l.text} />
                                         </div>

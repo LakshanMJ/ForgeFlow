@@ -1,0 +1,268 @@
+/* .animated-gradient-border {
+    position: relative;
+    width: fit-content;
+    padding: 6px; 
+    border-radius: 999px;
+    
+   
+    border: 2.5px solid #ffffff; 
+    
+   
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.animated-gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: -150%;
+    
+    background: conic-gradient(
+        from 0deg,
+        #006aff 0deg,
+        #00d4ff 50deg,
+        #f000ff 120deg,
+        #ff3b3b 180deg,
+        #ff8c00 240deg,
+        #006aff 360deg
+    );
+
+    animation: gradient-spin 4s linear infinite;
+    z-index: 0;
+}
+
+
+.animated-gradient-border-inner {
+    position: relative;
+    z-index: 1;
+    
+    padding: 10px 24px;
+    border-radius: 999px;
+    background: #ffffff;
+
+
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 1) 40%,  
+        rgba(0, 0, 0, 0.7) 70%,    
+        rgba(0, 0, 0, 0) 100% 
+    );
+    mask-image: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 0) 100%
+    );
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+@keyframes gradient-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+} */
+
+
+/* chat2 */
+
+/* .animated-gradient-border {
+    position: relative;
+    width: fit-content;
+
+
+    padding: 10px;
+
+    border-radius: 999px;
+
+
+    border: 3px solid #ffffff;
+
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08);
+
+    overflow: hidden;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.animated-gradient-border::before {
+    content: "";
+
+    position: absolute;
+    inset: -150%;
+
+    background: conic-gradient(
+        from 0deg,
+        #006aff 0deg,
+        #00d4ff 50deg,
+        #f000ff 120deg,
+        #ff3b3b 180deg,
+        #ff8c00 240deg,
+        #006aff 360deg
+    );
+
+    animation: gradient-spin 4s linear infinite;
+
+    z-index: 0;
+}
+
+.animated-gradient-border-inner {
+    position: relative;
+    z-index: 1;
+
+    padding: 20px 48px;
+
+    min-width: 50%;
+    min-height: 300px;
+
+    border-radius: 999px;
+
+    background: #ffffff;
+
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 0) 100%
+    );
+
+    mask-image: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 0) 100%
+    );
+
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+
+@keyframes gradient-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+} */
+
+.animated-gradient-border {
+    position: relative;
+
+    /* 50% of the viewport */
+    width: 45vw;
+
+    /* Large fixed height */
+    height: 300px;
+
+    padding: 10px;
+
+    border-radius: 18px;
+
+    border: 3px solid #ffffff;
+
+    box-shadow: 0 6px 28px rgba(0, 0, 0, 0.08);
+
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Rotating conic gradient */
+.animated-gradient-border::before {
+    content: "";
+
+    position: absolute;
+    inset: -150%;
+
+    background: conic-gradient(
+        from 0deg,
+        #006aff 0deg,
+        #00d4ff 50deg,
+        #f000ff 120deg,
+        #ff3b3b 180deg,
+        #ff8c00 240deg,
+        #006aff 360deg
+    );
+
+    animation: gradient-spin 4s linear infinite;
+
+    z-index: 0;
+}
+
+
+/* Large white center */
+.animated-gradient-border-inner {
+    position: relative;
+    z-index: 1;
+
+    width: 100%;
+    height: 100%;
+
+    border-radius: 18px;
+
+    background: #fffffffd;
+
+    -webkit-mask-image: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 0) 100%
+    );
+
+    mask-image: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 1) 40%,
+        rgba(0, 0, 0, 0.7) 70%,
+        rgba(0, 0, 0, 0) 100%
+    );
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+}
+
+
+@keyframes gradient-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

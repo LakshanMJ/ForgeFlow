@@ -97,7 +97,7 @@ export default function Sidebar() {
 							) : React.isValidElement(Icon) ? (
 								Icon
 							) : (
-								<Icon size={20} color={iconColor} />
+								<Icon size={28} color={iconColor} />
 							)}
 
 							{label}
