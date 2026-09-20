@@ -77,7 +77,7 @@ export default function Sidebar() {
 										justifyContent: 'center',
 										width: 24,
 										height: 24,
-										borderRadius: 7,
+										borderRadius: 7	,
 										// 👇 only Flint gets the tile
 										// ...(brand && {
 										// 	background: 'linear-gradient(135deg, #1E1B4B 0%, #4C1D95 100%)',
@@ -89,9 +89,6 @@ export default function Sidebar() {
 										alt=""
 										width={25}
 										height={25}
-										// style={{...(brand && {
-										// 	background: 'linear-gradient(135deg, #ffffff 0%, #ffffff 100%)',
-										// }),}}
 									/>
 								</span>
 							) : React.isValidElement(Icon) ? (
@@ -112,7 +109,6 @@ export default function Sidebar() {
 					aria-expanded={isAdminOpen}
 					aria-controls="admin-submenu"
 				>
-					{/* <Cog size={15} /> */}
 					<MdAdminPanelSettings size={26} />
 					<span style={{ flex: 1 }}>Admin</span>
 					<ChevronDown

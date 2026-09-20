@@ -89,9 +89,12 @@ export default function FeatureGrid() {
 							<div className="feature-media-frame">
 								<div className="feature-media-window">
 									{feature.imageSrc ? (
-										<img src={'/public/bell.png'} alt={feature.imageAlt} />
+										<img src={'/public/test.png'} alt={feature.imageAlt} />
 									) : (
-										<span className="feature-image-placeholder">{feature.imageAlt}</span>
+										<span className="feature-image-placeholder">
+											{/* {feature.imageAlt} */}
+											<img src="/test.png" alt={feature.imageAlt} />
+										</span>
 									)}
 								</div>
 							</div>

@@ -103,6 +103,10 @@
   --flint-pink: #EC4899;
   --flint-orange: #FB923C;
   --flint-red: #F87171;
+
+  --nav-item-active-background-color: #292929;
+  --nav-item-active-text-color: #EEEEEE;
+
 }
 
 [data-theme="light"] {
@@ -158,10 +162,9 @@
   --kpi-card-text-color: #1A1A1A;
 
   --dash-panel-title-color: #1a1a1a;
-  ;
-
-
   --task-group-progress-track-color: #DCE4EC;
+  --nav-item-active-background-color: #EAEAEA;
+  --nav-item-active-text-color: #202020;
 }
 
 * {
@@ -413,15 +416,16 @@ button {
   flex-direction: column;
 
   position: sticky;
-  top: 64px;
+  top: 40px;
   height: calc(100vh - 30px);
 }
 
 .nav-item {
   display: flex;
+  height: 5px;
   align-items: center;
   gap: 10px;
-  padding: 9px 10px;
+  padding: 16px 10px;
   border-radius: 6px;
   font-size: 14.5px;
   font-weight: 500;
@@ -429,6 +433,7 @@ button {
   color: #646464;
   cursor: pointer;
   text-decoration: none;
+  line-height: 16px;
 }
 
 .nav-item:hover {
@@ -436,28 +441,28 @@ button {
   color: var(--text);
 }
 
-.nav-item .dash {
+/* .nav-item .dash {
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: var(--text-tertiary);
   flex-shrink: 0;
-}
+} */
 
-.nav-item.active {
+/* .nav-item.active {
   background: var(--surface-3);
   color: var(--text);
-}
+} */
 
-.nav-item.active .dash {
-  background: var(--ember);
-}
+/* .nav-item.active .dash {
+  background: red;
+} */
 
-.nav-divider {
+/* .nav-divider {
   height: 1px;
   background: var(--border);
   margin: 10px 8px;
-}
+} */
 
 /* .sidebar-footer {
   margin-top: auto;
@@ -468,10 +473,11 @@ button {
 
 .sidebar-footer {
   margin-top: auto;
+  margin-bottom: 10px;
   flex-shrink: 0;
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 16px;
+  padding: 14px;
 }
 
 /* ---- Stat / ticket card ---- */
@@ -665,10 +671,10 @@ button {
 }
 
 .nav-item.active {
-  border-left: 2px solid var(--ember);
+  /* border-left: 0px solid var(--ember); */
   padding-left: 8px;
-  color: var(--ember);
-  background: var(--ember-tint);
+  color: var(--nav-item-active-text-color);
+  background: var(--nav-item-active-background-color);
 }
 
 .nav-item.active svg {
