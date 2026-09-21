@@ -11,6 +11,7 @@ type Feature = {
 	description: string;
 	imageAlt: string;
 	imageSrc?: string;
+	imageScale?: number;
 };
 
 const FEATURES: Feature[] = [
@@ -19,24 +20,32 @@ const FEATURES: Feature[] = [
 		description:
 			"Create tasks with owners, due dates, and priorities in seconds. Flowdeck AI fills in the details so your team can skip the setup and get straight to work.",
 		imageAlt: "Task creation screenshot",
+		imageSrc: "/flint.png",
+		imageScale: 1.00,
 	},
 	{
 		title: "Know who's doing what, without asking",
 		description:
 			"Comments, @mentions, and real-time updates keep everyone aligned without another status meeting. Flowdeck AI flags what's overdue and what's at risk so nothing slips through.",
 		imageAlt: "Workspace activity screenshot",
+		imageSrc: "",
+		imageScale: 1.30,
 	},
 	{
 		title: "Turn conversations into tasks instantly",
 		description:
 			"Catch action items straight from chat and docs. Flowdeck AI drafts the task, assignee, and due date before you finish the sentence.",
 		imageAlt: "Chat to task screenshot",
+		imageSrc: "",
+		imageScale: 1.30,
 	},
 	{
 		title: "See exactly where every project stands",
 		description:
 			"Live dashboards roll up status across every team and project. Flowdeck AI summarizes risk and progress so leaders don't have to ask for updates.",
 		imageAlt: "Dashboard screenshot",
+		imageSrc: "",
+		imageScale: 1.30,
 	},
 ];
 
@@ -89,11 +98,25 @@ export default function FeatureGrid() {
 							<div className="feature-media-frame">
 								<div className="feature-media-window">
 									{feature.imageSrc ? (
-										<img src={'/public/test.png'} alt={feature.imageAlt} />
+										// <img src={feature.imageSrc} alt={feature.imageAlt} />
+										<img
+											src={feature.imageSrc}
+											alt={feature.imageAlt}
+											style={{
+												transform: `scale(${feature.imageScale ?? 1})`,
+											}}
+										/>
 									) : (
 										<span className="feature-image-placeholder">
 											{/* {feature.imageAlt} */}
-											<img src="/test.png" alt={feature.imageAlt} />
+											{/* <img src={feature.imageSrc} alt={feature.imageAlt} /> */}
+											<img
+												src={feature.imageSrc}
+												alt={feature.imageAlt}
+												style={{
+													transform: `scale(${feature.imageScale ?? 1})`,
+												}}
+											/>
 										</span>
 									)}
 								</div>

@@ -54,6 +54,15 @@
   --violet: #8f7fd1;
   --violet-tint: #262238;
   --violet-tint-text: #b3a3ea;
+  --cyan: #4DA6B8;
+  --cyan-tint: #1F3439;
+  --cyan-tint-text: #6CC4D4;
+  --orange: #C9783D;
+  --orange-tint: #38271E;
+  --orange-tint-text: #E49A62;
+  --blue: #5B7FC4;
+  --blue-tint: #222B3D;
+  --blue-tint-text: #7F9FE0;
 
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 
@@ -6915,6 +6924,7 @@ button {
   flex: 1;
   /* grows to fill */
   display: flex;
+  background: #FFFFFF;
   flex-direction: column;
   justify-content: center;
   /* centers vertically */

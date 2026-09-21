@@ -112,13 +112,13 @@ const OPS_KPI_CARDS = [
 ];
 
 const WORKLOAD_ITEMS = [
-    { name: 'Paulie Walnuts', initials: 'P', color: 'var(--red)', tintText: 'var(--red-tint-text)', pct: 87, count: 7 },
+    { name: 'Emma Richter', initials: 'E', color: 'var(--red)', tintText: 'var(--red-tint-text)', pct: 87, count: 7 },
     { name: 'Sarah Connor', initials: 'S', color: 'var(--gold)', tintText: 'var(--gold-tint-text)', pct: 62, count: 5 },
-    { name: 'Howard Stark', initials: 'E', color: 'var(--steel)', tintText: 'var(--steel-tint-text)', pct: 62, count: 5 },
+    { name: 'Howard Stark', initials: 'H', color: 'var(--steel)', tintText: 'var(--steel-tint-text)', pct: 62, count: 5 },
     { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
-    { name: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', tintText: 'var(--patina-tint-text)', pct: 37, count: 3 },
+    { name: 'Anna Müller', initials: 'A', color: 'var(--violet)', tintText: 'var(--violet-tint-text)', pct: 37, count: 3 },
+    { name: 'Paulie Walnuts', initials: 'P', color: 'var(--cyan)', tintText: 'var(--cyan-tint-text)', pct: 37, count: 3 },
+    { name: 'David Wolf', initials: 'D', color: 'var(--blue)', tintText: 'var(--blue-tint-text)', pct: 37, count: 3 },
 
 ];
 
@@ -148,12 +148,12 @@ const DONUT_SEGMENTS = TASK_DISTRIBUTION.map((item) => {
 });
 
 const PROJECT_HEALTH = [
-    { name: 'Acme Platform', pct: 72, color: 'var(--patina)' },
+    { name: 'Cloud Migration', pct: 72, color: 'var(--patina)' },
     { name: 'Beta Rewrite', pct: 45, color: 'var(--gold)' },
     { name: 'Gamma Mobile', pct: 90, color: 'var(--patina)' },
     { name: 'Delta Infra', pct: 12, color: 'var(--red)' },
-    { name: 'Delta Infra', pct: 12, color: 'var(--red)' },
-    { name: 'Delta Infra', pct: 12, color: 'var(--red)' },
+    { name: 'Waldkirch Platform', pct: 12, color: 'var(--red)' },
+    { name: 'Fleet Management', pct: 12, color: 'var(--red)' },
 ];
 
 const UPCOMING_DEADLINES: {
@@ -166,11 +166,11 @@ const UPCOMING_DEADLINES: {
     date: string;
     dateColor?: string;
 }[] = [
-        { title: 'Payment API Integration', priority: 'critical', project: 'acme', owner: 'Lex Luthor', initials: 'P', color: 'var(--red)', date: 'Dec 12', dateColor: 'var(--red)' },
+        { title: 'Payment API Integration', priority: 'critical', project: 'acme', owner: 'David Wolf', initials: 'D', color: 'var(--blue)', date: 'Dec 12', dateColor: 'var(--red)' },
         { title: 'User Authentication', priority: 'high', project: 'acme', owner: 'Mike Shinoda', initials: 'M', color: 'var(--patina)', date: 'Dec 15', dateColor: 'var(--gold)' },
         { title: 'Dashboard Redesign', priority: 'high', project: 'acme', owner: 'Sarah Connor', initials: 'S', color: 'var(--gold)', date: 'Dec 18' },
-        { title: 'Database Migration', priority: 'medium', project: 'beta', owner: 'Paulie Walnuts', initials: 'P', color: 'var(--red)', date: 'Dec 20' },
-        { title: 'API Documentation', priority: 'medium', project: 'beta', owner: 'Howard Stark', initials: 'E', color: 'var(--steel)', date: 'Dec 22' },
+        { title: 'Database Migration', priority: 'medium', project: 'beta', owner: 'Emma Richter', initials: 'E', color: 'var(--red)', date: 'Dec 20' },
+        { title: 'API Documentation', priority: 'medium', project: 'beta', owner: 'Howard Stark', initials: 'H', color: 'var(--steel)', date: 'Dec 22' },
     ];
 
 const ProjectManagerDashboard = () => {

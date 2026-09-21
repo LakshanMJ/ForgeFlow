@@ -8,8 +8,8 @@ export default function DashboardPage() {
 	return (
 		<div className="dashboard-sections">
 			<UserDashboard />
-			<ProjectManagerDashboard />
-			<StakeholderDashboard />
+			{/* <ProjectManagerDashboard /> */}
+			{/* <StakeholderDashboard /> */}
 		</div>
 	);
 }

@@ -10,7 +10,7 @@ export default function AppLayout({
     <div className="app-shell">
       <TopBar
         orgName="Anvil Labs"
-        userName="Lakshan Jayasuriya"
+        userName="John Bennett"
         userRole="Admin"
       />
 
