@@ -2425,18 +2425,42 @@ button {
   min-height: 40px;
 }
 
-.add-task-link {
+/* .add-task-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 12.5px;
   color: var(--text-tertiary);
   background: none;
-  border: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   cursor: pointer;
-  padding: 4px 2px;
+  padding: 2px 100px;
   margin: 0 12px 12px;
   align-self: flex-start;
+} */
+
+.add-task-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Centers the icon + text horizontally */
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-tertiary);
+  background: none;
+   border: 1.90px dashed var(--border); 
+  border-radius: 8px;
+  cursor: pointer;
+  
+  /* THE FIX */
+  width: calc(100% - 24px);            /* Fills the available width */
+  padding: 6px 12px;         /* Normal padding, no magic numbers */
+  margin: 0 12px 12px;       
+  box-sizing: border-box;    /* Ensures padding is counted inside the 100% width */
+  
+  /* Optional but recommended */
+  white-space: nowrap;       /* Prevents the text from ever wrapping */
+  transition: background 0.2s ease;
 }
 
 .add-task-link:hover {
@@ -2444,7 +2468,7 @@ button {
 }
 
 /* ---- Task card ---- */
-.task-card {
+/* .task-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -2459,6 +2483,42 @@ button {
 
 .task-card.dragging {
   opacity: 0.4;
+} */
+
+.task-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: grab;
+  touch-action: none;
+
+  /* NEW: Subtle shadow for elevation */
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.04),   /* Tight, subtle shadow for definition */
+    0 2px 4px rgba(0, 0, 0, 0.03);   /* Slightly wider, softer shadow for depth */
+
+  /* NEW: Smooth transition for hover effects */
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+/* NEW: Hover state — makes it feel interactive */
+.task-card:hover {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 4px 8px rgba(0, 0, 0, 0.04);
+  border-color: color-mix(in srgb, var(--border) 70%, var(--text-tertiary));
+  transform: translateY(-1px); /* Slight lift on hover */
+}
+
+/* Existing dragging state — amplify the shadow */
+.task-card.dragging {
+  cursor: grabbing;
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.12),
+    0 12px 24px rgba(0, 0, 0, 0.08);
+  transform: rotate(2deg) scale(1.02); /* Optional: tilt the card while dragging */
+  opacity: 0.95;
 }
 
 .task-card-top-row {
@@ -2530,13 +2590,14 @@ button {
 
 .task-card-assignee-name {
   font-size: 12px;
+  font-weight: 600;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.task-card-done-mark {
+/* .task-card-done-mark {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -2544,7 +2605,7 @@ button {
   font-weight: 600;
   color: var(--patina);
   flex-shrink: 0;
-}
+} */
 
 .task-card-progress-row {
   display: flex;
@@ -2575,6 +2636,7 @@ button {
 
 .task-card-blocked-note {
   font-size: 11.5px;
+  font-weight: 600;
   color: var(--text-tertiary);
   margin-top: 8px;
   line-height: 1.4;
@@ -2617,6 +2679,34 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.task-card-blocker-banner {
+  display: flex;
+  align-items: flex-start;
+  /* Aligns icon to top if text wraps */
+  gap: 6px;
+  background-color: color-mix(in srgb, var(--red) 10%, transparent);
+  /* Soft red bg */
+  color: var(--red);
+  /* Red text */
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  /* Space above the banner */
+  /* border-left: 3px solid var(--ember); */
+  /* Strong visual cue */
+}
+
+.blocker-icon {
+  flex-shrink: 0;
+  /* Prevents icon from squishing */
+  margin-top: 1px;
+  /* Slight optical alignment with text */
 }
 
 /* ==== Create New Project modal ==== */
@@ -7124,13 +7214,27 @@ button {
   letter-spacing: 0.5px;
 }
 
-.pm-deadline-owner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
+.task-card-priority-text {
+  /* Typography */
+  font-size: 11px;
+  /* Small, matching your tags */
   font-weight: 600;
-  color: var(--text-secondary);
+  /* Semi-bold to make the color pop */
+  letter-spacing: 0.05em;
+  /* Slight spacing for uppercase text */
+  text-transform: uppercase;
+  /* Ensures consistent casing regardless of data */
+
+  /* Layout & Alignment */
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  /* Keeps it tight vertically */
+  white-space: nowrap;
+  /* Prevents "MEDIUM" from breaking into two lines */
+
+  /* Optional: Slight opacity so it doesn't scream at the user */
+  opacity: 0.9;
 }
 
 .pm-deadline-avatar {
@@ -7144,6 +7248,70 @@ button {
   font-weight: 700;
   color: #ffffff;
   flex-shrink: 0;
+}
+
+/* The parent container holding both the owner and the done mark */
+.task-card-footer-left {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Pushes name to left, Done to right */
+  width: 100%;
+  /* Ensures it takes up the full width of the footer */
+  gap: 8px;
+  /* Adds a minimum gap if they get too close */
+}
+
+/* The wrapper for the avatar and name */
+.pm-deadline-owner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  flex: 1;
+  /* Allows this section to shrink if the container gets narrow */
+  min-width: 0;
+  /* CRITICAL: Allows flex children to shrink below their content size */
+}
+
+/* .pm-deadline-owner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+} */
+
+
+/* The name text itself */
+.pm-deadline-name {
+  font-size: 12px;
+  /* Adjust to your preferred size */
+  color: var(--text-secondary, #64748b);
+  white-space: nowrap;
+  /* Prevents the name from wrapping to a new line */
+  overflow: hidden;
+  /* Hides text that overflows */
+  text-overflow: ellipsis;
+  /* Adds "..." if the name is too long */
+}
+
+/* The Done mark */
+.task-card-done-mark {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--patina, #10b981);
+  /* Adjust to your success color */
+  white-space: nowrap;
+  /* Ensures "Done" and the icon stay on one line */
+  flex-shrink: 0;
+  /* Prevents the Done mark from getting squished */
 }
 
 @media (max-width: 900px) {
@@ -7472,4 +7640,42 @@ button {
 .sd-gauge-fill {
   height: 100%;
   border-radius: 999px;
+}
+
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* DESIGN */
+.tag-chip--chip-steel {
+  background: var(--steel-tint);
+  color: var(--steel-tint-text);
+}
+
+/* RESEARCH / ARCHITECTURE / DEVOPS */
+.tag-chip--chip-violet {
+  background: var(--violet-tint);
+  color: var(--violet-tint-text);
+}
+
+/* DEVELOPMENT */
+.tag-chip--chip-patina {
+  background: var(--patina-tint);
+  color: var(--patina-tint-text);
+}
+
+/* MANAGEMENT */
+.tag-chip--chip-neutral {
+  background: var(--neutral-tint);
+  color: var(--neutral-tint-text);
 }

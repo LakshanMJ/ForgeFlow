@@ -46,10 +46,10 @@ export default function TasksPage() {
 					<div className="page-title-row">
 						<h1 className="page-title">Tasks</h1>
 						<div className="page-title-chips">
-							<TagChip label="12 Total" />
-							<TagChip label="5 In Progress" />
-							<TagChip label="3 Overdue" />
-							<TagChip label="4 Done" />
+							<TagChip label="12 Total" variant = 'neutral'/>
+							<TagChip label="5 In Progress" variant = 'neutral' />
+							<TagChip label="3 Overdue" variant = 'neutral'/>
+							<TagChip label="4 Done" variant = 'neutral'/>
 						</div>
 					</div>
 					<p className="page-subtitle">Plan, prioritize and keep your work moving</p>

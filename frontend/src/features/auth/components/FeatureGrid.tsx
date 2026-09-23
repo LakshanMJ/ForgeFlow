@@ -12,6 +12,8 @@ type Feature = {
 	imageAlt: string;
 	imageSrc?: string;
 	imageScale?: number;
+	imageOffsetY?:number;
+	imageOffsetX?:number
 };
 
 const FEATURES: Feature[] = [
@@ -28,15 +30,16 @@ const FEATURES: Feature[] = [
 		description:
 			"Comments, @mentions, and real-time updates keep everyone aligned without another status meeting. Flowdeck AI flags what's overdue and what's at risk so nothing slips through.",
 		imageAlt: "Workspace activity screenshot",
-		imageSrc: "",
-		imageScale: 1.30,
+		imageSrc: "/dashboards.png",
+		imageScale: 1.45,
 	},
 	{
 		title: "Turn conversations into tasks instantly",
 		description:
 			"Catch action items straight from chat and docs. Flowdeck AI drafts the task, assignee, and due date before you finish the sentence.",
 		imageAlt: "Chat to task screenshot",
-		imageSrc: "",
+		// imageSrc: "/proj-det.png",
+		imageSrc: "/half-left.png",
 		imageScale: 1.30,
 	},
 	{
@@ -44,8 +47,10 @@ const FEATURES: Feature[] = [
 		description:
 			"Live dashboards roll up status across every team and project. Flowdeck AI summarizes risk and progress so leaders don't have to ask for updates.",
 		imageAlt: "Dashboard screenshot",
-		imageSrc: "",
-		imageScale: 1.30,
+		imageSrc: "/444.png",
+		imageScale: 1.25,
+		imageOffsetX: 45,
+		imageOffsetY: 35,
 	},
 ];
 
@@ -103,7 +108,7 @@ export default function FeatureGrid() {
 											src={feature.imageSrc}
 											alt={feature.imageAlt}
 											style={{
-												transform: `scale(${feature.imageScale ?? 1})`,
+												transform: `translate(${feature.imageOffsetX ?? 0}px, ${feature.imageOffsetY ?? 0}px) scale(${feature.imageScale ?? 1})`,
 											}}
 										/>
 									) : (
@@ -114,7 +119,7 @@ export default function FeatureGrid() {
 												src={feature.imageSrc}
 												alt={feature.imageAlt}
 												style={{
-													transform: `scale(${feature.imageScale ?? 1})`,
+													transform: `translate(${feature.imageOffsetX ?? 0}px, ${feature.imageOffsetY ?? 0}px) scale(${feature.imageScale ?? 1})`,
 												}}
 											/>
 										</span>

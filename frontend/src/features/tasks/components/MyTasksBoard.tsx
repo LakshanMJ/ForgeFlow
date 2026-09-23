@@ -1,6 +1,10 @@
+import TasksBoard from "@/features/projects/components/TasksBoard";
+
 const MyTasksBoard = () => {
     return(
-        <div>MyTasksBoard</div>
+        <div>
+            <TasksBoard />
+        </div>
     )    
 }
 

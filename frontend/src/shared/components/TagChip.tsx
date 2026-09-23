@@ -3,7 +3,7 @@ interface TagChipProps {
   variant?: string;   // Optional — defaults to neutral
 }
 
-export default function TagChip({ label, variant = 'neutral' }: TagChipProps) {
+export default function TagChip({ label, variant }: TagChipProps) {
   return (
     <span className={`tag-chip tag-chip--${variant}`}>
       {label}
