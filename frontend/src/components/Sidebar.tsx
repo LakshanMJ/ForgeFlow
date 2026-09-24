@@ -136,8 +136,7 @@ export default function Sidebar() {
 				)}
 			</nav>
 
-			<div className="sidebar-footer">
-				{/* <div className="nav-divider" /> */}
+			{/* <div className="sidebar-footer">
 				<Link
 					href="/dashboard/settings"
 					className={`nav-item${pathname === '/dashboard/settings' ? ' active' : ''}`}
@@ -145,7 +144,7 @@ export default function Sidebar() {
 					<FaBuilding size={15} />
 					ACME
 				</Link>
-			</div>
+			</div> */}
 		</aside>
 	);
 }

@@ -115,6 +115,7 @@
 
   --nav-item-active-background-color: #292929;
   --nav-item-active-text-color: #EEEEEE;
+  --pm-donut-background: #111111;
 
 }
 
@@ -174,6 +175,7 @@
   --task-group-progress-track-color: #DCE4EC;
   --nav-item-active-background-color: #EAEAEA;
   --nav-item-active-text-color: #202020;
+  --pm-donut-background: #FFFFFF;
 }
 
 * {
@@ -1213,6 +1215,7 @@ button {
 
 .project-header-subtitle {
   font-size: 13.5px;
+  font-weight: 700;
   color: var(--text-secondary);
   margin: 4px 0 10px;
 }
@@ -7014,7 +7017,7 @@ button {
   flex: 1;
   /* grows to fill */
   display: flex;
-  background: #FFFFFF;
+  background: var(--pm-donut-background);
   flex-direction: column;
   justify-content: center;
   /* centers vertically */

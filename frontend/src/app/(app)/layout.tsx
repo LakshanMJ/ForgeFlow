@@ -15,7 +15,7 @@ export default function AppLayout({
       />
 
       <div className="app-body">
-        {/* <Sidebar /> */}
+        {/* <Sidebar />  */}
 
         <main className="main-content">
           {children}

@@ -63,8 +63,8 @@ export default function HomePage() {
 					</h1>
 
 					<p className="hero-sub">
-						One workspace for tasks, docs, and goals. built to scale
-						from your first project to your five-hundredth, without
+						One workspace for tasks, docs, and goals. Built to scale
+						from your first project to your five hundredth, without
 						switching tools along the way.
 					</p>
 
@@ -120,7 +120,7 @@ export default function HomePage() {
 					<h2 className="banner-heading">
 						Ship faster with{" "}
 						<span className="banner-accent">
-							agents in Flowdeck
+							agents in ForgeFlow
 						</span>
 					</h2>
 
@@ -132,7 +132,7 @@ export default function HomePage() {
 						href="/signup"
 						className="btn btn-solid btn-large"
 					>
-						Get Flowdeck free
+						Get ForgeFlow free
 					</a>
 
 				</div>
@@ -142,7 +142,7 @@ export default function HomePage() {
 			<footer className="footer">
 				<div className="footer-inner">
 					<span className="footer-copy">
-						Copyright © 2026 Flowdeck
+						Copyright © 2026 ForgeFlow
 					</span>
 				</div>
 			</footer>

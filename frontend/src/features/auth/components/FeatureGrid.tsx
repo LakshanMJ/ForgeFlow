@@ -18,34 +18,35 @@ type Feature = {
 
 const FEATURES: Feature[] = [
 	{
-		title: "Turn any project into a clear plan in minutes",
+		title: "Your workday, already sorted.",
 		description:
-			"Create tasks with owners, due dates, and priorities in seconds. Flowdeck AI fills in the details so your team can skip the setup and get straight to work.",
+			"Every morning, Flint reads your board, finds what's overdue, blocked, and urgent, and tells you exactly what to do first. No dashboards to check. No status meetings to sit through.",
 		imageAlt: "Task creation screenshot",
 		imageSrc: "/flint.png",
 		imageScale: 1.00,
 	},
 	{
-		title: "Know who's doing what, without asking",
+		title: "One truth. Three perspectives",
 		description:
-			"Comments, @mentions, and real-time updates keep everyone aligned without another status meeting. Flowdeck AI flags what's overdue and what's at risk so nothing slips through.",
+			"See exactly what matters to you. Whether you're executing tasks, managing projects, or tracking progress, ForgeFlow shapes your view around your role. No clutter. Just clarity.",
 		imageAlt: "Workspace activity screenshot",
 		imageSrc: "/dashboards.png",
 		imageScale: 1.45,
 	},
 	{
-		title: "Turn conversations into tasks instantly",
+		title: "Every project. One home.",
 		description:
-			"Catch action items straight from chat and docs. Flowdeck AI drafts the task, assignee, and due date before you finish the sentence.",
+			"Dive into any project and see everything at once. Tasks, timelines, team, and health. No more jumping between tools. The full picture, always one click away.",
 		imageAlt: "Chat to task screenshot",
 		// imageSrc: "/proj-det.png",
-		imageSrc: "/half-left.png",
-		imageScale: 1.30,
+		// imageSrc: "/half-left.png",
+		imageSrc: "/dark-proj-half left.png",
+		imageScale: 1.60,
 	},
 	{
-		title: "See exactly where every project stands",
+		title: "Move work forward.",
 		description:
-			"Live dashboards roll up status across every team and project. Flowdeck AI summarizes risk and progress so leaders don't have to ask for updates.",
+			"Every task has a place. Every person knows theirs. ForgeFlow turns scattered work into a steady, visible flow, so progress stops being a guess and starts being a given.",
 		imageAlt: "Dashboard screenshot",
 		imageSrc: "/444.png",
 		imageScale: 1.25,

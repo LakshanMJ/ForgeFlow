@@ -1,12 +1,12 @@
 export default function BrandMark() {
-  return (
-    <>
-      <div className="brand-mark">
-        <span className="dot" />
-        ForgeFlow
-      </div>
+	return (
+		<>
+			<div className="brand-mark">
+				<span className="dot" />
+				ForgeFlow
+			</div>
 
-      <style>{`
+			<style>{`
         .brand-mark {
           font-family: "Barlow Condensed", sans-serif;
           font-weight: 700;
@@ -27,6 +27,6 @@ export default function BrandMark() {
           flex-shrink: 0;
         }
       `}</style>
-    </>
-  );
+		</>
+	);
 }

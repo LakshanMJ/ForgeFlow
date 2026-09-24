@@ -55,11 +55,11 @@ export default function ProjectDetailPage({ id }: ProjectDetailProps) {
     } = useProject(id);
 	
 	const [tab, setTab] = useState('overview');
-	console.log(project,'PROJECT')
+
 	return (
 		<>
 			<div className="breadcrumb-row">
-				<div>{project?.name}</div>
+				{/* <div>{project?.name}</div> */}
 				<Link href="/dashboard/projects" className="breadcrumb-link">
 					<ArrowLeft size={14} />
 					Back to Projects
@@ -82,7 +82,7 @@ export default function ProjectDetailPage({ id }: ProjectDetailProps) {
 					</span>
 					<div>
 						<div className="project-header-title-row">
-							<h1 className="project-header-title">Acme Platform Redesign</h1>
+							<h1 className="project-header-title">NorthStar Platform Redesign</h1>
 							<Star size={18} fill="var(--ember)" color="var(--ember)" />
 						</div>
 						<p className="project-header-subtitle">
