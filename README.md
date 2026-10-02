@@ -332,8 +332,8 @@ Make sure you have:
 ## 1. Clone the repository
 
 ```bash
-git clone YOUR_REPOSITORY_URL
-cd forgeflow
+git clone https://github.com/LakshanMJ/ForgeFlow.git
+cd ForgeFlow
 ```
 
 ---
@@ -363,8 +363,10 @@ Create a `.env` file in the backend:
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/forgeflow"
 
-JWT_ACCESS_SECRET="your-access-secret"
+JWT_SECRET="your-jwt-secret"
 JWT_REFRESH_SECRET="your-refresh-secret"
+
+FRONTEND_URL="http://localhost:3000"
 
 PORT=3001
 ```
@@ -378,6 +380,10 @@ NEXT_PUBLIC_API_URL="http://localhost:3001"
 ---
 
 ## 4. Set up the database
+
+Make sure PostgreSQL is running and your DATABASE_URL in the backend .env points to your local database.
+
+Run the Prisma migrations:
 
 ```bash
 npx prisma migrate dev
