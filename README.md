@@ -6,14 +6,6 @@
 
 It brings tasks, projects, teams, blockers, analytics, and AI-assisted insights into one connected workspace.
 
-<p align="center">
-  <a href="YOUR_LIVE_DEMO_URL">Live Demo</a>
-  ·
-  <a href="YOUR_FRONTEND_REPO_URL">Frontend</a>
-  ·
-  <a href="YOUR_BACKEND_REPO_URL">Backend</a>
-</p>
-
 ---
 
 ## ✦ The Problem
