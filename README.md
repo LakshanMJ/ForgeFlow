@@ -225,25 +225,20 @@ ForgeFlow is built as a modern full-stack application with a separated frontend 
 
 # 🏗️ Backend Architecture
 
-The backend follows a modular architecture designed to keep business logic separated from infrastructure concerns.
+The backend follows a modular, feature-based architecture where functionality is organized into domain-specific modules. Each module encapsulates related controllers, services, data access, and business logic.
 
 ```text
 src/
-├── modules/
-│   ├── auth/
-│   ├── users/
-│   ├── organizations/
-│   ├── departments/
-│   ├── projects/
-│   ├── tasks/
-│   ├── roles/
-│   └── notifications/
+│ 
+│── auth/
+│── users/
+│── organizations/
+│── departments/
+│── projects/
+│── tasks/
+│── roles/
+│── notifications/
 │
-├── common/
-│   ├── guards/
-│   ├── decorators/
-│   ├── filters/
-│   └── interceptors/
 │
 └── main.ts
 ```
